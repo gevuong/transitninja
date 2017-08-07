@@ -41,6 +41,22 @@ Home Page
 Modal Nav Bar
 ![Modal_NavBar](images/modal_nav_bar.png)
 
+Route Options
+![Next Bus](images/Route_Options.png)
+
+Show Bus on Map
+![Show Bus](images/Show_Bus.png)
+
+Next Bus
+![Next Bus](images/Next_Bus.png)
+
+My Favorite Routes
+![My Routes](images/Favorites Page.png)
+
+New Favorite
+![New Favorite](images/New_Favorite.png)
+
+
 
 ## Group Members and Work Breakdown
 	Josh Chen, Noah Kang, John Matthews, George Vuong
