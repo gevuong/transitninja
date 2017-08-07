@@ -32,8 +32,13 @@ An iOS mobile app providing real time tracking of local public transit systems i
 * Researched various phone apps for styling, single page app vs. multi view apps, UX/UI flaws, etc.
 
 ### Wireframes
+Loading Page
 ![Loading_page](images/loading_page.png)
+
+Home Page
 ![Home_page](images/home_page.png)
+
+Modal Nav Bar
 ![Modal_NavBar](images/modal_nav_bar.png)
 
 
