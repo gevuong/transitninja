@@ -2,7 +2,7 @@ var muniStations = function(){
   var fs = require('fs');
   var initialData =[];
 
-  var x = fs.readFileSync('muniStops.txt', 'utf8');
+  var x = fs.readFileSync(__dirname+'/muniStops.txt', 'utf8');
   var stringed = x.toString().split('\n');
   for(var i in stringed){
   initialData.push([stringed[i]]);
@@ -23,4 +23,4 @@ var muniStations = function(){
   return dummy;
 };
 
-console.log(muniStations());
+module.exports.x = muniStations;
