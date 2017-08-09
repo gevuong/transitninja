@@ -1,7 +1,7 @@
-var Todos = require('../models/todoModel');
+var muniStops = require('../stations/muniStations');
 
-module.exports = function(app) {
-  app.get('/api/setupTodos', function(req, res) {
+console.log(muniStops.x());
+
 
     // seed database
     var starterTodos = [
@@ -30,3 +30,4 @@ module.exports = function(app) {
     });
   });
 };
+
