@@ -5,8 +5,8 @@ var config = require('./config');
 var setupController = require('./controllers/setupController');
 var db;
 var port = process.env.PORT || 3000;
+var muniStopController = require('./controllers/muniStopController');
 
-console.log(port);
 app.use('/assets', express.static(__dirname + '/public'));
 
 app.set('view engine', 'ejs');
@@ -19,3 +19,4 @@ mongoose.connect(config.getDBConnectionString(), (err, database) => {
   });
 });
 setupController(app); // setupController is a function
+muniStopController(app);
