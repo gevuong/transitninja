@@ -10,7 +10,7 @@ module.exports = function(app) {
     let muniStationsArray = d.muniStations();
     // console.log(muniStationsArray);
     // muniStationsArray.forEach(function(station) {
-      console.log(station);
+
       muniStationModel.create(muniStationsArray, function(results){
         // if (err) {
         //   return console.log(err);
