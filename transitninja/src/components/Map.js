@@ -6,22 +6,40 @@ export default class MyComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { x: {latitude: 37.78824, longitude: -122.4324}, user_location: {latitude: 0, longitude: 0}, error: null};
+    this.state {
+      mapRegion: null,
+      lastLat: null,
+      lastLong: null,
+    }
   }
 
-  componentWillMount(){
-    navigator.geolocation.getCurrentPosition(
+  componentDidMount(){
+    this.watchID= navigator.geolocation.watchPosition(
       (position)=>{
-
-        const { latitude, longitude } = position.coords;
-  
-        this.setState({
-          user_location: {latitude, longitude}
-        });
+        let region = {
+          latitude:       position.coords.latitude,
+          longitude:      position.coords.longitude,
+          latitudeDelta:  0.00922*1.5,
+          longitudeDelta: 0.00421*1.5
+        };
+        this.onRegionChange(region, region.latitude, region.longitude);
       },
-      (error) => this.setState({ error: error.message })
-      // { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+      (error) => console.log({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
     );
+  }
+
+  onRegionChange(region, lastLat, lastLong) {
+    this.setState({
+      mapRegion: region,
+      // If there are no new values set the current ones
+      lastLat: lastLat || this.state.lastLat,
+      lastLong: lastLong || this.state.lastLong
+    });
+  }
+
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
   }
 
   render() {
@@ -29,21 +47,26 @@ export default class MyComponent extends React.Component {
       <View>
         <MapView
           style={styles.mapStyle}
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}>
+          showsUserLocation={true}
+          followUserLocation={true}
+          onRegionChange={this.onRegionChange.bind(this)}>
+          >
           <MapView.Marker
             draggable
-            coordinate={this.state.x}
+            coordinate={
+              latitude: (this.state.lastLat) || -36.82339,
+              longitude: (this.state.lastLong) || -73.03569,
+            }
             onDragEnd={(e)=>this.setState({x: e.nativeEvent.coordinate})} >
             <Image
               source={require('../../assets/bus.png')} style={styles.busIconStyle}
             />
           </MapView.Marker>
-          <MapView.Marker coordinate={this.state.user_location} />
+          <MapView.Marker
+            coordinate={
+            latitude: (this.state.lastLat) || -36.82339,
+            longitude: (this.state.lastLong) || -73.03569,
+          } />
           </MapView>
       </View>
     );
