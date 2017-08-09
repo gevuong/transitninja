@@ -24,7 +24,7 @@ var actransitTrip = function(){
 };
 
 
-
+module.exports.actransitTrip = actransitTrip;
 
 
 console.log(actransitTrip());

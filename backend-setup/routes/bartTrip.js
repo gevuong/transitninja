@@ -24,7 +24,7 @@ var bartTrip = function(){
 };
 
 
-
+module.exports.bartTrip = bartTrip;
 
 
 console.log(bartTrip());

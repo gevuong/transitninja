@@ -24,7 +24,7 @@ var muniTrip = function(){
 };
 
 
-
+module.exports.muniTrip = muniTrip;
 
 
 console.log(muniTrip());

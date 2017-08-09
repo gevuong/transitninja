@@ -23,7 +23,7 @@ var caltrainShape = function(){
 };
 
 
-
+module.exports.caltrainShape = caltrainShape;
 
 
 console.log(caltrainShape());

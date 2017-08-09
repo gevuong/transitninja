@@ -23,6 +23,6 @@ var caltrainRoutes = function(){
   return dummy;
 };
 
-
+module.exports.caltrainRoutes = caltrainRoutes;
 
 console.log(caltrainRoutes());

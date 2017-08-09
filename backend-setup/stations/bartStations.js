@@ -25,3 +25,5 @@ return dummy;
 };
 
 console.log(bartStations());
+
+module.exports.bartStations = bartStations;
