@@ -1,14 +1,18 @@
-var mongoose = require('mongoose');
+// var mongoose = require('mongoose');
+//
+// var Schema = mongoose.Schema;
+//
+// var todoSchema = new Schema({
+//   username: String,
+//   todo: String,
+//   isDone: Boolean,
+//   hasAttachment: Boolean
+// });
+//
+// var Todos = mongoose.model('Todos', todoSchema);
+//
+// module.exports = Todos;
 
-var Schema = mongoose.Schema;
+var muniStops = require('../stations/muniStations');
 
-var todoSchema = new Schema({
-  username: String,
-  todo: String,
-  isDone: Boolean,
-  hasAttachment: Boolean
-});
-
-var Todos = mongoose.model('Todos', todoSchema);
-
-module.exports = Todos;
+console.log(muniStops.x());
