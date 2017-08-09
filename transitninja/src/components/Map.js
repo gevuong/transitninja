@@ -1,31 +1,84 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import React, { Component, PropTypes} from 'react';
+import { Text, View, StyleSheet, Image} from 'react-native';
 import MapView from 'react-native-maps';
 
-const Map = () => {
-  console.log("this is getting hit!");
-  const { mapStyle } = styles;
+export default class MyComponent extends React.Component {
 
-  return (
-    <View>
-      <MapView style={mapStyle}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-     />
-    </View>
-  );
-};
+  constructor(props) {
+    super(props);
+    this.state = {
+      mapRegion: null,
+      lastLat: null,
+      lastLong: null
+    };
+  }
 
-const styles = {
+  componentDidMount(){
+    this.watchID= navigator.geolocation.watchPosition(
+      (position)=>{
+        let region = {
+          latitude:       position.coords.latitude,
+          longitude:      position.coords.longitude,
+          latitudeDelta:  0.00922*1.5,
+          longitudeDelta: 0.00421*1.5
+        };
+        this.onRegionChange(region, region.latitude, region.longitude);
+      },
+      (error) => alert(error.message),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
+  }
+
+  onRegionChange(region, lastLat, lastLong) {
+    this.setState({
+      mapRegion: region,
+      lastLat: lastLat || this.state.lastLat,
+      lastLong: lastLong || this.state.lastLong
+    });
+  }
+
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
+  }
+
+  render() {
+    return (
+      <View>
+        <MapView
+          style={styles.mapStyle}
+          region={this.state.mapRegion}
+          showsUserLocation={true}
+          followUserLocation={true}
+          onRegionChange={this.onRegionChange.bind(this)}>
+          <MapView.Marker
+            coordinate={{
+              latitude: this.state.lastLat || -36.82339,
+              longitude: this.state.lastLong || -73.03569
+            }}
+            >
+            <Image
+              source={require('../../assets/bus.png')} style={styles.busIconStyle}
+            />
+          </MapView.Marker>
+          <MapView.Marker
+            coordinate={{
+            latitude: this.state.lastLat || -36.82339,
+            longitude: this.state.lastLong || -73.03569
+          }} />
+          </MapView>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
   mapStyle: {
     width: 700,
     height: 800,
     backgroundColor: 'skyblue'
   },
-};
-
-export default Map;
+  busIconStyle: {
+    width: 15,
+    height: 15
+  }
+});
