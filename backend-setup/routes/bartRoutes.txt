@@ -1,0 +1,6 @@
+01,BART,,Pittsburg/Bay Point - SFIA/Millbrae,,1,http://www.bart.gov/schedules/bylineresults?route=1,ffff33,
+03,BART,,Warm Springs/South Fremont - Richmond,,1,http://www.bart.gov/schedules/bylineresults?route=3,ff9933,
+05,BART,,Warm Springs/South Fremont - Daly City,,1,http://www.bart.gov/schedules/bylineresults?route=5,339933,
+07,BART,,Richmond - Daly City/Millbrae,,1,http://www.bart.gov/schedules/bylineresults?route=7,ff0000,
+11,BART,,Dublin/Pleasanton - Daly City,,1,http://www.bart.gov/schedules/bylineresults?route=11,0099cc,
+19,BART,,Oakland Int'l Airport - Coliseum,,1,http://www.bart.gov/schedules/bylineresults?route=19,d5cfa3,
