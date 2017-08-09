@@ -1,8 +1,8 @@
-var actransitStations = function(){
+var muniRoutes = function(){
   var fs = require('fs');
   var initialData =[];
 
-  var x = fs.readFileSync(__dirname+'/actransitStops.txt', 'utf8');
+  var x = fs.readFileSync(__dirname+'/muniRoutes.txt', 'utf8');
   var stringed = x.toString().split('\n');
   for(var i in stringed){
   initialData.push([stringed[i]]);
@@ -17,10 +17,14 @@ var actransitStations = function(){
   });
   var dummy = [];
   dataToArray.forEach(function(op, idx){
-  dummy.push({'stop_id': op[0], 'stop_name': op[1], 'stop_desc':op[2],'stop_lat': op[3],
-  'stop_lon': op[4], 'zone_id': op[5], 'stop_url': op[6]});
+  dummy.push({'route_id': op[0], 'agency_id': op[1], 'route_short_name':op[2],'route_long_name': op[3],
+  'route_desc': op[4], 'route_type': op[5], 'route_url': op[6], 'route_color': op[7], 'route_text_color': op[8]});
   });
   return dummy;
 };
 
-console.log(actransitStations());
+
+
+
+
+console.log(muniRoutes());
