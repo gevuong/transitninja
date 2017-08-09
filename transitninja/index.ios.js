@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 import Header from './src/components/Header';
-// import Map from './src/components/Map';
+import Map from './src/components/Map';
 import TemporaryConnection from './src/components/TemporaryConnection';
 
 export default class transitninja extends Component {
@@ -20,13 +20,14 @@ export default class transitninja extends Component {
     return (
       <View>
         <Header headerText={'Search Here'} / >
+        <Map />
         <TemporaryConnection />
       </View>
     );
   }
 }
 
-// <Map />
+
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
