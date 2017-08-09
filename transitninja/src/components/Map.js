@@ -46,6 +46,7 @@ export default class MyComponent extends React.Component {
       <View>
         <MapView
           style={styles.mapStyle}
+          region={this.state.mapRegion}
           showsUserLocation={true}
           followUserLocation={true}
           onRegionChange={this.onRegionChange.bind(this)}>
