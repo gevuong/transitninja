@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React, { Component, PropTypes} from 'react';
 import { Text, View, StyleSheet, Image} from 'react-native';
 import MapView from 'react-native-maps';
 
@@ -6,7 +6,22 @@ export default class MyComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { x: {latitude: 37.78824, longitude: -122.4324} };
+    this.state = { x: {latitude: 37.78824, longitude: -122.4324}, user_location: {latitude: 0, longitude: 0}, error: null};
+  }
+
+  componentWillMount(){
+    navigator.geolocation.getCurrentPosition(
+      (position)=>{
+
+        const { latitude, longitude } = position.coords;
+  
+        this.setState({
+          user_location: {latitude, longitude}
+        });
+      },
+      (error) => this.setState({ error: error.message })
+      // { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
   }
 
   render() {
@@ -28,6 +43,7 @@ export default class MyComponent extends React.Component {
               source={require('../../assets/bus.png')} style={styles.busIconStyle}
             />
           </MapView.Marker>
+          <MapView.Marker coordinate={this.state.user_location} />
           </MapView>
       </View>
     );
