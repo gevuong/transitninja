@@ -1,17 +1,25 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet} from 'react-native';
+import Search from 'react-native-search-box';
 
-const Header = (props) => {
-  const { textStyle, viewStyle } = styles;
+class Header extends React.Component{
+  constructor(props){
+    super(props);
+  }
 
-  return (
-    <View style={viewStyle}>
-      <Text style={textStyle}>{props.headerText}</Text>
-    </View>
-  );
-};
+  render() {
+    return (
+      <View style={styles.viewStyle}>
+        <Search
+          ref="search_box" />
+      </View>
+    );
+  }
 
-const styles = {
+
+}
+
+const styles = StyleSheet.create({
   viewStyle: {
     backgroundColor: '#F8F8F8',
     justifyContent: 'center',
@@ -28,7 +36,7 @@ const styles = {
     fontSize: 20
   }
 
-};
+});
 
 // make the component available to other parts of the app
 export default Header;
