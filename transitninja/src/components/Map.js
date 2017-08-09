@@ -6,11 +6,11 @@ export default class MyComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state {
+    this.state = {
       mapRegion: null,
       lastLat: null,
-      lastLong: null,
-    }
+      lastLong: null
+    };
   }
 
   componentDidMount(){
@@ -24,7 +24,7 @@ export default class MyComponent extends React.Component {
         };
         this.onRegionChange(region, region.latitude, region.longitude);
       },
-      (error) => console.log({ error: error.message }),
+      (error) => alert(error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
     );
   }
@@ -32,7 +32,6 @@ export default class MyComponent extends React.Component {
   onRegionChange(region, lastLat, lastLong) {
     this.setState({
       mapRegion: region,
-      // If there are no new values set the current ones
       lastLat: lastLat || this.state.lastLat,
       lastLong: lastLong || this.state.lastLong
     });
@@ -50,23 +49,21 @@ export default class MyComponent extends React.Component {
           showsUserLocation={true}
           followUserLocation={true}
           onRegionChange={this.onRegionChange.bind(this)}>
-          >
           <MapView.Marker
-            draggable
-            coordinate={
-              latitude: (this.state.lastLat) || -36.82339,
-              longitude: (this.state.lastLong) || -73.03569,
-            }
-            onDragEnd={(e)=>this.setState({x: e.nativeEvent.coordinate})} >
+            coordinate={{
+              latitude: this.state.lastLat || -36.82339,
+              longitude: this.state.lastLong || -73.03569
+            }}
+            >
             <Image
               source={require('../../assets/bus.png')} style={styles.busIconStyle}
             />
           </MapView.Marker>
           <MapView.Marker
-            coordinate={
-            latitude: (this.state.lastLat) || -36.82339,
-            longitude: (this.state.lastLong) || -73.03569,
-          } />
+            coordinate={{
+            latitude: this.state.lastLat || -36.82339,
+            longitude: this.state.lastLong || -73.03569
+          }} />
           </MapView>
       </View>
     );
