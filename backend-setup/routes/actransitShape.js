@@ -1,8 +1,8 @@
-var actransitStations = function(){
+var actransitShape = function(){
   var fs = require('fs');
   var initialData =[];
 
-  var x = fs.readFileSync(__dirname+'/actransitStops.txt', 'utf8');
+  var x = fs.readFileSync(__dirname+'/actransitShapes.txt', 'utf8');
   var stringed = x.toString().split('\n');
   for(var i in stringed){
   initialData.push([stringed[i]]);
@@ -17,10 +17,12 @@ var actransitStations = function(){
   });
   var dummy = [];
   dataToArray.forEach(function(op, idx){
-  dummy.push({'stop_id': op[0], 'stop_name': op[1], 'stop_desc':op[2],'stop_lat': op[3],
-  'stop_lon': op[4], 'zone_id': op[5], 'stop_url': op[6]});
+  dummy.push({'shape_id': op[0], 'shape_pt_lat': op[1], 'shape_pt_lon':op[2],'shape_pt_sequence': op[3]});
   });
   return dummy;
 };
 
-console.log(actransitStations());
+
+
+
+console.log(actransitShape());
