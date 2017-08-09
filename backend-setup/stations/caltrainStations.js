@@ -26,3 +26,5 @@ return dummy;
 };
 
 // console.log(caltrainStations());
+
+module.exports.caltrainStations = caltrainStations;

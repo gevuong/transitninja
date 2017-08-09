@@ -23,6 +23,6 @@ var muniShape = function(){
 };
 
 
-
+module.exports.muniShape = muniShape;
 
 console.log(muniShape());

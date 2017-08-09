@@ -22,7 +22,7 @@ var bartShape = function(){
   return dummy;
 };
 
-
+module.exports.bartShape = bartShape;
 
 
 console.log(bartShape());

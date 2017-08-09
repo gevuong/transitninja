@@ -24,6 +24,6 @@ var caltrainTrip = function(){
 };
 
 
-
+module.exports.caltrainTrip = caltrainTrip;
 
 console.log(caltrainTrip());

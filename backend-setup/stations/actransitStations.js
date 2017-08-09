@@ -24,3 +24,6 @@ var actransitStations = function(){
 };
 
 console.log(actransitStations());
+
+
+module.exports.actransitStations = actransitStations;

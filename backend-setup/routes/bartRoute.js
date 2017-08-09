@@ -23,7 +23,7 @@ var bartRoutes = function(){
   return dummy;
 };
 
-
+module.exports.bartRoutes = bartRoutes;
 
 
 

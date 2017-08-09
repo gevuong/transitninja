@@ -23,6 +23,6 @@ var actransitShape = function(){
 };
 
 
-
+module.exports.actransitShape = actransitShape;
 
 console.log(actransitShape());

@@ -24,6 +24,6 @@ var actransitRoutes = function(){
 };
 
 
-
+module.exports.actransitRoutes = actransitRoutes;
 
 console.log(actransitRoutes());
