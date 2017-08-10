@@ -1,25 +1,83 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Search from 'react-native-search-box';
-import SearchBar from 'react-native-searchbar'
+// import Search from 'react-native-search-box';
+import SearchBar from 'react-native-searchbar';
+import Polyline from '@mapbox/polyline';
+import fetch from 'isomorphic-fetch';
 
+const startLoc = 'sanjose';
+const endLoc = 'sanfrancisco';
 class Header extends React.Component {
-  logger() {
-    console.log('test');
+  constructor(props) {
+      super(props);
+      this.state = {
+        latitude: '',
+        longitude: '',
+      destination: '',
+      coordo: [],
+      res: ''
+      };
+    this.getDirections = this.getDirections.bind(this);
+  }
+
+
+  // searching(property) {
+  //   console.log(this.state);
+  //   return e => this.setState({ [property]: e.target.value });
+  // }
+
+  componentDidMount() {
+  // find your origin and destination point coordinates and pass it to our method.
+  // I am using Bursa,TR -> Istanbul,TR for this example
+  // this.getDirections('40.1884979, 29.061018', '41.0082,28.9784');
+}
+
+  // logger() {
+  //     // console.log('test');
+  //
+  // }
+
+async getDirections() {
+    console.log('hit');
+
+    try {
+      // fetch directions from google.
+      const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${endLoc}`);
+      const respJson = await resp.json();
+      console.log(respJson);
+      // decode encoded polyline data.
+      const points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+      // converts polyline data into a list of objects
+      const coords = points.map((point) => {
+        return { latitude: point[0], longitude: point[1] };
+      });
+      this.setState({ coordo: coords });
+      return coords;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  handleres(results) {
+    this.setState({ res: results });
   }
 
   render() {
+    console.log(this.state.destination);
+
+
     return (
+
       <View style={styles.viewStyle}>
-        <Search
-          ref="search_box"
-          contentWidth={50}
-        />
+
         <SearchBar
           ref={(ref) => { this.searchBar = ref; }}
-          data={[1, 2, 3]}
-          handleResults={this.logger()}
+          data={[]}
+          handleResults={this.handleres()}
           showOnLoad
+          textColor={'#FF0000'}
+          handleChangeText={(e) => this.setState({ destination: e })}
+          onSubmitEditing={this.getDirections}
         />
       </View>
     );
@@ -27,6 +85,26 @@ class Header extends React.Component {
 
 
 }
+
+ // render() {
+ //   return (
+ //     <View>
+ //       <MapView style={styles.map} initialRegion={{
+ //         latitude:41.0082,
+ //         longitude:28.9784,
+ //         latitudeDelta: 0.0922,
+ //         longitudeDelta: 0.0421
+ //       }}>
+ //
+ //       <MapView.Polyline
+ //           coordinates={this.state.coords}
+ //           strokeWidth={2}
+ //           strokeColor="red"/>
+ //
+ //       </MapView>
+ //     </View>
+ //   );
+ // }
 
 const styles = StyleSheet.create({
   viewStyle: {
@@ -46,6 +124,7 @@ const styles = StyleSheet.create({
   }
 
 });
+
 
 // make the component available to other parts of the app
 export default Header;
