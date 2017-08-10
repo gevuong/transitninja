@@ -17,7 +17,7 @@ class TemporaryConnection extends Component {
 
 
   render() {
-    console.log("state", this.state.transit_info);
+    console.log('state', this.state.transit_info);
 
     return (
       <View>

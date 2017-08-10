@@ -13,7 +13,7 @@ const getDirections = (startLoc, destinationLoc) => {
     let respJson = await resp.json();
     // decode encoded polyline data.
     let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
-    // converts polyline data into a list of objects 
+    // converts polyline data into a list of objects
     let coords = points.map((point, index) => {
       return  {
         latitude : point[0],

@@ -11,7 +11,7 @@ const RouterComponent = () => {
           rightTitle="Add"
           key="employeeList"
           component={Map}
-          title="Employees"
+          title="Home Page"
           initial
         />
       </Scene>
