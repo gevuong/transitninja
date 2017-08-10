@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Search from 'react-native-search-box';
-import SearchBar from 'react-native-searchbar'
+import SearchBar from 'react-native-searchbar';
 
 class Header extends React.Component {
   logger() {
@@ -11,10 +10,6 @@ class Header extends React.Component {
   render() {
     return (
       <View style={styles.viewStyle}>
-        <Search
-          ref="search_box"
-          contentWidth={50}
-        />
         <SearchBar
           ref={(ref) => { this.searchBar = ref; }}
           data={[1, 2, 3]}

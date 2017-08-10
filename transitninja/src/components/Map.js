@@ -5,7 +5,8 @@ import MapView from 'react-native-maps';
 import TemporaryConnection from './TemporaryConnection';
 import Header from './Header';
 
-const BUS_LOGO = require('../../assets/bus.png');
+// const BUS_LOGO = require('../../assets/bus.png');
+const BUS_STOP_LOGO = require('../../assets/bus_stop.png');
 
 export default class Map extends Component {
 
@@ -28,7 +29,6 @@ export default class Map extends Component {
 
   componentWillMount() {
     axios.get('http://localhost:3000/api/muniStations').then(response => {
-      console.log('this is getting hit');
       this.setState({ muni_stops: response.data });
     });
     axios.get('http://localhost:3000/api/actransitStations').then(response => {
@@ -43,8 +43,8 @@ export default class Map extends Component {
         const region = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          latitudeDelta: 0.00922 * 1.5,
-          longitudeDelta: 0.00421 * 1.5
+          latitudeDelta: 0.00322,
+          longitudeDelta: 0.00121
         };
         this.onRegionChange(region, region.latitude, region.longitude);
       },
@@ -65,17 +65,24 @@ export default class Map extends Component {
     });
   }
 
+  _renderMuni(){
+
+  }
+
+  _renderACTransit(){
+    
+  }
+
   render() {
-    console.log('state is', this.state.actransit_stops);
     return (
-      <View>
+      <View style={styles.viewStyle}>
         <Header />
         <MapView
-          style={styles.mapStyle}
           region={this.state.mapRegion}
           showsUserLocation
           followUserLocation
           onRegionChange={this.onRegionChange.bind(this)}
+          style={styles.mapStyle}
         >
           {this.state.muni_stops.map(stop => (
             <MapView.Marker
@@ -85,10 +92,12 @@ export default class Map extends Component {
               }}
               title={stop.stop_name}
               key={stop.stop_id}
-
+            >
+            <Image
+              source={BUS_STOP_LOGO} style={styles.busIconStyle}
             />
+            </MapView.Marker>
           ))}
-
           {this.state.actransit_stops.map(stop => (
             <MapView.Marker
               coordinate={{
@@ -98,25 +107,8 @@ export default class Map extends Component {
               title={stop.stop_name}
               key={stop.stop_id}
               pinColor={'#000000'}
-
             />
           ))}
-          <MapView.Marker
-            coordinate={{
-              latitude: this.state.lastLat || -36.82339,
-              longitude: this.state.lastLong || -73.03569
-            }}
-          >
-            <Image
-              source={BUS_LOGO} style={styles.busIconStyle}
-            />
-          </MapView.Marker>
-          <MapView.Marker
-            coordinate={{
-            latitude: this.state.lastLat || -36.82339,
-            longitude: this.state.lastLong || -73.03569
-            }}
-          />
           </MapView>
           <TemporaryConnection />
       </View>
@@ -125,18 +117,15 @@ export default class Map extends Component {
 }
 
 const styles = StyleSheet.create({
+  viewStyle: {
+    flex: 1,
+    alignItems: 'stretch'
+  },
   mapStyle: {
-    width: 700,
-    height: 800,
-    backgroundColor: 'skyblue'
+    flex: 1
   },
   busIconStyle: {
     width: 15,
     height: 15
   }
 });
-//
-// example stops:
-// {"__v":0,"stop_id":913,"stop_name":"DUBLIN ST & LAGRANDE AVE","stop_desc":0,"stop_lat":37.719192,"stop_lon":-122.425802,"zone_id":0,"stop_url":"","_id":"598bff78cb3351601e41b5de"},
-// {"__v":0,"stop_id":3003,"stop_name":"2nd St & Brannan St   ","stop_desc":0,"stop_lat":37.781827,"stop_lon":-122.391945,"zone_id":0,"stop_url":"","_id":"598bff78cb3351601e41b5df"},
-// {"__v":0,"stop_id":3004,"stop_name":"2nd St & Brannan St","stop_desc":0,"stop_lat":37.781854,"stop_lon":-122.392232,"zone_id":0,"stop_url":"","_id":"598bff78cb3351601e41b5e0"},
