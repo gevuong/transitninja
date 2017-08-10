@@ -2,11 +2,12 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import MapView from 'react-native-maps';
-import TemporaryConnection from './TemporaryConnection';
-import Header from './Header';
+// import Header from './Header';
+import Button from 'react-native-button';
 
 // const BUS_LOGO = require('../../assets/bus.png');
-const BUS_STOP_LOGO = require('../../assets/bus_stop.png');
+const BUS_STOP_RED = require('../../assets/Bus_Stop_Red.png');
+const BUS_STOP_GREEN = require('../../assets/Bus_Stop_Green.png');
 
 export default class Map extends Component {
 
@@ -17,8 +18,11 @@ export default class Map extends Component {
       lastLat: null,
       lastLong: null,
       muni_stops: [],
-      actransit_stops: []
+      actransit_stops: [],
+      showACTransit: true,
+      showMuni: true
     };
+    this.toggleMuni = this.toggleMuni.bind(this);
   }
 
 // this is some code to customize eslint for this page.
@@ -32,7 +36,6 @@ export default class Map extends Component {
       this.setState({ muni_stops: response.data });
     });
     axios.get('http://localhost:3000/api/actransitStations').then(response => {
-      console.log('this is getting hit');
       this.setState({ actransit_stops: response.data });
     });
   }
@@ -65,18 +68,48 @@ export default class Map extends Component {
     });
   }
 
-  _renderMuni(){
-
+  toggleMuni() {
+    console.log('Button clicked');
+    this.setState({
+      showMuni: !this.state.showMuni
+    });
   }
 
-  _renderACTransit(){
-    
+  renderMuni() {
+    return this.state.muni_stops.map(stop => (
+      <MapView.Marker
+        coordinate={{
+          latitude: stop.stop_lat || -36.82339,
+          longitude: stop.stop_lon || -73.03569
+        }}
+        title={stop.stop_name}
+        key={stop.stop_id}
+      >
+      <Image source={BUS_STOP_RED} style={styles.busIconStyle} />
+      </MapView.Marker>
+    ));
+  }
+
+  renderACTransit() {
+    return this.state.actransit_stops.map(stop => (
+      <MapView.Marker
+        coordinate={{
+          latitude: stop.stop_lat || -36.82339,
+          longitude: stop.stop_lon || -73.03569
+        }}
+        title={stop.stop_name}
+        key={stop.stop_id}
+      >
+        <Image source={BUS_STOP_GREEN} style={styles.busIconStyle} />
+      </MapView.Marker>
+    ));
   }
 
   render() {
+    console.log(this.state);
+    // <Header />
     return (
       <View style={styles.viewStyle}>
-        <Header />
         <MapView
           region={this.state.mapRegion}
           showsUserLocation
@@ -84,33 +117,15 @@ export default class Map extends Component {
           onRegionChange={this.onRegionChange.bind(this)}
           style={styles.mapStyle}
         >
-          {this.state.muni_stops.map(stop => (
-            <MapView.Marker
-              coordinate={{
-                latitude: stop.stop_lat || -36.82339,
-                longitude: stop.stop_lon || -73.03569
-              }}
-              title={stop.stop_name}
-              key={stop.stop_id}
-            >
-            <Image
-              source={BUS_STOP_LOGO} style={styles.busIconStyle}
-            />
-            </MapView.Marker>
-          ))}
-          {this.state.actransit_stops.map(stop => (
-            <MapView.Marker
-              coordinate={{
-                latitude: stop.stop_lat || -36.82339,
-                longitude: stop.stop_lon || -73.03569
-              }}
-              title={stop.stop_name}
-              key={stop.stop_id}
-              pinColor={'#000000'}
-            />
-          ))}
-          </MapView>
-          <TemporaryConnection />
+        <Button
+          containerStyle={{ height: 35, padding: 10, borderRadius: 10, backgroundColor: 'white' }}
+          style={{ fontSize: 20, color: 'red' }}
+          onPress={this.toggleMuni}
+        >I am a Button
+        </Button>
+        {this.state.showMuni ? this.renderMuni() : null }
+        {this.state.showACTransit ? this.renderACTransit() : null }
+        </MapView>
       </View>
     );
   }
