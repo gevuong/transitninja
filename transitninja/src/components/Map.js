@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import MapView from 'react-native-maps';
 import TemporaryConnection from './TemporaryConnection';
 import Header from './Header';
@@ -60,16 +60,24 @@ export default class Map extends Component {
     });
   }
 
+  _renderMuni(){
+
+  }
+
+  _renderACTransit(){
+    
+  }
+
   render() {
     return (
       <View style={styles.viewStyle}>
         <Header />
         <MapView
-          style={styles.mapStyle}
           region={this.state.mapRegion}
           showsUserLocation
           followUserLocation
           onRegionChange={this.onRegionChange.bind(this)}
+          style={styles.mapStyle}
         >
           {this.state.muni_stops.map(stop => (
             <MapView.Marker
