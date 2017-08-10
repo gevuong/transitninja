@@ -15,7 +15,6 @@ export default class Map extends Component {
       lastLat: null,
       lastLong: null
     };
-
   }
 
 // this is some code to customize eslint for this page.
