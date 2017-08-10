@@ -1,17 +1,15 @@
 import React from 'react';
-import { Text, View, StyleSheet} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Search from 'react-native-search-box';
 
-class Header extends React.Component{
-  constructor(props){
-    super(props);
-  }
+class Header extends React.Component {
 
   render() {
     return (
       <View style={styles.viewStyle}>
         <Search
-          ref="search_box" />
+          ref="search_box"
+        />
       </View>
     );
   }
