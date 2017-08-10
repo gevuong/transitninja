@@ -1,6 +1,7 @@
 import React, { Component, PropTypes} from 'react';
 import { Text, View, StyleSheet, Image} from 'react-native';
 import MapView from 'react-native-maps';
+import axios from 'axios';
 
 export default class MyComponent extends React.Component {
 
@@ -9,9 +10,17 @@ export default class MyComponent extends React.Component {
     this.state = {
       mapRegion: null,
       lastLat: null,
-      lastLong: null
+      lastLong: null,
+      transit_info: []
     };
   }
+
+  componentWillMount() {
+    // We need to replace the following url with the location of our server. (e.g. replace with http://localhost:3000)
+    axios.get('http://localhost:3000/api/muniStations').then(response => this.setState({ transit_info: response.data }));
+
+      // http requests return a promise to us, because http requests are inherently asynchronous.
+}
 
   componentDidMount(){
     this.watchID= navigator.geolocation.watchPosition(
@@ -27,6 +36,8 @@ export default class MyComponent extends React.Component {
       (error) => alert(error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
     );
+    axios.get('http://localhost:3000/api/muniStations').then(response => this.setState({ transit_info: response.data }));
+
   }
 
   onRegionChange(region, lastLat, lastLong) {
@@ -42,6 +53,22 @@ export default class MyComponent extends React.Component {
   }
 
   render() {
+
+
+var arr =  () => {this.state.transit_info.forEach((el) => {
+    return (
+      <MapView.Marker
+        coordinate={{latitude: el.stop_lat, longitude: el.stop_lon}}
+        title={el.stop_name}
+        >
+        <Image
+          source={require('../../assets/bus.png')} style={styles.busIconStyle}
+        />
+
+        </MapView.Marker>
+    );
+  });
+};
     return (
       <View>
         <MapView
@@ -49,6 +76,7 @@ export default class MyComponent extends React.Component {
           region={this.state.mapRegion}
           showsUserLocation={true}
           followUserLocation={true}
+
           onRegionChange={this.onRegionChange.bind(this)}>
           <MapView.Marker
             coordinate={{
@@ -65,6 +93,15 @@ export default class MyComponent extends React.Component {
             latitude: this.state.lastLat || -36.82339,
             longitude: this.state.lastLong || -73.03569
           }} />
+
+        <MapView.Marker
+          coordinate={{latitude: -36.82339, longitude: -73.03570}}>
+          <Image
+            source={require('../../assets/bus.png')} style={styles.busIconStyle}
+          />
+        </MapView.Marker>
+
+        {this.arr}
           </MapView>
       </View>
     );
