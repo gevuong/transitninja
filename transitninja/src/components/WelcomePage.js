@@ -5,6 +5,8 @@ import {
   View
 } from 'react-native';
 
+import TemporaryConnection from './TemporaryConnection';
+
 import { Actions } from 'react-native-router-flux';
 
 const WelcomePage = () => {

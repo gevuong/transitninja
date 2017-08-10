@@ -5,7 +5,10 @@ var config = require('./config');
 var setupController = require('./controllers/setupController');
 var db;
 var port = process.env.PORT || 3000;
+
 var muniStopController = require('./controllers/muniStopController');
+var actransitBusController = require('./controllers/actransitBusController');
+var muniBusController = require('./controllers/muniBusController');
 
 app.use('/assets', express.static(__dirname + '/public'));
 
@@ -20,3 +23,5 @@ mongoose.connect(config.getDBConnectionString(), (err, database) => {
 });
 setupController(app); // setupController is a function
 muniStopController(app);
+actransitBusController(app);
+muniBusController(app);
