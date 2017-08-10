@@ -1,25 +1,69 @@
 import React from 'react';
 import { Scene, Router, Actions } from 'react-native-router-flux';
 import Map from './components/Map';
+import WelcomePage from './components/WelcomePage';
+import ModalMenu from './components/ModalMenu';
 
 const RouterComponent = () => {
   return (
     <Router sceneStyle={{ paddingTop: 65 }}>
       <Scene key="main">
         <Scene
-          onRight={() => Actions.employeeCreate()}
-          rightTitle="Add"
-          key="employeeList"
-          component={Map}
-          title="Home Page"
+          key="welcome"
+          component={WelcomePage}
+          title="Welcome"
           initial
+        />
+        <Scene
+          onRight={() => Actions.modal()}
+          rightTitle="Menu"
+          key="mapPage"
+          component={Map}
+          title="Map Page"
+        />
+        <Scene
+          key="modal"
+          direction="vertical"
+          component={ModalMenu}
+          title="Modal"
+          hideNavBar
         />
       </Scene>
     </Router>
   );
 };
 
-// <Scene key="employeeCreate" component={EmployeeCreate} title="Create Employee" />
-// <Scene key="employeeEdit" component={EmployeeEdit} title="Edit Employee" />
-
 export default RouterComponent;
+
+
+// Reference:
+//
+// import React from 'react';
+// import { Scene, Router, Actions } from 'react-native-router-flux';
+// import LoginForm from './components/LoginForm';
+// import EmployeeList from './components/EmployeeList';
+// import EmployeeCreate from './components/EmployeeCreate';
+// import EmployeeEdit from './components/EmployeeEdit';
+//
+// const RouterComponent = () => {
+//   return (
+//     <Router sceneStyle={{ paddingTop: 65 }}>
+//       <Scene key="auth">
+//         <Scene key="login" component={LoginForm} title="Please Login" />
+//       </Scene>
+//
+//       <Scene key="main">
+//         <Scene
+//           onRight={() => Actions.employeeCreate()}
+//           rightTitle="Add"
+//           key="employeeList"
+//           component={EmployeeList}
+//           title="Employees"
+//           initial
+//         />
+//         <Scene key="employeeCreate" component={EmployeeCreate} title="Create Employee" />
+//         <Scene key="employeeEdit" component={EmployeeEdit} title="Edit Employee" />
+//       </Scene>
+//     </Router>
+//   );
+// };
