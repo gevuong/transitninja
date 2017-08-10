@@ -27,7 +27,6 @@ export default class Map extends Component {
 
   componentWillMount() {
     axios.get('http://localhost:3000/api/muniStations').then(response => {
-      console.log('this is getting hit');
       this.setState({ muni_stops: response.data });
     });
   }
@@ -61,7 +60,6 @@ export default class Map extends Component {
   }
 
   render() {
-    console.log('state is', this.state.muni_stops);
     return (
       <View>
         <Header />
