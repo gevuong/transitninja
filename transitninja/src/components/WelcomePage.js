@@ -15,6 +15,7 @@ const WelcomePage = () => {
         onPress={() => Actions.mapPage()}
       >
         Welcome to the Demo!
+        Click here to get to the map page.
       </Text>
     </View>
   );
