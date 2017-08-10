@@ -15,7 +15,8 @@ export default class Map extends Component {
       mapRegion: null,
       lastLat: null,
       lastLong: null,
-      muni_stops: []
+      muni_stops: [],
+      actransit_stops: []
     };
   }
 
@@ -29,6 +30,10 @@ export default class Map extends Component {
     axios.get('http://localhost:3000/api/muniStations').then(response => {
       console.log('this is getting hit');
       this.setState({ muni_stops: response.data });
+    });
+    axios.get('http://localhost:3000/api/actransitStations').then(response => {
+      console.log('this is getting hit');
+      this.setState({ actransit_stops: response.data });
     });
   }
 
@@ -61,7 +66,7 @@ export default class Map extends Component {
   }
 
   render() {
-    console.log('state is', this.state.muni_stops);
+    console.log('state is', this.state.actransit_stops);
     return (
       <View>
         <Header />
@@ -80,6 +85,20 @@ export default class Map extends Component {
               }}
               title={stop.stop_name}
               key={stop.stop_id}
+
+            />
+          ))}
+
+          {this.state.actransit_stops.map(stop => (
+            <MapView.Marker
+              coordinate={{
+                latitude: stop.stop_lat || -36.82339,
+                longitude: stop.stop_lon || -73.03569
+              }}
+              title={stop.stop_name}
+              key={stop.stop_id}
+              pinColor={'#000000'}
+
             />
           ))}
           <MapView.Marker
