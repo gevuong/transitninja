@@ -9,7 +9,7 @@ var port = process.env.PORT || 3000;
 var muniStopController = require('./controllers/muniStopController');
 var actransitBusController = require('./controllers/actransitBusController');
 var muniBusController = require('./controllers/muniBusController');
-
+var actransitStopController = require('./controllers/actransitStopController');
 app.use('/assets', express.static(__dirname + '/public'));
 
 app.set('view engine', 'ejs');
@@ -25,3 +25,4 @@ setupController(app); // setupController is a function
 muniStopController(app);
 actransitBusController(app);
 muniBusController(app);
+actransitStopController(app);
