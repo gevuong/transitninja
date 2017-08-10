@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { Component } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import MapView from 'react-native-maps';
@@ -13,7 +14,8 @@ export default class Map extends Component {
     this.state = {
       mapRegion: null,
       lastLat: null,
-      lastLong: null
+      lastLong: null,
+      muni_stops: []
     };
   }
 
@@ -22,6 +24,13 @@ export default class Map extends Component {
   /*global alert:true*/
   /*global require:true*/
   /*eslint no-undef: "error"*/
+
+  componentWillMount() {
+    axios.get('http://localhost:3000/api/muniStations').then(response => {
+      console.log('this is getting hit');
+      this.setState({ muni_stops: response.data });
+    });
+  }
 
   componentDidMount() {
     this.watchID = navigator.geolocation.watchPosition(
@@ -52,6 +61,7 @@ export default class Map extends Component {
   }
 
   render() {
+    console.log('state is', this.state.muni_stops);
     return (
       <View>
         <Header />
@@ -62,6 +72,16 @@ export default class Map extends Component {
           followUserLocation
           onRegionChange={this.onRegionChange.bind(this)}
         >
+          {this.state.muni_stops.map(stop => (
+            <MapView.Marker
+              coordinate={{
+                latitude: stop.stop_lat || -36.82339,
+                longitude: stop.stop_lon || -73.03569
+              }}
+              title={stop.stop_name}
+              key={stop.stop_id}
+            />
+          ))}
           <MapView.Marker
             coordinate={{
               latitude: this.state.lastLat || -36.82339,
@@ -96,3 +116,8 @@ const styles = StyleSheet.create({
     height: 15
   }
 });
+//
+// example stops:
+// {"__v":0,"stop_id":913,"stop_name":"DUBLIN ST & LAGRANDE AVE","stop_desc":0,"stop_lat":37.719192,"stop_lon":-122.425802,"zone_id":0,"stop_url":"","_id":"598bff78cb3351601e41b5de"},
+// {"__v":0,"stop_id":3003,"stop_name":"2nd St & Brannan St   ","stop_desc":0,"stop_lat":37.781827,"stop_lon":-122.391945,"zone_id":0,"stop_url":"","_id":"598bff78cb3351601e41b5df"},
+// {"__v":0,"stop_id":3004,"stop_name":"2nd St & Brannan St","stop_desc":0,"stop_lat":37.781854,"stop_lon":-122.392232,"zone_id":0,"stop_url":"","_id":"598bff78cb3351601e41b5e0"},
