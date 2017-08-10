@@ -15,5 +15,9 @@
     "express": "^4.15.4",
     "mongoose": "^4.11.6",
     "nodemon": "^1.11.0"
+  },
+  "dependencies": {
+    "gtfs-realtime-bindings": "0.0.4",
+    "request": "^2.81.0"
   }
 }
