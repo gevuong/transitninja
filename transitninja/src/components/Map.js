@@ -16,7 +16,9 @@ export default class Map extends Component {
       lastLat: null,
       lastLong: null,
       muni_stops: [],
-      actransit_stops: []
+      actransit_stops: [],
+      bart_stops: [],
+      caltrain_stops: []
     };
   }
 
@@ -34,6 +36,14 @@ export default class Map extends Component {
     axios.get('http://localhost:3000/api/actransitStations').then(response => {
       console.log('this is getting hit');
       this.setState({ actransit_stops: response.data });
+    });
+    axios.get('http://localhost:3000/api/bartStations').then(response => {
+      console.log('this is getting hit');
+      this.setState({ bart_stops: response.data });
+    });
+    axios.get('http://localhost:3000/api/caltrainStations').then(response => {
+      console.log('this is getting hit');
+      this.setState({ caltrain_stops: response.data });
     });
   }
 
@@ -101,6 +111,31 @@ export default class Map extends Component {
 
             />
           ))}
+
+          {this.state.bart_stops.map(stop => (
+            <MapView.Marker
+              coordinate={{
+                latitude: stop.stop_lat || -36.82339,
+                longitude: stop.stop_lon || -73.03569
+              }}
+              title={stop.stop_name}
+              key={stop.stop_id}
+              pinColor={'#3498DB'}
+            />
+          ))}
+
+          {this.state.caltrain_stops.map(stop => (
+            <MapView.Marker
+              coordinate={{
+                latitude: stop.stop_lat || -36.82339,
+                longitude: stop.stop_lon || -73.03569
+              }}
+              title={stop.stop_name}
+              key={stop.stop_id}
+              pinColor={'#F7DC6F'}
+            />
+          ))}
+
           <MapView.Marker
             coordinate={{
               latitude: this.state.lastLat || -36.82339,

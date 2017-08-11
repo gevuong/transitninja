@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import SearchBar from 'react-native-searchbar';
 import Polyline from '@mapbox/polyline';
 import fetch from 'isomorphic-fetch';
-
+//
 const startLoc = 'sanjose';
 const endLoc = 'sanfrancisco';
 class Header extends React.Component {
@@ -18,9 +18,13 @@ class Header extends React.Component {
       res: ''
       };
     this.getDirections = this.getDirections.bind(this);
+    this.yoo = this.yoo.bind(this);
   }
 
 
+  componentWillMount() {
+    // this.yoo();
+  }
   // searching(property) {
   //   console.log(this.state);
   //   return e => this.setState({ [property]: e.target.value });
@@ -36,6 +40,7 @@ class Header extends React.Component {
   //     // console.log('test');
   //
   // }
+
 
 async getDirections() {
     console.log('hit');
@@ -57,10 +62,12 @@ async getDirections() {
       return error;
     }
   }
-
-  handleres(results) {
-    this.setState({ res: results });
+  yoo() {
+    console.log('hitting');
   }
+  // handleres(results) {
+  //   this.setState({ res: results });
+  // }
 
   render() {
     console.log(this.state.destination);
@@ -72,12 +79,12 @@ async getDirections() {
 
         <SearchBar
           ref={(ref) => { this.searchBar = ref; }}
-          data={[]}
-          handleResults={this.handleres()}
+          data={['sanjose, sanfrancisco']}
+          handleResults={this.logger}
           showOnLoad
           textColor={'#FF0000'}
           handleChangeText={(e) => this.setState({ destination: e })}
-          onSubmitEditing={this.getDirections}
+          onPress={() => (console.log('wlajfiwjf;oawligj!!!!'))}
         />
       </View>
     );

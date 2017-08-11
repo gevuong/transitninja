@@ -5,7 +5,7 @@ var actransitStations = function(){
   var x = fs.readFileSync(__dirname + '/actransitStops.txt', 'utf8');
   var stringed = x.toString().split('\n');
   for(var i in stringed){
-    stringed[i] = stringed[i].replace(/['"]+/g, '')
+    stringed[i] = stringed[i].replace(/['"]+/g, '');
   initialData.push([stringed[i]]);
   }
 

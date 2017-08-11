@@ -10,6 +10,9 @@ var muniStopController = require('./controllers/muniStopController');
 var actransitBusController = require('./controllers/actransitBusController');
 var muniBusController = require('./controllers/muniBusController');
 var actransitStopController = require('./controllers/actransitStopController');
+var bartStopController = require('./controllers/bartStopController');
+var caltrainStopController = require('./controllers/caltrainStopController');
+
 app.use('/assets', express.static(__dirname + '/public'));
 
 app.set('view engine', 'ejs');
@@ -26,3 +29,5 @@ muniStopController(app);
 actransitBusController(app);
 muniBusController(app);
 actransitStopController(app);
+bartStopController(app);
+caltrainStopController(app);
