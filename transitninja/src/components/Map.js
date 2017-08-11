@@ -4,7 +4,6 @@ import { View, StyleSheet, Image } from 'react-native';
 import MapView from 'react-native-maps';
 // import Header from './Header';
 import Button from 'react-native-button';
-import StaticMapViewMarker from './MapViewMarker';
 
 // const BUS_LOGO = require('../../assets/bus.png');
 // const BUS_STOP_RED = require('../../assets/Bus_Stop_Red.png');
@@ -22,7 +21,9 @@ export default class Map extends Component {
       showACTransit: false,
       showMuni: false,
       muni_stops: [],
-      actransit_stops: []
+      actransit_stops: [],
+      muni_stops_to_render: [],
+      actransit_stops_to_render: []
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.toggleACTransit = this.toggleACTransit.bind(this);
@@ -33,7 +34,6 @@ export default class Map extends Component {
   /*global alert:true*/
   /*global require:true*/
   /*eslint no-undef: "error"*/
-
   componentWillMount() {
     axios.get('http://localhost:3000/api/muniStations').then(response => {
       this.setState(prevState => ({
@@ -71,6 +71,33 @@ export default class Map extends Component {
       lastLat: lastLat || this.state.lastLat,
       lastLong: lastLong || this.state.lastLong
     });
+    const arr = [];
+    this.state.muni_stops.forEach((stop) => {
+      if (this.isInRegion(stop.stop_lat, stop.stop_lon)) {
+        arr.push(stop);
+      }
+    });
+    this.setState({ muni_stops_to_render: arr });
+    const arr2 = [];
+    this.state.actransit_stops.forEach((stop) => {
+      if (this.isInRegion(stop.stop_lat, stop.stop_lon)) {
+        arr2.push(stop);
+      }
+    });
+    this.setState({ actransit_stops_to_render: arr2 });
+  }
+
+  isInRegion(lat, long) {
+    console.log('coordinates', lat, long);
+    const { latitude, longitude, latitudeDelta, longitudeDelta } = this.state.mapRegion;
+    const top = latitude - (latitudeDelta * 0.5);
+    const bottom = latitude + (latitudeDelta * 0.5);
+    const right = longitude - (longitudeDelta * 0.5);
+    const left = longitude + (longitudeDelta * 0.5);
+    if (lat > top) {
+     return false;
+    }
+    return true;
   }
 
   toggleMuni() {
@@ -86,7 +113,8 @@ export default class Map extends Component {
   }
 
   renderMuni() {
-    return this.state.muni_stops.map(stop => (
+    console.log('from render', this.state.muni_stops_to_render);
+    return this.state.muni_stops_to_render.map(stop => (
       <MapView.Marker
         coordinate={{
           latitude: stop.stop_lat || -36.82339,
@@ -99,7 +127,7 @@ export default class Map extends Component {
   }
 
   renderACTransit() {
-    return this.state.actransit_stops.map(stop => (
+    return this.state.actransit_stops_to_render.map(stop => (
       <MapView.Marker
         coordinate={{
           latitude: stop.stop_lat || -36.82339,
@@ -157,11 +185,14 @@ const styles = StyleSheet.create({
   //   height: 15
   // },
   buttonView: {
-    marginTop: 100,
-    height: 300,
+    marginTop: 80,
+    marginLeft: 220,
+    marginBottom: 80,
+    // height: 300,
+    // width: 1000,
+    // flex: 1,
     alignContent: 'flex-end',
-    justifyContent: 'flex-end',
-    flexDirection: 'column'
+    justifyContent: 'flex-end'
   },
   toggleOn: {
     marginTop: 30,
