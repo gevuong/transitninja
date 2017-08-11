@@ -13,8 +13,8 @@ const BUS_STOP_RED = require('../../assets/Bus_Stop_Red.png');
 const BUS_STOP_GREEN = require('../../assets/Bus_Stop_Green.png');
 
 
-const startLoc = 'sanjose';
-const endLoc = 'sanfrancisco';
+// const startLoc = 'sanjose';
+// const endLoc = 'sanfrancisco';
 export default class Map extends Component {
 
   constructor(props) {
@@ -33,13 +33,15 @@ export default class Map extends Component {
       showCaltrain: true,
       latitude: '',
       longitude: '',
-    destination: '',
+    startLoc: 'sanjose',
+    endLoc: '',
     coordo: [],
     res: ''
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.getDirections = this.getDirections.bind(this);
     // this.renderPol = this.renderPol.bind(this);
+    // this.parser = this.parser.bind(this);
   }
 
 // this is some code to customize eslint for this page.
@@ -56,11 +58,9 @@ export default class Map extends Component {
       this.setState({ actransit_stops: response.data });
     });
     axios.get('http://localhost:3000/api/bartStations').then(response => {
-      console.log('this is getting hit');
       this.setState({ bart_stops: response.data });
     });
     axios.get('http://localhost:3000/api/caltrainStations').then(response => {
-      console.log('this is getting hit');
       this.setState({ caltrain_stops: response.data });
     });
   }
@@ -96,10 +96,9 @@ export default class Map extends Component {
 
   async getDirections() {
       console.log('hit');
-
       try {
         // fetch directions from google.
-        const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${endLoc}`);
+        const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${this.state.startLoc}&destination=${this.state.endLoc}`);
         const respJson = await resp.json();
         console.log(respJson);
         // decode encoded polyline data.
@@ -122,6 +121,15 @@ export default class Map extends Component {
       showMuni: !this.state.showMuni
     });
   }
+
+  // parser(locations) {
+  //   const str = [];
+  //   const o = locations.split(' ');
+  //   o.forEach(letter => (
+  //     str.push(letter.toString())
+  //   ));
+  //   return str.join(' ');
+  // }
 
   renderMuni() {
     return this.state.muni_stops.map(stop => (
@@ -184,32 +192,121 @@ export default class Map extends Component {
   }
 
   renderPol() {
-    console.log('yooukhkgughhhhhh');
+    console.log(this.state.startLoc);
+      console.log(this.state.endLoc);
     return (
     <MapView.Polyline
        coordinates={this.state.coordo}
-       strokeWidth={20}
+       strokeWidth={5}
        strokeColor="green"
     />
   );
   }
 
+  // {this.state.muni_stops.map(stop => (
+  //   <MapView.Marker
+  //     coordinate={{
+  //       latitude: stop.stop_lat || -36.82339,
+  //       longitude: stop.stop_lon || -73.03569
+  //     }}
+  //     title={stop.stop_name}
+  //     key={stop.stop_id}
+  //
+  //   />
+  // ))}
+  //
+  // {this.state.actransit_stops.map(stop => (
+  //   <MapView.Marker
+  //     coordinate={{
+  //       latitude: stop.stop_lat || -36.82339,
+  //       longitude: stop.stop_lon || -73.03569
+  //     }}
+  //     title={stop.stop_name}
+  //     key={stop.stop_id}
+  //     pinColor={'#000000'}
+  //
+  //   />
+  // ))}
+  //
+  // {this.state.bart_stops.map(stop => (
+  //   <MapView.Marker
+  //     coordinate={{
+  //       latitude: stop.stop_lat || -36.82339,
+  //       longitude: stop.stop_lon || -73.03569
+  //     }}
+  //     title={stop.stop_name}
+  //     key={stop.stop_id}
+  //     pinColor={'#3498DB'}
+  //   />
+  // ))}
+  //
+  // {this.state.caltrain_stops.map(stop => (
+  //   <MapView.Marker
+  //     coordinate={{
+  //       latitude: stop.stop_lat || -36.82339,
+  //       longitude: stop.stop_lon || -73.03569
+  //     }}
+  //     title={stop.stop_name}
+  //     key={stop.stop_id}
+  //     pinColor={'#F7DC6F'}
+  //   />
+  // ))}
+  //
+  // <MapView.Marker
+  //   coordinate={{
+  //     latitude: this.state.lastLat || -36.82339,
+  //     longitude: this.state.lastLong || -73.03569
+  //   }}
+  // >
+  //   <Image
+  //     source={BUS_STOP_RED} style={styles.busIconStyle}
+  //   />
+  // </MapView.Marker>
+  // <MapView.Marker
+  //   coordinate={{
+  //   latitude: this.state.lastLat || -36.82339,
+  //   longitude: this.state.lastLong || -73.03569
+  //   }}
+  // />
+
 
   render() {
     // <Header />
-
+    const x = true;
+    const y = false;
     // console.log(this.state);
     return (
       <View style={styles.viewStyle}>
+        <View style={styles.secondBar}>
           <SearchBar
             ref={(ref) => { this.searchBar = ref; }}
             data={['sanjose, sanfrancisco']}
             handleResults={this.logger}
-            showOnLoad
+            showOnLoad={x}
+            placeholder='Current location'
+            iOSHideShadow={x}
+            hideBack={x}
             textColor={'#FF0000'}
-            handleChangeText={(e) => this.setState({ destination: e })}
+            handleChangeText={(e) => this.setState({ startLoc: e })}
             onSubmitEditing={() => this.getDirections().then(this.renderPol())}
           />
+        </View>
+
+        <View style={styles.firstBar}>
+          <SearchBar
+            ref={(ref) => { this.searchBar = ref; }}
+            placeholder='Destination'
+            data={['sanjose, sanfrancisco']}
+            handleResults={this.logger}
+            showOnLoad
+            hideBack={x}
+            iOSHideShadow={x}
+            textColor={'#FF0000'}
+            handleChangeText={(e) => this.setState({ endLoc: e })}
+            onSubmitEditing={() => this.getDirections().then(this.renderPol())}
+          />
+        </View>
+
         <MapView
           region={this.state.mapRegion}
           showsUserLocation
@@ -219,73 +316,6 @@ export default class Map extends Component {
         >
 
         {this.renderPol()}
-
-          {this.state.muni_stops.map(stop => (
-            <MapView.Marker
-              coordinate={{
-                latitude: stop.stop_lat || -36.82339,
-                longitude: stop.stop_lon || -73.03569
-              }}
-              title={stop.stop_name}
-              key={stop.stop_id}
-
-            />
-          ))}
-
-          {this.state.actransit_stops.map(stop => (
-            <MapView.Marker
-              coordinate={{
-                latitude: stop.stop_lat || -36.82339,
-                longitude: stop.stop_lon || -73.03569
-              }}
-              title={stop.stop_name}
-              key={stop.stop_id}
-              pinColor={'#000000'}
-
-            />
-          ))}
-
-          {this.state.bart_stops.map(stop => (
-            <MapView.Marker
-              coordinate={{
-                latitude: stop.stop_lat || -36.82339,
-                longitude: stop.stop_lon || -73.03569
-              }}
-              title={stop.stop_name}
-              key={stop.stop_id}
-              pinColor={'#3498DB'}
-            />
-          ))}
-
-          {this.state.caltrain_stops.map(stop => (
-            <MapView.Marker
-              coordinate={{
-                latitude: stop.stop_lat || -36.82339,
-                longitude: stop.stop_lon || -73.03569
-              }}
-              title={stop.stop_name}
-              key={stop.stop_id}
-              pinColor={'#F7DC6F'}
-            />
-          ))}
-
-          <MapView.Marker
-            coordinate={{
-              latitude: this.state.lastLat || -36.82339,
-              longitude: this.state.lastLong || -73.03569
-            }}
-          >
-            <Image
-              source={BUS_STOP_RED} style={styles.busIconStyle}
-            />
-          </MapView.Marker>
-          <MapView.Marker
-            coordinate={{
-            latitude: this.state.lastLat || -36.82339,
-            longitude: this.state.lastLong || -73.03569
-            }}
-          />
-
 
           </MapView>
           <TemporaryConnection />
@@ -305,5 +335,11 @@ const styles = StyleSheet.create({
   busIconStyle: {
     width: 15,
     height: 15
+  },
+  firstBar: {
+    flex: 0.15
+  },
+  secondBar: {
+    flex: 0.15
   }
 });
