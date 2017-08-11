@@ -106,6 +106,7 @@ export default class Map extends Component {
       (error) => alert(error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
+    // this.getDirections();
   }
 
   componentWillUnmount() {
@@ -265,16 +266,16 @@ export default class Map extends Component {
     ));
   }
 
-  // renderPol() {
-  //   console.log('yooukhkgughhhhhh');
-  //   return (
-  //   <MapView.Polyline
-  //      coordinates={this.state.coordo}
-  //      strokeWidth={2}
-  //      strokeColor="red"
-  //   />
-  // );
-  // }
+  renderPol() {
+    console.log('yooukhkgughhhhhh');
+    return (
+    <MapView.Polyline
+       coordinates={this.state.coordo}
+       strokeWidth={20}
+       strokeColor="green"
+    />
+  );
+  }
 
 
 //   bartCaltrainPins
@@ -365,7 +366,7 @@ export default class Map extends Component {
             showOnLoad
             textColor={'#FF0000'}
             handleChangeText={(e) => this.setState({ destination: e })}
-            onSubmitEditing={() => this.getDirections()}
+            onSubmitEditing={() => this.getDirections().then(this.renderPol())}
           />
         <MapView
           region={this.state.mapRegion}
@@ -374,6 +375,77 @@ export default class Map extends Component {
           onRegionChange={this.onRegionChange.bind(this)}
           style={styles.mapStyle}
         >
+
+
+        {this.renderPol()}
+
+          {this.state.muni_stops.map(stop => (
+            <MapView.Marker
+              coordinate={{
+                latitude: stop.stop_lat || -36.82339,
+                longitude: stop.stop_lon || -73.03569
+              }}
+              title={stop.stop_name}
+              key={stop.stop_id}
+
+            />
+          ))}
+
+          {this.state.actransit_stops.map(stop => (
+            <MapView.Marker
+              coordinate={{
+                latitude: stop.stop_lat || -36.82339,
+                longitude: stop.stop_lon || -73.03569
+              }}
+              title={stop.stop_name}
+              key={stop.stop_id}
+              pinColor={'#000000'}
+
+            />
+          ))}
+
+          {this.state.bart_stops.map(stop => (
+            <MapView.Marker
+              coordinate={{
+                latitude: stop.stop_lat || -36.82339,
+                longitude: stop.stop_lon || -73.03569
+              }}
+              title={stop.stop_name}
+              key={stop.stop_id}
+              pinColor={'#3498DB'}
+            />
+          ))}
+
+          {this.state.caltrain_stops.map(stop => (
+            <MapView.Marker
+              coordinate={{
+                latitude: stop.stop_lat || -36.82339,
+                longitude: stop.stop_lon || -73.03569
+              }}
+              title={stop.stop_name}
+              key={stop.stop_id}
+              pinColor={'#F7DC6F'}
+            />
+          ))}
+
+          <MapView.Marker
+            coordinate={{
+              latitude: this.state.lastLat || -36.82339,
+              longitude: this.state.lastLong || -73.03569
+            }}
+          >
+            <Image
+              source={BUS_STOP_RED} style={styles.busIconStyle}
+            />
+          </MapView.Marker>
+          <MapView.Marker
+            coordinate={{
+            latitude: this.state.lastLat || -36.82339,
+            longitude: this.state.lastLong || -73.03569
+            }}
+          />
+
+
 
 
         { this.renderACTransitBusses() }
