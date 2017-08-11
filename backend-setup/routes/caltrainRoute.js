@@ -24,5 +24,3 @@ var caltrainRoutes = function(){
 };
 
 module.exports.caltrainRoutes = caltrainRoutes;
-
-console.log(caltrainRoutes());

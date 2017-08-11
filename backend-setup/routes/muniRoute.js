@@ -25,6 +25,3 @@ var muniRoutes = function(){
 
 
 module.exports.muniRoutes = muniRoutes;
-
-
-console.log(muniRoutes());
