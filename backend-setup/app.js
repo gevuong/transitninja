@@ -25,25 +25,41 @@ mongoose.connect(config.getDBConnectionString(), (err, database) => {
   });
 });
 let muniCounter = 0;
-let muniApiToken = () =>{
-  if (muniCounter === 2){
 
+let muniApiToken = () =>{
+  let apiArr = ["3b31e671-cca3-4abf-9510-2ccf0996ef28",
+  "69ca5ef3-1acd-476d-93bc-7173838f5c79",
+  "299a8fd5-2137-4546-b9ee-d09da9d31535"];
+
+
+  if (muniCounter === 2){
     muniCounter = 0;
   } else {
     muniCounter += 1;
   }
-  return muniCounter;
+  return {
+    method: 'GET',
+    url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[muniCounter]}&agency=sf-muni`,
+    encoding: null
+  };
 
 };
 
 let actransitCounter = 0;
 let actransitApiToken = () =>{
+  let apiArr = ["7cec8694-c386-42b4-870c-a76aef58b40f",
+  "1e63a81e-0a10-4ef8-991c-ed195c33a855",
+  "b021f9d5-2fe8-4fd8-90f0-4b8b5807cf51"];
   if (actransitCounter === 2){
     actransitCounter = 0;
   } else {
     actransitCounter += 1;
   }
-  return actransitCounter;
+  return {
+    method: 'GET',
+    url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[actransitCounter]}&agency=actransit`,
+    encoding: null
+  };
 
 };
 
