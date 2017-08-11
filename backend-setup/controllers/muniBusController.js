@@ -6,6 +6,7 @@ let request = require('request');
 let rp = require('request-promise');
 let muniBusModel = require('../models/muniBussesModel');
 
+
 const muniRequestSettings = {
   method: 'GET',
   url: 'https://api.511.org/transit/vehiclepositions?api_key=7cec8694-c386-42b4-870c-a76aef58b40f&agency=sf-muni',
@@ -34,6 +35,7 @@ const muniBusController = function(app) {
         }
         res.send(muniArr);
       });
+
     });
   });
 };

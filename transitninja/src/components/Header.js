@@ -4,7 +4,6 @@ import SearchBar from 'react-native-searchbar';
 
 class Header extends React.Component {
   logger() {
-    console.log('test');
   }
 
   render() {

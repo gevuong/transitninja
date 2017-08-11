@@ -10,6 +10,7 @@ module.exports = function(app) {
       if (err) {
         return console.log(err);
       }
+
       res.send(results);
     });
   });
