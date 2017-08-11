@@ -13,7 +13,8 @@ import TemporaryConnection from './TemporaryConnection';
 
 import Button from 'react-native-button';
 
-const BUS_LOGO = require('../../assets/bus_icon_green.png');
+const BUS_LOGO_GREEN = require('../../assets/bus_icon_green.png');
+const BUS_LOGO_RED = require('../../assets/bus_icon_red.png');
 
 const startLoc = 'sanjose';
 const endLoc = 'sanfrancisco';
