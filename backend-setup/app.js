@@ -24,10 +24,32 @@ mongoose.connect(config.getDBConnectionString(), (err, database) => {
     console.log('listening to 3000');
   });
 });
+let muniCounter = 0;
+let muniApiToken = () =>{
+  if (muniCounter === 2){
+
+    muniCounter = 0;
+  } else {
+    muniCounter += 1;
+  }
+  return muniCounter;
+
+};
+
+let actransitCounter = 0;
+let actransitApiToken = () =>{
+  if (actransitCounter === 2){
+    actransitCounter = 0;
+  } else {
+    actransitCounter += 1;
+  }
+  return actransitCounter;
+
+};
 
 setInterval(function(){
-  actransitBusController(app);
-  muniBusController(app);
+  actransitBusController(app, muniApiToken());
+  muniBusController(app, actransitApiToken());
 }, 20000);
 
 
