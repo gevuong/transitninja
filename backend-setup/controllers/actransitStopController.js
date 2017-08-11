@@ -4,7 +4,6 @@ console.log('-----', "1");
 module.exports = function(app) {
   app.get('/api/actransitStations', function(req, res) {
     let actransitStationsArray = actransit.actransitStations();
-    console.log(actransitStationsArray);
     actransitStationModel.create(actransitStationsArray, function(err, results){
       if (err) {
         return console.log(err);

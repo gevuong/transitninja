@@ -19,11 +19,11 @@ export default class Map extends Component {
       mapRegion: null,
       lastLat: null,
       lastLong: null,
-      showACTransit: true,
-      showMuni: true
+      showACTransit: false,
+      showMuni: false,
+      muni_stops: [],
+      actransit_stops: []
     };
-    this.muni_stops = [];
-    this.actransit_stops = [];
     this.toggleMuni = this.toggleMuni.bind(this);
     this.toggleACTransit = this.toggleACTransit.bind(this);
   }
@@ -35,14 +35,13 @@ export default class Map extends Component {
   /*eslint no-undef: "error"*/
 
   componentWillMount() {
-    // axios.get('http://localhost:3000/api/muniStations').then(response => {
-    //   this.setState(prevState => ({ muni_stops: prevState.muni_stops.concat(response.data) }));
-    // });
     axios.get('http://localhost:3000/api/muniStations').then(response => {
-      this.muni_stops = response.data;
+      this.setState(prevState => ({
+        muni_stops: prevState.muni_stops.concat(response.data) }));
     });
     axios.get('http://localhost:3000/api/actransitStations').then(response => {
-      this.actransit_stops = response.data;
+      this.setState(prevState => ({
+        actransit_stops: prevState.actransit_stops.concat(response.data) }));
     });
   }
 
@@ -87,7 +86,7 @@ export default class Map extends Component {
   }
 
   renderMuni() {
-    return this.muni_stops.map(stop => (
+    return this.state.muni_stops.map(stop => (
       <MapView.Marker
         coordinate={{
           latitude: stop.stop_lat || -36.82339,
@@ -100,7 +99,7 @@ export default class Map extends Component {
   }
 
   renderACTransit() {
-    return this.actransit_stops.map(stop => (
+    return this.state.actransit_stops.map(stop => (
       <MapView.Marker
         coordinate={{
           latitude: stop.stop_lat || -36.82339,
