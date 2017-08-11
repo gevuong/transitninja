@@ -3,6 +3,8 @@ var muni = require('../stations/muniStations');
 
 module.exports = function(app) {
   app.get('/api/muniStations', function(req, res) {
+    muniStationModel.remove().exec();
+
     let muniStationsArray = muni.muniStations();
     muniStationModel.create(muniStationsArray, function(err, results){
       if (err) {
