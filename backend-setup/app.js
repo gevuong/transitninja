@@ -22,8 +22,13 @@ mongoose.connect(config.getDBConnectionString(), (err, database) => {
   });
 });
 
+setInterval(function(){
+  actransitBusController(app);
+  muniBusController(app);
+}, 11000);
+
+
+
 setupController(app); // setupController is a function
-muniStopController(app);
-actransitBusController(app);
-muniBusController(app);
 actransitStopController(app);
+muniStopController(app);
