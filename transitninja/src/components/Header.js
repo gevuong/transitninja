@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-// import Search from 'react-native-search-box';
-import SearchBar from 'react-native-searchbar';
 import Polyline from '@mapbox/polyline';
 import fetch from 'isomorphic-fetch';
-//
+import SearchBar from 'react-native-searchbar';
+
 const startLoc = 'sanjose';
 const endLoc = 'sanfrancisco';
+
 class Header extends React.Component {
   constructor(props) {
       super(props);

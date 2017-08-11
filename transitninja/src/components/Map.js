@@ -2,10 +2,12 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import MapView from 'react-native-maps';
+// import Header from './Header';
+// import Button from 'react-native-button';
 import TemporaryConnection from './TemporaryConnection';
-import Header from './Header';
-
-const BUS_LOGO = require('../../assets/bus.png');
+// const BUS_LOGO = require('../../assets/bus.png');
+const BUS_STOP_RED = require('../../assets/Bus_Stop_Red.png');
+const BUS_STOP_GREEN = require('../../assets/Bus_Stop_Green.png');
 
 export default class Map extends Component {
 
@@ -18,8 +20,13 @@ export default class Map extends Component {
       muni_stops: [],
       actransit_stops: [],
       bart_stops: [],
-      caltrain_stops: []
+      caltrain_stops: [],
+      showACTransit: true,
+      showMuni: true,
+      showBart: true,
+      showCaltrain: true
     };
+    this.toggleMuni = this.toggleMuni.bind(this);
   }
 
 // this is some code to customize eslint for this page.
@@ -30,11 +37,9 @@ export default class Map extends Component {
 
   componentWillMount() {
     axios.get('http://localhost:3000/api/muniStations').then(response => {
-      console.log('this is getting hit');
       this.setState({ muni_stops: response.data });
     });
     axios.get('http://localhost:3000/api/actransitStations').then(response => {
-      console.log('this is getting hit');
       this.setState({ actransit_stops: response.data });
     });
     axios.get('http://localhost:3000/api/bartStations').then(response => {
@@ -53,8 +58,8 @@ export default class Map extends Component {
         const region = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          latitudeDelta: 0.00922 * 1.5,
-          longitudeDelta: 0.00421 * 1.5
+          latitudeDelta: 0.00322,
+          longitudeDelta: 0.00121
         };
         this.onRegionChange(region, region.latitude, region.longitude);
       },
@@ -75,17 +80,84 @@ export default class Map extends Component {
     });
   }
 
+  toggleMuni() {
+    console.log('Button clicked');
+    this.setState({
+      showMuni: !this.state.showMuni
+    });
+  }
+
+  renderMuni() {
+    return this.state.muni_stops.map(stop => (
+      <MapView.Marker
+        coordinate={{
+          latitude: stop.stop_lat || -36.82339,
+          longitude: stop.stop_lon || -73.03569
+        }}
+        title={stop.stop_name}
+        key={stop.stop_id}
+      >
+      <Image source={BUS_STOP_RED} style={styles.busIconStyle} />
+      </MapView.Marker>
+    ));
+  }
+
+  renderACTransit() {
+    return this.state.actransit_stops.map(stop => (
+      <MapView.Marker
+        coordinate={{
+          latitude: stop.stop_lat || -36.82339,
+          longitude: stop.stop_lon || -73.03569
+        }}
+        title={stop.stop_name}
+        key={stop.stop_id}
+      >
+        <Image source={BUS_STOP_GREEN} style={styles.busIconStyle} />
+      </MapView.Marker>
+    ));
+  }
+
+  renderBart() {
+    return this.state.bart_stops.map(stop => (
+      <MapView.Marker
+        coordinate={{
+          latitude: stop.stop_lat || -36.82339,
+          longitude: stop.stop_lon || -73.03569
+        }}
+        title={stop.stop_name}
+        key={stop.stop_id}
+      >
+        <Image source={BUS_STOP_GREEN} style={styles.busIconStyle} />
+      </MapView.Marker>
+    ));
+  }
+
+  renderCaltrain() {
+    return this.state.caltrain_stops.map(stop => (
+      <MapView.Marker
+        coordinate={{
+          latitude: stop.stop_lat || -36.82339,
+          longitude: stop.stop_lon || -73.03569
+        }}
+        title={stop.stop_name}
+        key={stop.stop_id}
+      >
+        <Image source={BUS_STOP_GREEN} style={styles.busIconStyle} />
+      </MapView.Marker>
+    ));
+  }
+
   render() {
-    console.log('state is', this.state.actransit_stops);
+    console.log(this.state);
+    // <Header />
     return (
-      <View>
-        <Header />
+      <View style={styles.viewStyle}>
         <MapView
-          style={styles.mapStyle}
           region={this.state.mapRegion}
           showsUserLocation
           followUserLocation
           onRegionChange={this.onRegionChange.bind(this)}
+          style={styles.mapStyle}
         >
           {this.state.muni_stops.map(stop => (
             <MapView.Marker
@@ -143,7 +215,7 @@ export default class Map extends Component {
             }}
           >
             <Image
-              source={BUS_LOGO} style={styles.busIconStyle}
+              source={BUS_STOP_RED} style={styles.busIconStyle}
             />
           </MapView.Marker>
           <MapView.Marker
@@ -160,18 +232,15 @@ export default class Map extends Component {
 }
 
 const styles = StyleSheet.create({
+  viewStyle: {
+    flex: 1,
+    alignItems: 'stretch'
+  },
   mapStyle: {
-    width: 700,
-    height: 800,
-    backgroundColor: 'skyblue'
+    flex: 1
   },
   busIconStyle: {
     width: 15,
     height: 15
   }
 });
-//
-// example stops:
-// {"__v":0,"stop_id":913,"stop_name":"DUBLIN ST & LAGRANDE AVE","stop_desc":0,"stop_lat":37.719192,"stop_lon":-122.425802,"zone_id":0,"stop_url":"","_id":"598bff78cb3351601e41b5de"},
-// {"__v":0,"stop_id":3003,"stop_name":"2nd St & Brannan St   ","stop_desc":0,"stop_lat":37.781827,"stop_lon":-122.391945,"zone_id":0,"stop_url":"","_id":"598bff78cb3351601e41b5df"},
-// {"__v":0,"stop_id":3004,"stop_name":"2nd St & Brannan St","stop_desc":0,"stop_lat":37.781854,"stop_lon":-122.392232,"zone_id":0,"stop_url":"","_id":"598bff78cb3351601e41b5e0"},

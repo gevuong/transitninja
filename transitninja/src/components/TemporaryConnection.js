@@ -10,14 +10,14 @@ class TemporaryConnection extends Component {
 
   componentWillMount() {
     // We need to replace the following url with the location of our server. (e.g. replace with http://localhost:3000)
-    axios.get('http://localhost:3000/api/muniStations').then(response => this.setState({ transit_info: response.data }));
+    // axios.get('http://localhost:3000/api/muniStations').then(response => this.setState({ transit_info: response.data }));
       // http requests return a promise to us, because http requests are inherently asynchronous.
 
   }
 
 
   render() {
-    console.log('state', this.state.transit_info);
+    // console.log('state', this.state.transit_info);
 
     return (
       <View>

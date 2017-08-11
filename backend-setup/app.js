@@ -24,6 +24,7 @@ mongoose.connect(config.getDBConnectionString(), (err, database) => {
     console.log('listening to 3000');
   });
 });
+
 setupController(app); // setupController is a function
 muniStopController(app);
 actransitBusController(app);

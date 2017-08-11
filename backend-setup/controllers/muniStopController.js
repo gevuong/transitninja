@@ -1,6 +1,7 @@
 var muniStationModel = require('../models/muniStationModel');
 var muni = require('../stations/muniStations');
 console.log('-----', "1");
+
 module.exports = function(app) {
   app.get('/api/muniStations', function(req, res) {
     let muniStationsArray = muni.muniStations();
