@@ -5,9 +5,11 @@ import MapView from 'react-native-maps';
 // import Header from './Header';
 import Button from 'react-native-button';
 
+
 const BUS_LOGO = require('../../assets/bus_icon_green.png');
 // const BUS_STOP_RED = require('../../assets/Bus_Stop_Red.png');
 // const BUS_STOP_GREEN = require('../../assets/Bus_Stop_Green.png');
+
 
 
 export default class Map extends Component {
@@ -18,6 +20,7 @@ export default class Map extends Component {
       mapRegion: null,
       lastLat: null,
       lastLong: null,
+
       showACTransit: false,
       showMuni: false,
       actransit_busses: []
@@ -25,6 +28,7 @@ export default class Map extends Component {
       // muni_stops: [],
       // muni_stops_to_render: [],
       // actransit_stops_to_render: []
+
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.toggleACTransit = this.toggleACTransit.bind(this);
@@ -43,9 +47,14 @@ export default class Map extends Component {
     axios.get('http://localhost:3000/api/actransitBusses').then(response => {
       this.setState({ actransit_busses: response.data });
     });
-    // axios.get('http://localhost:3000/api/muniBusses').then(response => {
-    //   this.setState({ actransit_busses: response.data });
-    // });
+
+    axios.get('http://localhost:3000/api/actransitBusses').then(response => {
+      this.setState({ actransit_busses: response.data });
+    });
+    axios.get('http://localhost:3000/api/muniBusses').then(response => {
+      this.setState({ muni_busses: response.data });
+    });
+
   }
 
   componentDidMount() {
@@ -116,26 +125,33 @@ export default class Map extends Component {
   }
 
   renderMuni() {
+
     console.log('from render', this.state.muni_stops_to_render);
     return this.state.muni_stops_to_render.map(stop => (
+
       <MapView.Marker
         coordinate={{
-          latitude: stop.stop_lat || -36.82339,
-          longitude: stop.stop_lon || -73.03569
+          latitude: bus.lat || -36.82339,
+          longitude: bus.lon || -73.03569
         }}
+
         title={stop.stop_name}
         key={stop.stop_id}
       />
+
     ));
   }
 
   renderACTransit() {
+
     return this.state.actransit_stops_to_render.map(stop => (
+
       <MapView.Marker
         coordinate={{
-          latitude: stop.stop_lat || -36.82339,
-          longitude: stop.stop_lon || -73.03569
+          latitude: bus.lat || -36.82339,
+          longitude: bus.lon || -73.03569
         }}
+
         title={stop.stop_name}
         key={stop.stop_id}
       />
@@ -155,6 +171,7 @@ export default class Map extends Component {
         key={bus.id}
       >
         <Image source={BUS_LOGO} />
+
       </MapView.Marker>
     ));
   }
