@@ -79,6 +79,7 @@ export default class Map extends Component {
       (error) => alert(error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
+    // this.getDirections();
   }
 
   componentWillUnmount() {
@@ -182,16 +183,16 @@ export default class Map extends Component {
     ));
   }
 
-  // renderPol() {
-  //   console.log('yooukhkgughhhhhh');
-  //   return (
-  //   <MapView.Polyline
-  //      coordinates={this.state.coordo}
-  //      strokeWidth={2}
-  //      strokeColor="red"
-  //   />
-  // );
-  // }
+  renderPol() {
+    console.log('yooukhkgughhhhhh');
+    return (
+    <MapView.Polyline
+       coordinates={this.state.coordo}
+       strokeWidth={20}
+       strokeColor="green"
+    />
+  );
+  }
 
 
   render() {
@@ -207,7 +208,7 @@ export default class Map extends Component {
             showOnLoad
             textColor={'#FF0000'}
             handleChangeText={(e) => this.setState({ destination: e })}
-            onSubmitEditing={() => this.getDirections()}
+            onSubmitEditing={() => this.getDirections().then(this.renderPol())}
           />
         <MapView
           region={this.state.mapRegion}
@@ -216,6 +217,9 @@ export default class Map extends Component {
           onRegionChange={this.onRegionChange.bind(this)}
           style={styles.mapStyle}
         >
+
+        {this.renderPol()}
+
           {this.state.muni_stops.map(stop => (
             <MapView.Marker
               coordinate={{
@@ -281,11 +285,7 @@ export default class Map extends Component {
             longitude: this.state.lastLong || -73.03569
             }}
           />
-          <MapView.Polyline
-             coordinates={this.state.coordo}
-             strokeWidth={2}
-             strokeColor="red"
-          />
+
 
           </MapView>
           <TemporaryConnection />
