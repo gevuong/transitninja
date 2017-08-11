@@ -5,7 +5,7 @@ import MapView from 'react-native-maps';
 // import Header from './Header';
 import Button from 'react-native-button';
 
-// const BUS_LOGO = require('../../assets/bus.png');
+const BUS_LOGO = require('../../assets/bus_icon_green.png');
 // const BUS_STOP_RED = require('../../assets/Bus_Stop_Red.png');
 // const BUS_STOP_GREEN = require('../../assets/Bus_Stop_Green.png');
 
@@ -43,6 +43,9 @@ export default class Map extends Component {
     axios.get('http://localhost:3000/api/actransitBusses').then(response => {
       this.setState({ actransit_busses: response.data });
     });
+    // axios.get('http://localhost:3000/api/muniBusses').then(response => {
+    //   this.setState({ actransit_busses: response.data });
+    // });
   }
 
   componentDidMount() {
@@ -145,12 +148,14 @@ export default class Map extends Component {
     return this.state.actransit_busses.map(bus => (
       <MapView.Marker
         coordinate={{
-          latitude: bus.lat || -36.82339,
+          latitude: bus.lat + 0.000060 || -36.82339,
           longitude: bus.lon || -73.03569
         }}
         title={bus.trip_id}
         key={bus.id}
-      />
+      >
+        <Image source={BUS_LOGO} />
+      </MapView.Marker>
     ));
   }
 
