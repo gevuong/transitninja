@@ -4,11 +4,17 @@ import { View, StyleSheet, Image } from 'react-native';
 import MapView from 'react-native-maps';
 // import Header from './Header';
 // import Button from 'react-native-button';
+import Polyline from '@mapbox/polyline';
+import fetch from 'isomorphic-fetch';
+import SearchBar from 'react-native-searchbar';
 import TemporaryConnection from './TemporaryConnection';
 // const BUS_LOGO = require('../../assets/bus.png');
 const BUS_STOP_RED = require('../../assets/Bus_Stop_Red.png');
 const BUS_STOP_GREEN = require('../../assets/Bus_Stop_Green.png');
 
+
+const startLoc = 'sanjose';
+const endLoc = 'sanfrancisco';
 export default class Map extends Component {
 
   constructor(props) {
@@ -24,9 +30,16 @@ export default class Map extends Component {
       showACTransit: true,
       showMuni: true,
       showBart: true,
-      showCaltrain: true
+      showCaltrain: true,
+      latitude: '',
+      longitude: '',
+    destination: '',
+    coordo: [],
+    res: ''
     };
     this.toggleMuni = this.toggleMuni.bind(this);
+    this.getDirections = this.getDirections.bind(this);
+    // this.renderPol = this.renderPol.bind(this);
   }
 
 // this is some code to customize eslint for this page.
@@ -79,6 +92,28 @@ export default class Map extends Component {
       lastLong: lastLong || this.state.lastLong
     });
   }
+
+  async getDirections() {
+      console.log('hit');
+
+      try {
+        // fetch directions from google.
+        const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${endLoc}`);
+        const respJson = await resp.json();
+        console.log(respJson);
+        // decode encoded polyline data.
+        const points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+        // converts polyline data into a list of objects
+        const coords = points.map((point) => {
+          return { latitude: point[0], longitude: point[1] };
+        });
+        this.setState({ coordo: coords });
+        console.log(this.state.coordo);
+        return coords;
+      } catch (error) {
+        return error;
+      }
+    }
 
   toggleMuni() {
     console.log('Button clicked');
@@ -147,11 +182,33 @@ export default class Map extends Component {
     ));
   }
 
+  // renderPol() {
+  //   console.log('yooukhkgughhhhhh');
+  //   return (
+  //   <MapView.Polyline
+  //      coordinates={this.state.coordo}
+  //      strokeWidth={2}
+  //      strokeColor="red"
+  //   />
+  // );
+  // }
+
+
   render() {
-    console.log(this.state);
     // <Header />
+
+    // console.log(this.state);
     return (
       <View style={styles.viewStyle}>
+          <SearchBar
+            ref={(ref) => { this.searchBar = ref; }}
+            data={['sanjose, sanfrancisco']}
+            handleResults={this.logger}
+            showOnLoad
+            textColor={'#FF0000'}
+            handleChangeText={(e) => this.setState({ destination: e })}
+            onSubmitEditing={() => this.getDirections()}
+          />
         <MapView
           region={this.state.mapRegion}
           showsUserLocation
@@ -224,6 +281,12 @@ export default class Map extends Component {
             longitude: this.state.lastLong || -73.03569
             }}
           />
+          <MapView.Polyline
+             coordinates={this.state.coordo}
+             strokeWidth={2}
+             strokeColor="red"
+          />
+
           </MapView>
           <TemporaryConnection />
       </View>
