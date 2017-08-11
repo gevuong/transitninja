@@ -19,8 +19,13 @@ export default class Map extends Component {
       lastLong: null,
       muni_stops: [],
       actransit_stops: [],
+      caltrain_stops: [],
+      bart_stops: [],
       showACTransit: true,
-      showMuni: true
+      showMuni: true,
+      showBart: true,
+      showCalTrain: true
+
     };
     this.toggleMuni = this.toggleMuni.bind(this);
   }
@@ -36,6 +41,12 @@ export default class Map extends Component {
       this.setState({ muni_stops: response.data });
     });
     axios.get('http://localhost:3000/api/actransitStations').then(response => {
+      this.setState({ actransit_stops: response.data });
+    });
+    axios.get('http://localhost:3000/api/bartStations').then(response => {
+      this.setState({ actransit_stops: response.data });
+    });
+    axios.get('http://localhost:3000/api/caltrainStations').then(response => {
       this.setState({ actransit_stops: response.data });
     });
   }
@@ -105,6 +116,36 @@ export default class Map extends Component {
     ));
   }
 
+  renderBart() {
+    return this.state.bart_stops.map(stop => (
+      <MapView.Marker
+        coordinate={{
+          latitude: stop.stop_lat || -36.82339,
+          longitude: stop.stop_lon || -73.03569
+        }}
+        title={stop.stop_name}
+        key={stop.stop_id}
+      >
+        <Image source={BUS_STOP_GREEN} style={styles.busIconStyle} />
+      </MapView.Marker>
+    ));
+  }
+
+  renderCaltrain() {
+    return this.state.caltrain_stops.map(stop => (
+      <MapView.Marker
+        coordinate={{
+          latitude: stop.stop_lat || -36.82339,
+          longitude: stop.stop_lon || -73.03569
+        }}
+        title={stop.stop_name}
+        key={stop.stop_id}
+      >
+        <Image source={BUS_STOP_GREEN} style={styles.busIconStyle} />
+      </MapView.Marker>
+    ));
+  }
+
   render() {
     console.log(this.state);
     // <Header />
@@ -125,6 +166,9 @@ export default class Map extends Component {
         </Button>
         {this.state.showMuni ? this.renderMuni() : null }
         {this.state.showACTransit ? this.renderACTransit() : null }
+        {this.state.showBart ? this.renderBart() : null }
+        {this.state.showCaltrain ? this.renderCalTrain() : null }
+
         </MapView>
       </View>
     );
