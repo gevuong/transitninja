@@ -28,7 +28,7 @@ mongoose.connect(config.getDBConnectionString(), (err, database) => {
 setInterval(function(){
   actransitBusController(app);
   muniBusController(app);
-}, 11000);
+}, 20000);
 
 
 
@@ -39,4 +39,3 @@ bartStopController(app);
 caltrainStopController(app);
 
 muniStopController(app);
-

@@ -6,7 +6,7 @@ import MapView from 'react-native-maps';
 
 // import Button from 'react-native-button';
 import Polyline from '@mapbox/polyline';
-import fetch from 'isomorphic-fetch';
+// import fetch from 'isomorphic-fetch';
 import SearchBar from 'react-native-searchbar';
 import TemporaryConnection from './TemporaryConnection';
 // const BUS_LOGO = require('../../assets/bus.png');
@@ -16,8 +16,8 @@ import Button from 'react-native-button';
 
 const BUS_LOGO = require('../../assets/bus_icon_green.png');
 
-// const BUS_STOP_RED = require('../../assets/Bus_Stop_Red.png');
-// const BUS_STOP_GREEN = require('../../assets/Bus_Stop_Green.png');
+const BUS_STOP_RED = require('../../assets/Bus_Stop_Red.png');
+const BUS_STOP_GREEN = require('../../assets/Bus_Stop_Green.png');
 
 
 
@@ -352,7 +352,7 @@ export default class Map extends Component {
 
 //           </MapView>
 //           <TemporaryConnection />
-  
+
   render() {
     // <Header />
 
