@@ -25,8 +25,13 @@ mongoose.connect(config.getDBConnectionString(), (err, database) => {
   });
 });
 
-setInterval(function(){
-}, 20000);
+
+
+
+actransitBusController(app);
+muniBusController(app);
+
+
 
 actransitBusController(app);
 muniBusController(app);

@@ -12,29 +12,32 @@ let apiArr = ["7cec8694-c386-42b4-870c-a76aef58b40f",
 "1e63a81e-0a10-4ef8-991c-ed195c33a855",
 "b021f9d5-2fe8-4fd8-90f0-4b8b5807cf51"];
 
-let counter = 0;
 
 
-let apiToken = () =>{
-  if (counter === 2){
-    counter = 0;
-  } else {
-    counter += 1;
-  }
-  return apiArr[counter];
 
-};
 
-const actransitRequestSettings = {
-  method: 'GET',
-  url: `https://api.511.org/transit/vehiclepositions?api_key=${apiToken()}&agency=actransit`,
-  encoding: null
-};
+
+// const actransitRequestSettings = {
+//   method: 'GET',
+//   url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=actransit`,
+//   encoding: null
+// };
 
 const actransitBusController = function(app) {
-  rp(actransitRequestSettings).then(function(arr){
+
+  rp({
+    method: 'GET',
+    url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=actransit`,
+    encoding: null
+  }).then(function(arr){
     app.get('/api/actransitBusses', function(req, res) {
       actransitBusModel.remove().exec();
+
+      console.log({
+        method: 'GET',
+        url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=actransit`,
+        encoding: null
+      });
 
       let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
       let actransitArr = [];

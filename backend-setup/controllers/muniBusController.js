@@ -12,29 +12,32 @@ let apiArr = ["3b31e671-cca3-4abf-9510-2ccf0996ef28",
 "69ca5ef3-1acd-476d-93bc-7173838f5c79",
 "299a8fd5-2137-4546-b9ee-d09da9d31535"];
 
-let counter = 0;
 
 
-let apiToken = () =>{
-  if (counter === 2){
-    counter = 0;
-  } else {
-    counter += 1;
-  }
-  return apiArr[counter];
 
-};
 
-const muniRequestSettings = {
-  method: 'GET',
-  url: `https://api.511.org/transit/vehiclepositions?api_key=${apiToken()}&agency=sf-muni`,
-  encoding: null
-};
+// const muniRequestSettings = {
+//   method: 'GET',
+//   url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=sf-muni`,
+//   encoding: null
+// };
 
 const muniBusController = function(app) {
-  rp(muniRequestSettings).then(function(arr){
+
+  rp({
+    method: 'GET',
+    url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=sf-muni`,
+    encoding: null
+  }).then(function(arr){
     app.get('/api/muniBusses', function(req, res) {
       muniBusModel.remove().exec();
+
+
+      console.log({
+        method: 'GET',
+        url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=sf-muni`,
+        encoding: null
+      });
 
       let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
       let muniArr = [];
