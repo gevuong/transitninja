@@ -11,7 +11,7 @@ const RouterComponent = () => {
         <Scene
           key="welcome"
           component={WelcomePage}
-          title="Welcome"
+          hideNavBar
           initial
         />
         <Scene

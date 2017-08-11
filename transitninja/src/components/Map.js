@@ -32,7 +32,9 @@ export default class Map extends Component {
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.toggleACTransit = this.toggleACTransit.bind(this);
+    this.renderACTransitBusses = this.renderACTransitBusses.bind(this);
   }
+
 
 // this is some code to customize eslint for this page.
   /*global navigator:true*/
@@ -54,7 +56,6 @@ export default class Map extends Component {
     axios.get('http://localhost:3000/api/muniBusses').then(response => {
       this.setState({ muni_busses: response.data });
     });
-
   }
 
   componentDidMount() {
@@ -125,33 +126,26 @@ export default class Map extends Component {
   }
 
   renderMuni() {
-
     console.log('from render', this.state.muni_stops_to_render);
     return this.state.muni_stops_to_render.map(stop => (
-
       <MapView.Marker
         coordinate={{
           latitude: bus.lat || -36.82339,
           longitude: bus.lon || -73.03569
         }}
-
         title={stop.stop_name}
         key={stop.stop_id}
       />
-
     ));
   }
 
   renderACTransit() {
-
     return this.state.actransit_stops_to_render.map(stop => (
-
       <MapView.Marker
         coordinate={{
           latitude: bus.lat || -36.82339,
           longitude: bus.lon || -73.03569
         }}
-
         title={stop.stop_name}
         key={stop.stop_id}
       />
@@ -171,10 +165,11 @@ export default class Map extends Component {
         key={bus.id}
       >
         <Image source={BUS_LOGO} />
-
       </MapView.Marker>
     ));
   }
+
+// note that I removed onRegionChange from the MapView props. This will speed up our app a bit. But if we WANT to update the mapRegion whenever we move the map around, then we'll need to put i back in.
 
   render() {
     // <Header />
@@ -184,7 +179,6 @@ export default class Map extends Component {
           region={this.state.mapRegion}
           showsUserLocation
           followUserLocation
-          onRegionChange={this.onRegionChange.bind(this)}
           style={styles.mapStyle}
         >
         { this.renderACTransitBusses() }

@@ -1,24 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   StyleSheet,
-  Text,
-  View
+  View,
+  Image,
+  TouchableHighlight
 } from 'react-native';
-
-import TemporaryConnection from './TemporaryConnection';
-
 import { Actions } from 'react-native-router-flux';
+//
+// const NINJA_ICON = require('../../assets/transitninjaicon.png');
+// const NINJA_LOGO = require('../../assets/transitninjalogo.png');
+const NINJA_ICON_YELLOW = require('../../assets/transitninjaicon2.png');
 
 const WelcomePage = () => {
   return (
     <View style={styles.container}>
-      <Text
-        style={styles.welcome}
-        onPress={() => Actions.mapPage()}
-      >
-        Welcome to the Demo!
-        Click here to get to the map page.
-      </Text>
+    <TouchableHighlight onPress={() => { Actions.mapPage(); }}>
+      <View style={styles.viewStyle}>
+        <Image source={NINJA_ICON_YELLOW} />
+      </View>
+    </TouchableHighlight>
     </View>
   );
 };
@@ -28,7 +28,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#353535'
+  },
+  viewStyle: {
+    height: 1000,
+    width: 1000,
+    backgroundColor: '#353535',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   welcome: {
     fontSize: 20,
