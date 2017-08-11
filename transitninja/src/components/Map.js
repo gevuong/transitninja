@@ -3,14 +3,27 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import MapView from 'react-native-maps';
 // import Header from './Header';
+
+// import Button from 'react-native-button';
+import Polyline from '@mapbox/polyline';
+import fetch from 'isomorphic-fetch';
+import SearchBar from 'react-native-searchbar';
+import TemporaryConnection from './TemporaryConnection';
+// const BUS_LOGO = require('../../assets/bus.png');
+
 import Button from 'react-native-button';
 
 
 const BUS_LOGO = require('../../assets/bus_icon_green.png');
+
 // const BUS_STOP_RED = require('../../assets/Bus_Stop_Red.png');
 // const BUS_STOP_GREEN = require('../../assets/Bus_Stop_Green.png');
 
 
+
+
+const startLoc = 'sanjose';
+const endLoc = 'sanfrancisco';
 
 export default class Map extends Component {
 
@@ -21,17 +34,28 @@ export default class Map extends Component {
       lastLat: null,
       lastLong: null,
 
-      showACTransit: false,
-      showMuni: false,
-      actransit_busses: []
-      // actransit_stops: [],
-      // muni_stops: [],
-      // muni_stops_to_render: [],
-      // actransit_stops_to_render: []
+
+      muni_stops: [],
+      actransit_stops: [],
+      bart_stops: [],
+      caltrain_stops: [],
+      actransit_busses: [],
+      showACTransit: true,
+      showMuni: true,
+      showBart: true,
+      showCaltrain: true,
+      latitude: '',
+      longitude: '',
+    destination: '',
+    coordo: [],
+    res: ''
 
     };
     this.toggleMuni = this.toggleMuni.bind(this);
+    this.getDirections = this.getDirections.bind(this);
     this.toggleACTransit = this.toggleACTransit.bind(this);
+    // this.renderPol = this.renderPol.bind(this);
+
   }
 
 // this is some code to customize eslint for this page.
@@ -48,12 +72,23 @@ export default class Map extends Component {
       this.setState({ actransit_busses: response.data });
     });
 
+    axios.get('http://localhost:3000/api/bartStations').then(response => {
+      console.log('this is getting hit');
+      this.setState({ bart_stops: response.data });
+    });
+    axios.get('http://localhost:3000/api/caltrainStations').then(response => {
+      console.log('this is getting hit');
+      this.setState({ caltrain_stops: response.data });
+    });
+
+
     axios.get('http://localhost:3000/api/actransitBusses').then(response => {
       this.setState({ actransit_busses: response.data });
     });
     axios.get('http://localhost:3000/api/muniBusses').then(response => {
       this.setState({ muni_busses: response.data });
     });
+
 
   }
 
@@ -99,6 +134,29 @@ export default class Map extends Component {
     // this.setState({ actransit_stops_to_render: arr2 });
   }
 
+
+  async getDirections() {
+      console.log('hit');
+
+      try {
+        // fetch directions from google.
+        const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${endLoc}`);
+        const respJson = await resp.json();
+        console.log(respJson);
+        // decode encoded polyline data.
+        const points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+        // converts polyline data into a list of objects
+        const coords = points.map((point) => {
+          return { latitude: point[0], longitude: point[1] };
+        });
+        this.setState({ coordo: coords });
+        console.log(this.state.coordo);
+        return coords;
+      } catch (error) {
+        return error;
+      }
+    }
+
   // isInRegion(lat, long) {
   //   console.log('coordinates', lat, long);
   //   const { latitude, longitude, latitudeDelta, longitudeDelta } = this.state.mapRegion;
@@ -111,6 +169,7 @@ export default class Map extends Component {
   //   }
   //   return true;
   // }
+
 
   toggleMuni() {
     this.setState({
@@ -176,10 +235,138 @@ export default class Map extends Component {
     ));
   }
 
+  renderBart() {
+    return this.state.bart_stops.map(stop => (
+      <MapView.Marker
+        coordinate={{
+          latitude: stop.stop_lat || -36.82339,
+          longitude: stop.stop_lon || -73.03569
+        }}
+        title={stop.stop_name}
+        key={stop.stop_id}
+      >
+        <Image source={BUS_STOP_GREEN} style={styles.busIconStyle} />
+      </MapView.Marker>
+    ));
+  }
+
+  renderCaltrain() {
+    return this.state.caltrain_stops.map(stop => (
+      <MapView.Marker
+        coordinate={{
+          latitude: stop.stop_lat || -36.82339,
+          longitude: stop.stop_lon || -73.03569
+        }}
+        title={stop.stop_name}
+        key={stop.stop_id}
+      >
+        <Image source={BUS_STOP_GREEN} style={styles.busIconStyle} />
+      </MapView.Marker>
+    ));
+  }
+
+  // renderPol() {
+  //   console.log('yooukhkgughhhhhh');
+  //   return (
+  //   <MapView.Polyline
+  //      coordinates={this.state.coordo}
+  //      strokeWidth={2}
+  //      strokeColor="red"
+  //   />
+  // );
+  // }
+
+
+//   bartCaltrainPins
+//           {this.state.muni_stops.map(stop => (
+//             <MapView.Marker
+//               coordinate={{
+//                 latitude: stop.stop_lat || -36.82339,
+//                 longitude: stop.stop_lon || -73.03569
+//               }}
+//               title={stop.stop_name}
+//               key={stop.stop_id}
+
+//             />
+//           ))}
+
+//           {this.state.actransit_stops.map(stop => (
+//             <MapView.Marker
+//               coordinate={{
+//                 latitude: stop.stop_lat || -36.82339,
+//                 longitude: stop.stop_lon || -73.03569
+//               }}
+//               title={stop.stop_name}
+//               key={stop.stop_id}
+//               pinColor={'#000000'}
+
+//             />
+//           ))}
+
+//           {this.state.bart_stops.map(stop => (
+//             <MapView.Marker
+//               coordinate={{
+//                 latitude: stop.stop_lat || -36.82339,
+//                 longitude: stop.stop_lon || -73.03569
+//               }}
+//               title={stop.stop_name}
+//               key={stop.stop_id}
+//               pinColor={'#3498DB'}
+//             />
+//           ))}
+
+//           {this.state.caltrain_stops.map(stop => (
+//             <MapView.Marker
+//               coordinate={{
+//                 latitude: stop.stop_lat || -36.82339,
+//                 longitude: stop.stop_lon || -73.03569
+//               }}
+//               title={stop.stop_name}
+//               key={stop.stop_id}
+//               pinColor={'#F7DC6F'}
+//             />
+//           ))}
+
+//           <MapView.Marker
+//             coordinate={{
+//               latitude: this.state.lastLat || -36.82339,
+//               longitude: this.state.lastLong || -73.03569
+//             }}
+//           >
+//             <Image
+//               source={BUS_STOP_RED} style={styles.busIconStyle}
+//             />
+//           </MapView.Marker>
+//           <MapView.Marker
+//             coordinate={{
+//             latitude: this.state.lastLat || -36.82339,
+//             longitude: this.state.lastLong || -73.03569
+//             }}
+//           />
+//           <MapView.Polyline
+//              coordinates={this.state.coordo}
+//              strokeWidth={2}
+//              strokeColor="red"
+//           />
+
+//           </MapView>
+//           <TemporaryConnection />
+  
   render() {
     // <Header />
+
+    // console.log(this.state);
     return (
       <View style={styles.viewStyle}>
+          <SearchBar
+            ref={(ref) => { this.searchBar = ref; }}
+            data={['sanjose, sanfrancisco']}
+            handleResults={this.logger}
+            showOnLoad
+            textColor={'#FF0000'}
+            handleChangeText={(e) => this.setState({ destination: e })}
+            onSubmitEditing={() => this.getDirections()}
+          />
         <MapView
           region={this.state.mapRegion}
           showsUserLocation
@@ -187,6 +374,8 @@ export default class Map extends Component {
           onRegionChange={this.onRegionChange.bind(this)}
           style={styles.mapStyle}
         >
+
+
         { this.renderACTransitBusses() }
         <View style={styles.buttonView}>
           <Button
@@ -203,6 +392,7 @@ export default class Map extends Component {
           </Button>
         </View>
         </MapView>
+
       </View>
     );
   }
