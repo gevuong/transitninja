@@ -27,11 +27,14 @@ mongoose.connect(config.getDBConnectionString(), (err, database) => {
 
 
 
+
 actransitBusController(app);
 muniBusController(app);
 
 
 
+actransitBusController(app);
+muniBusController(app);
 
 setupController(app); // setupController is a function
 actransitStopController(app);

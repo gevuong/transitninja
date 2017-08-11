@@ -4,7 +4,7 @@ console.log('-----', "1");
 module.exports = function(app) {
   app.get('/api/caltrainStations', function(req, res) {
     let caltrainStationsArray = caltrain.caltrainStations();
-    console.log(caltrainStationsArray);
+
     caltrainStationModel.create(caltrainStationsArray, function(err, results){
       if (err) {
         return console.log(err);

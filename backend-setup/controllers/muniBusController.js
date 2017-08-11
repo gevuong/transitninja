@@ -32,11 +32,13 @@ const muniBusController = function(app) {
     app.get('/api/muniBusses', function(req, res) {
       muniBusModel.remove().exec();
 
+
       console.log({
         method: 'GET',
         url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=sf-muni`,
         encoding: null
       });
+
       let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
       let muniArr = [];
       array.forEach(function(entity) {
