@@ -15,23 +15,16 @@ let apiArr = ["7cec8694-c386-42b4-870c-a76aef58b40f",
 let counter = 0;
 
 
-let apiToken = () =>{
-  if (counter === 2){
-    counter = 0;
-  } else {
-    counter += 1;
-  }
-  return apiArr[counter];
 
-};
 
 const actransitRequestSettings = {
   method: 'GET',
-  url: `https://api.511.org/transit/vehiclepositions?api_key=${apiToken()}&agency=actransit`,
+  url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[counter]}&agency=actransit`,
   encoding: null
 };
 
-const actransitBusController = function(app) {
+const actransitBusController = function(app, idx) {
+  counter = idx;
   rp(actransitRequestSettings).then(function(arr){
     app.get('/api/actransitBusses', function(req, res) {
       actransitBusModel.remove().exec();

@@ -15,26 +15,20 @@ let apiArr = ["3b31e671-cca3-4abf-9510-2ccf0996ef28",
 let counter = 0;
 
 
-let apiToken = () =>{
-  if (counter === 2){
-    counter = 0;
-  } else {
-    counter += 1;
-  }
-  return apiArr[counter];
 
-};
 
 const muniRequestSettings = {
   method: 'GET',
-  url: `https://api.511.org/transit/vehiclepositions?api_key=${apiToken()}&agency=sf-muni`,
+  url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[counter]}&agency=sf-muni`,
   encoding: null
 };
 
-const muniBusController = function(app) {
+const muniBusController = function(app, idx) {
+  counter = idx;
   rp(muniRequestSettings).then(function(arr){
     app.get('/api/muniBusses', function(req, res) {
       muniBusModel.remove().exec();
+
       console.log(muniRequestSettings);
       let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
       let muniArr = [];
