@@ -8,7 +8,6 @@ import MapView from 'react-native-maps';
 import Polyline from '@mapbox/polyline';
 // import fetch from 'isomorphic-fetch';
 import SearchBar from 'react-native-searchbar';
-import TemporaryConnection from './TemporaryConnection';
 // const BUS_LOGO = require('../../assets/bus.png');
 
 import Button from 'react-native-button';
@@ -102,24 +101,24 @@ export default class Map extends Component {
   }
 
   async getDirections() {
-      try {
-        // fetch directions from google.
-        const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${endLoc}`);
-        const respJson = await resp.json();
-        console.log(respJson);
-        // decode encoded polyline data.
-        const points = Polyline.decode(respJson.routes[0].overview_polyline.points);
-        // converts polyline data into a list of objects
-        const coords = points.map((point) => {
-          return { latitude: point[0], longitude: point[1] };
-        });
-        this.setState({ coordo: coords });
-        console.log(this.state.coordo);
-        return coords;
-      } catch (error) {
-        return error;
-      }
+    try {
+      // fetch directions from google.
+      const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${endLoc}`);
+      const respJson = await resp.json();
+      console.log(respJson);
+      // decode encoded polyline data.
+      const points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+      // converts polyline data into a list of objects
+      const coords = points.map((point) => {
+        return { latitude: point[0], longitude: point[1] };
+      });
+      this.setState({ coordo: coords });
+      console.log(this.state.coordo);
+      return coords;
+    } catch (error) {
+      return error;
     }
+  }
 
   toggleMuni() {
     this.setState({
@@ -138,8 +137,8 @@ export default class Map extends Component {
     return this.state.muni_stops_to_render.map(stop => (
       <MapView.Marker
         coordinate={{
-          latitude: bus.lat || -36.82339,
-          longitude: bus.lon || -73.03569
+          latitude: stop.lat || -36.82339,
+          longitude: stop.lon || -73.03569
         }}
         title={stop.stop_name}
         key={stop.stop_id}
@@ -151,8 +150,8 @@ export default class Map extends Component {
     return this.state.actransit_stops_to_render.map(stop => (
       <MapView.Marker
         coordinate={{
-          latitude: bus.lat || -36.82339,
-          longitude: bus.lon || -73.03569
+          latitude: stop.lat || -36.82339,
+          longitude: stop.lon || -73.03569
         }}
         title={stop.stop_name}
         key={stop.stop_id}
@@ -253,8 +252,9 @@ export default class Map extends Component {
           followUserLocation
           style={styles.mapStyle}
         >
-        { this.renderACTransitBusses() }
-        { this.renderMuniBusses() }
+        { this.state.showACTransit ? this.renderACTransitBusses() : null }
+        { this.state.showMuni ? this.renderMuniBusses() : null }
+        </MapView>
         <View style={styles.buttonView}>
           <Button
             containerStyle={this.state.showMuni ? styles.toggleOn : styles.toggleOff}
@@ -269,7 +269,6 @@ export default class Map extends Component {
           >AC
           </Button>
         </View>
-        </MapView>
 
       </View>
     );
@@ -286,19 +285,12 @@ const styles = StyleSheet.create({
   mapStyle: {
     flex: 1
   },
-  // busIconStyle: {
-  //   width: 15,
-  //   height: 15
-  // },
   buttonView: {
-    marginTop: 80,
-    marginLeft: 220,
-    marginBottom: 80,
-    // height: 300,
-    // width: 1000,
-    // flex: 1,
-    alignContent: 'flex-end',
-    justifyContent: 'flex-end'
+    position: 'absolute',
+    bottom: 20,
+    top: 300,
+    left: 270,
+    right: 100
   },
   toggleOn: {
     marginTop: 30,
