@@ -58,19 +58,15 @@ export default class Map extends Component {
   /*global require:true*/
   /*eslint no-undef: "error"*/
   componentWillMount() {
+    this.makeAxiosRequests();
+  }
+
+  makeAxiosRequests() {
     axios.get('http://localhost:3000/api/actransitBusses').then(response => {
       this.setState({ actransit_busses: response.data });
     });
     axios.get('http://localhost:3000/api/muniBusses').then(response => {
     this.setState({ muni_busses: response.data });
-//     axios.get('http://localhost:3000/api/bartStations').then(response => {
-//       console.log('this is getting hit');
-//       this.setState({ bart_stops: response.data });
-//     });
-//     axios.get('http://localhost:3000/api/caltrainStations').then(response => {
-//       console.log('this is getting hit');
-//       this.setState({ caltrain_stops: response.data });
-//     });
     });
   }
 
@@ -88,11 +84,14 @@ export default class Map extends Component {
       (error) => alert(error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
-    // this.getDirections();
+    this.timer = setTimeout(() => {
+      console.log('I do not leak!');
+    }, 5000);
   }
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
+    clearTimeout(this.timer);
   }
 
   onRegionChange(region, lastLat, lastLong) {
@@ -102,10 +101,8 @@ export default class Map extends Component {
       lastLong: lastLong || this.state.lastLong
     });
   }
-  
-  async getDirections() {
-      console.log('hit');
 
+  async getDirections() {
       try {
         // fetch directions from google.
         const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${endLoc}`);
