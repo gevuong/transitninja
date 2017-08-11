@@ -30,7 +30,7 @@ const actransitBusController = function(app) {
         if (err) {
           return console.log(err);
         }
-        console.log('-----1',results);
+        // console.log('-----1',results);
         res.send(actransitArr);
       });
     });
