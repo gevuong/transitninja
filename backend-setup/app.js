@@ -31,7 +31,6 @@ setInterval(function(){
 }, 20000);
 
 
-
 setupController(app); // setupController is a function
 actransitStopController(app);
 

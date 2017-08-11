@@ -15,9 +15,6 @@ import Button from 'react-native-button';
 
 const BUS_LOGO = require('../../assets/bus_icon_green.png');
 
-const BUS_STOP_RED = require('../../assets/Bus_Stop_Red.png');
-const BUS_STOP_GREEN = require('../../assets/Bus_Stop_Green.png');
-
 const startLoc = 'sanjose';
 const endLoc = 'sanfrancisco';
 
@@ -31,6 +28,7 @@ export default class Map extends Component {
       lastLong: null,
       muni_stops: [],
       actransit_stops: [],
+      muni_busses: [],
       bart_stops: [],
       caltrain_stops: [],
       actransit_busses: [],
@@ -173,7 +171,22 @@ export default class Map extends Component {
         title={bus.trip_id}
         key={bus.id}
       >
-        <Image source={BUS_LOGO} />
+        <Image source={BUS_LOGO_GREEN} />
+      </MapView.Marker>
+    ));
+  }
+
+  renderMuniBusses() {
+    return this.state.muni_busses.map(bus => (
+      <MapView.Marker
+        coordinate={{
+          latitude: bus.lat + 0.000060 || -36.82339,
+          longitude: bus.lon || -73.03569
+        }}
+        title={bus.trip_id}
+        key={bus.id}
+      >
+        <Image source={BUS_LOGO_RED} />
       </MapView.Marker>
     ));
   }
@@ -240,6 +253,7 @@ export default class Map extends Component {
           style={styles.mapStyle}
         >
         { this.renderACTransitBusses() }
+        { this.renderMuniBusses() }
         <View style={styles.buttonView}>
           <Button
             containerStyle={this.state.showMuni ? styles.toggleOn : styles.toggleOff}

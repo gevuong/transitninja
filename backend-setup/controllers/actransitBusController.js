@@ -35,7 +35,7 @@ const actransitBusController = function(app) {
   rp(actransitRequestSettings).then(function(arr){
     app.get('/api/actransitBusses', function(req, res) {
       actransitBusModel.remove().exec();
-      console.log(actransitRequestSettings);
+
       let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
       let actransitArr = [];
       array.forEach(function(entity) {

@@ -35,7 +35,7 @@ const muniBusController = function(app) {
   rp(muniRequestSettings).then(function(arr){
     app.get('/api/muniBusses', function(req, res) {
       muniBusModel.remove().exec();
-      console.log(muniRequestSettings);
+
       let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
       let muniArr = [];
       array.forEach(function(entity) {
