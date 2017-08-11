@@ -20,10 +20,11 @@ export default class Map extends Component {
       lastLong: null,
       showACTransit: false,
       showMuni: false,
-      muni_stops: [],
-      actransit_stops: [],
-      muni_stops_to_render: [],
-      actransit_stops_to_render: []
+      actransit_busses: []
+      // actransit_stops: [],
+      // muni_stops: [],
+      // muni_stops_to_render: [],
+      // actransit_stops_to_render: []
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.toggleACTransit = this.toggleACTransit.bind(this);
@@ -35,13 +36,12 @@ export default class Map extends Component {
   /*global require:true*/
   /*eslint no-undef: "error"*/
   componentWillMount() {
-    axios.get('http://localhost:3000/api/muniStations').then(response => {
-      this.setState(prevState => ({
-        muni_stops: prevState.muni_stops.concat(response.data) }));
-    });
-    axios.get('http://localhost:3000/api/actransitStations').then(response => {
-      this.setState(prevState => ({
-        actransit_stops: prevState.actransit_stops.concat(response.data) }));
+    // axios.get('http://localhost:3000/api/muniStations').then(response => {
+    //   this.setState(prevState => ({
+    //     muni_stops: prevState.muni_stops.concat(response.data) }));
+    // });
+    axios.get('http://localhost:3000/api/actransitBusses').then(response => {
+      this.setState({ actransit_busses: response.data });
     });
   }
 
@@ -71,34 +71,34 @@ export default class Map extends Component {
       lastLat: lastLat || this.state.lastLat,
       lastLong: lastLong || this.state.lastLong
     });
-    const arr = [];
-    this.state.muni_stops.forEach((stop) => {
-      if (this.isInRegion(stop.stop_lat, stop.stop_lon)) {
-        arr.push(stop);
-      }
-    });
-    this.setState({ muni_stops_to_render: arr });
-    const arr2 = [];
-    this.state.actransit_stops.forEach((stop) => {
-      if (this.isInRegion(stop.stop_lat, stop.stop_lon)) {
-        arr2.push(stop);
-      }
-    });
-    this.setState({ actransit_stops_to_render: arr2 });
+    // const arr = [];
+    // this.state.muni_stops.forEach((stop) => {
+    //   if (this.isInRegion(stop.stop_lat, stop.stop_lon)) {
+    //     arr.push(stop);
+    //   }
+    // });
+    // this.setState({ muni_stops_to_render: arr });
+    // const arr2 = [];
+    // this.state.actransit_stops.forEach((stop) => {
+    //   if (this.isInRegion(stop.stop_lat, stop.stop_lon)) {
+    //     arr2.push(stop);
+    //   }
+    // });
+    // this.setState({ actransit_stops_to_render: arr2 });
   }
 
-  isInRegion(lat, long) {
-    console.log('coordinates', lat, long);
-    const { latitude, longitude, latitudeDelta, longitudeDelta } = this.state.mapRegion;
-    const top = latitude - (latitudeDelta * 0.5);
-    const bottom = latitude + (latitudeDelta * 0.5);
-    const right = longitude - (longitudeDelta * 0.5);
-    const left = longitude + (longitudeDelta * 0.5);
-    if (lat > top) {
-     return false;
-    }
-    return true;
-  }
+  // isInRegion(lat, long) {
+  //   console.log('coordinates', lat, long);
+  //   const { latitude, longitude, latitudeDelta, longitudeDelta } = this.state.mapRegion;
+  //   const top = latitude - (latitudeDelta * 0.5);
+  //   const bottom = latitude + (latitudeDelta * 0.5);
+  //   const right = longitude - (longitudeDelta * 0.5);
+  //   const left = longitude + (longitudeDelta * 0.5);
+  //   if (lat > top) {
+  //    return false;
+  //   }
+  //   return true;
+  // }
 
   toggleMuni() {
     this.setState({
@@ -139,6 +139,21 @@ export default class Map extends Component {
     ));
   }
 
+  renderACTransitBusses() {
+    console.log(this.state.actransit_busses);
+
+    return this.state.actransit_busses.map(bus => (
+      <MapView.Marker
+        coordinate={{
+          latitude: bus.lat || -36.82339,
+          longitude: bus.lon || -73.03569
+        }}
+        title={bus.trip_id}
+        key={bus.id}
+      />
+    ));
+  }
+
   render() {
     // <Header />
     return (
@@ -150,6 +165,7 @@ export default class Map extends Component {
           onRegionChange={this.onRegionChange.bind(this)}
           style={styles.mapStyle}
         >
+        { this.renderACTransitBusses() }
         <View style={styles.buttonView}>
           <Button
             containerStyle={this.state.showMuni ? styles.toggleOn : styles.toggleOff}
@@ -164,13 +180,13 @@ export default class Map extends Component {
           >AC
           </Button>
         </View>
-        {this.state.showACTransit ? this.renderACTransit() : null }
-        {this.state.showMuni ? this.renderMuni() : null }
         </MapView>
       </View>
     );
   }
 }
+// {this.state.showACTransit ? this.renderACTransit() : null }
+// {this.state.showMuni ? this.renderMuni() : null }
 
 const styles = StyleSheet.create({
   viewStyle: {
