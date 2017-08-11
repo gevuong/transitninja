@@ -3,19 +3,28 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import MapView from 'react-native-maps';
 // import Header from './Header';
+
 // import Button from 'react-native-button';
 import Polyline from '@mapbox/polyline';
 import fetch from 'isomorphic-fetch';
 import SearchBar from 'react-native-searchbar';
 import TemporaryConnection from './TemporaryConnection';
 // const BUS_LOGO = require('../../assets/bus.png');
+
+import Button from 'react-native-button';
+
+
+const BUS_LOGO = require('../../assets/bus_icon_green.png');
+
 // const BUS_STOP_RED = require('../../assets/Bus_Stop_Red.png');
 // const BUS_STOP_GREEN = require('../../assets/Bus_Stop_Green.png');
 
 
 
+
 const startLoc = 'sanjose';
 const endLoc = 'sanfrancisco';
+
 export default class Map extends Component {
 
   constructor(props) {
@@ -24,6 +33,7 @@ export default class Map extends Component {
       mapRegion: null,
       lastLat: null,
       lastLong: null,
+
 
       muni_stops: [],
       actransit_stops: [],
@@ -39,6 +49,7 @@ export default class Map extends Component {
     destination: '',
     coordo: [],
     res: ''
+
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.getDirections = this.getDirections.bind(this);
@@ -60,6 +71,7 @@ export default class Map extends Component {
     axios.get('http://localhost:3000/api/actransitBusses').then(response => {
       this.setState({ actransit_busses: response.data });
     });
+
     axios.get('http://localhost:3000/api/bartStations').then(response => {
       console.log('this is getting hit');
       this.setState({ bart_stops: response.data });
@@ -68,6 +80,16 @@ export default class Map extends Component {
       console.log('this is getting hit');
       this.setState({ caltrain_stops: response.data });
     });
+
+
+    axios.get('http://localhost:3000/api/actransitBusses').then(response => {
+      this.setState({ actransit_busses: response.data });
+    });
+    axios.get('http://localhost:3000/api/muniBusses').then(response => {
+      this.setState({ muni_busses: response.data });
+    });
+
+
   }
 
   componentDidMount() {
@@ -162,26 +184,33 @@ export default class Map extends Component {
   }
 
   renderMuni() {
+
     console.log('from render', this.state.muni_stops_to_render);
     return this.state.muni_stops_to_render.map(stop => (
+
       <MapView.Marker
         coordinate={{
-          latitude: stop.stop_lat || -36.82339,
-          longitude: stop.stop_lon || -73.03569
+          latitude: bus.lat || -36.82339,
+          longitude: bus.lon || -73.03569
         }}
+
         title={stop.stop_name}
         key={stop.stop_id}
       />
+
     ));
   }
 
   renderACTransit() {
+
     return this.state.actransit_stops_to_render.map(stop => (
+
       <MapView.Marker
         coordinate={{
-          latitude: stop.stop_lat || -36.82339,
-          longitude: stop.stop_lon || -73.03569
+          latitude: bus.lat || -36.82339,
+          longitude: bus.lon || -73.03569
         }}
+
         title={stop.stop_name}
         key={stop.stop_id}
       />
@@ -194,12 +223,15 @@ export default class Map extends Component {
     return this.state.actransit_busses.map(bus => (
       <MapView.Marker
         coordinate={{
-          latitude: bus.lat || -36.82339,
+          latitude: bus.lat + 0.000060 || -36.82339,
           longitude: bus.lon || -73.03569
         }}
         title={bus.trip_id}
         key={bus.id}
-      />
+      >
+        <Image source={BUS_LOGO} />
+
+      </MapView.Marker>
     ));
   }
 
