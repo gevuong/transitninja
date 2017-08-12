@@ -60,11 +60,5 @@ const actransitBusController = function(app) {
   });
 };
 
-import joinTable from 'file'
-
-getRouteName(bus.trip_id){
-  return joinTable[trip_id]
-}
-
 
 module.exports = actransitBusController;

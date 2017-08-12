@@ -4,7 +4,6 @@ import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity } from 'r
 import MapView from 'react-native-maps';
 
 import Polyline from '@mapbox/polyline';
-import SearchBar from 'react-native-searchbar';
 import ToggleButton from './ToggleButton';
 import Button from 'react-native-button';
 import { Actions } from 'react-native-router-flux';
@@ -13,7 +12,7 @@ import Search from './Search';
 const BUS_LOGO_GREEN = require('../../assets/bus_icon_green.png');
 const BUS_LOGO_RED = require('../../assets/bus_icon_red.png');
 const AC_TRANSIT_LOGO = require('../../assets/ac_transit_logo.png');
-const PIN_SHOW = require('../../assets/pin_show.png');
+const PIN_SHOW = require('../../assets/pin_show_orange.png');
 const HAMBURGER = require('../../assets/hamburger.png');
 
 const startLoc = 'sanjose';
@@ -134,35 +133,34 @@ export default class Map extends Component {
   }
 
   renderACTransitBusses() {
-    console.log(this.state.actransit_busses);
 
-    return this.state.actransit_busses.map(bus => (
-      <MapView.Marker
-        coordinate={{
-          latitude: bus.lat + 0.000060 || -36.82339,
-          longitude: bus.lon || -73.03569
-        }}
-        title={bus.trip_id}
-        key={bus.id}
-      >
-        <Image source={BUS_LOGO_GREEN} />
-      </MapView.Marker>
-    ));
+    // return this.state.actransit_busses.map(bus => (
+    //   <MapView.Marker
+    //     coordinate={{
+    //       latitude: bus.lat + 0.000060 || -36.82339,
+    //       longitude: bus.lon || -73.03569
+    //     }}
+    //     title={bus.trip_id}
+    //     key={bus.id}
+    //   >
+    //     <Image source={BUS_LOGO_GREEN} />
+    //   </MapView.Marker>
+    // ));
   }
 
   renderMuniBusses() {
-    return this.state.muni_busses.map(bus => (
-      <MapView.Marker
-        coordinate={{
-          latitude: bus.lat + 0.000060 || -36.82339,
-          longitude: bus.lon || -73.03569
-        }}
-        title={bus.trip_id}
-        key={bus.id}
-      >
-        <Image source={BUS_LOGO_RED} />
-      </MapView.Marker>
-    ));
+    // return this.state.muni_busses.map(bus => (
+    //   <MapView.Marker
+    //     coordinate={{
+    //       latitude: bus.lat + 0.000060 || -36.82339,
+    //       longitude: bus.lon || -73.03569
+    //     }}
+    //     title={bus.trip_id}
+    //     key={bus.id}
+    //   >
+    //     <Image source={BUS_LOGO_RED} />
+    //   </MapView.Marker>
+    // ));
   }
 
 
@@ -177,6 +175,7 @@ export default class Map extends Component {
           data={['sanjose, sanfrancisco']}
           handleResults={this.logger}
           showOnLoad
+          placeholder="Where To?"
           hideBack
           textColor={'black'}
           handleChangeText={(e) => this.setState({ destination: e })}

@@ -240,7 +240,7 @@ export default class Search extends Component {
     return (
       <Animated.View style={[styles.container, {
           top: this.state.top,
-          shadowOpacity: iOSHideShadow ? 0 : 0.7,
+          shadowOpacity: iOSHideShadow ? 0 : 0.4,
           backgroundColor: 'white'
       }]}>
         {
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
     height: 45
   },
   navWrapper: {
-    width: Dimensions.get('window').width - 75
+    width: Dimensions.get('window').width - 80
   },
   nav: {
     ...Platform.select({
@@ -362,6 +362,6 @@ const styles = StyleSheet.create({
         ios: { height: 30 },
         android: { height: 40 },
     }),
-    width: Dimensions.get('window').width - 100,
+    width: Dimensions.get('window').width - 110,
   }
 });

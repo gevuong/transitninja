@@ -4,8 +4,12 @@ import { Text, StyleSheet, View, Image } from 'react-native';
 const ToggleButton = ({ logo, text }) => {
   return (
     <View style={styles.toggleStyle}>
+      <View style={styles.darkShadow}>
       <Image source={logo} />
-      <Text style={styles.textStyle}>{text}</Text>
+      </View>
+      <View style={styles.lightShadow}>
+        <Text style={styles.textStyle}>{text}</Text>
+      </View>
     </View>
   );
 };
@@ -14,17 +18,36 @@ const styles = StyleSheet.create({
   toggleStyle: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'transparent'
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  darkShadow: {
+    padding: 10,
+    shadowColor: '#ffffff',
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowRadius: 8,
+    shadowOpacity: 0.6,
   },
   textStyle: {
-    marginTop: 10,
+
     fontSize: 14,
     textAlign: 'center',
     fontWeight: '400',
-    textShadowColor: 'white',
-    textShadowOffset: { width: 10, height: 10 },
-    textShadowRadius: 40,
-  }
+  },
+  lightShadow: {
+    marginTop: 40,
+    padding: 10,
+    shadowColor: '#ffffff',
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowRadius: 15,
+    shadowOpacity: 1
+  },
 });
 
 export default ToggleButton;
