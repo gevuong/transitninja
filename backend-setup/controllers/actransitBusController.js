@@ -89,7 +89,7 @@ const actransitBusController = function(app) {
         if (err) {
           return console.log(err);
         }
-        console.log(actransitArr);
+        // console.log(actransitArr);
         res.send(actransitArr);
       });
     });
