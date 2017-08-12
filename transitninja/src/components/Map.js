@@ -36,7 +36,8 @@ export default class Map extends Component {
     startLoc: 'sanjose',
     endLoc: '',
     coordo: [],
-    res: ''
+    res: '',
+    active: false
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.getDirections = this.getDirections.bind(this);
@@ -203,6 +204,10 @@ export default class Map extends Component {
   );
   }
 
+  renderer() {
+
+  }
+
   // {this.state.muni_stops.map(stop => (
   //   <MapView.Marker
   //     coordinate={{
@@ -277,7 +282,7 @@ export default class Map extends Component {
     // console.log(this.state);
     return (
       <View style={styles.viewStyle}>
-        <View style={styles.secondBar}>
+        <View id='second' style={[styles.secondBar]}>
           <SearchBar
             ref={(ref) => { this.searchBar = ref; }}
             data={['sanjose, sanfrancisco']}
@@ -292,13 +297,15 @@ export default class Map extends Component {
           />
         </View>
 
-        <View style={styles.firstBar}>
+        <View id='first' style={styles.firstBar}>
           <SearchBar
             ref={(ref) => { this.searchBar = ref; }}
             placeholder='Destination'
             data={['sanjose, sanfrancisco']}
             handleResults={this.logger}
             showOnLoad
+            onFocus={() => console.log('hitting this son')}
+            onBlur={() => this.setState({ active: false })}
             hideBack={x}
             iOSHideShadow={x}
             textColor={'#FF0000'}
@@ -341,5 +348,8 @@ const styles = StyleSheet.create({
   },
   secondBar: {
     flex: 0.15
+  },
+  hide: {
+    flex: 0
   }
 });
