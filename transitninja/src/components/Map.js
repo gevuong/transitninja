@@ -74,9 +74,11 @@ export default class Map extends Component {
           >
             <Image source={BUS_LOGO_GREEN} />
           </MapView.Marker>
-        ));
-      });
-    })
+        )
+      )
+      })
+    });
+
         axios.get('http://localhost:3000/api/muniBusses').then(response => {
           this.setState({ muni_busses: response.data.map(bus => (
             <MapView.Marker
@@ -89,10 +91,11 @@ export default class Map extends Component {
             >
               <Image source={BUS_LOGO_RED} />
             </MapView.Marker>
-          ))
-        })
+          )
+        )
       })
-    }, 60000)
+    });
+  }, 60000)
 
   }
 
