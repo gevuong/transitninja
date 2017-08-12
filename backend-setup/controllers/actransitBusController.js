@@ -23,38 +23,73 @@ let apiArr = ["7cec8694-c386-42b4-870c-a76aef58b40f",
 //   encoding: null
 // };
 
+// const actransitBusController = function(app) {
+//
+//   rp({
+//     method: 'GET',
+//     url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=actransit`,
+//     encoding: null
+//   }).then(function(arr){
+//     console.log(GtfsRealtimeBindings.FeedMessage.decode(arr).entity);
+//     app.get('/api/actransitBusses', function(req, res) {
+//       actransitBusModel.remove().exec();
+//
+//
+//       let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
+//       console.log(array[0]);
+//       let actransitArr = [];
+//       array.forEach(function(entity) {
+//         actransitArr.push({
+//           'id': entity.id,
+//           'trip_id': entity.vehicle.trip.trip_id,
+//           'lon': entity.vehicle.position.longitude,
+//           'lat': entity.vehicle.position.latitude,
+//           'stop_id': entity.vehicle.stop_id
+//           });
+//       });
+//       actransitBussesModel.create(actransitArr, function(err, results){
+//         if (err) {
+//           return console.log(err);
+//         }
+//
+//         res.send(actransitArr);
+//       });
+//     });
+//   });
+// };
+
 const actransitBusController = function(app) {
 
-  rp({
-    method: 'GET',
-    url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=actransit`,
-    encoding: null
-  }).then(function(arr){
+
     app.get('/api/actransitBusses', function(req, res) {
       actransitBusModel.remove().exec();
 
-      console.log({
+
+
+      rp({
         method: 'GET',
         url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=actransit`,
         encoding: null
-      });
+      }).then(function(arr){
 
-      let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
-      let actransitArr = [];
-      array.forEach(function(entity) {
-        actransitArr.push({
-          'id': entity.id,
-          'trip_id': entity.vehicle.trip.trip_id,
-          'lon': entity.vehicle.position.longitude,
-          'lat': entity.vehicle.position.latitude,
-          'stop_id': entity.vehicle.stop_id
-          });
-      });
+        let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
+        console.log(array[0]);
+        let actransitArr = [];
+        array.forEach(function(entity) {
+          actransitArr.push({
+            'id': entity.id,
+            'trip_id': entity.vehicle.trip.trip_id,
+            'lon': entity.vehicle.position.longitude,
+            'lat': entity.vehicle.position.latitude,
+            'stop_id': entity.vehicle.stop_id
+            });
+        });
+
       actransitBussesModel.create(actransitArr, function(err, results){
         if (err) {
           return console.log(err);
         }
-
+        console.log(actransitArr);
         res.send(actransitArr);
       });
     });

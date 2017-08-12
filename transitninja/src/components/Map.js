@@ -47,6 +47,8 @@ export default class Map extends Component {
     this.getDirections = this.getDirections.bind(this);
     this.toggleACTransit = this.toggleACTransit.bind(this);
     this.renderACTransitBusses = this.renderACTransitBusses.bind(this);
+    this.makeAxiosRequests = this.makeAxiosRequests.bind(this);
+    this.renderMuniBusses = this.renderMuniBusses.bind(this);
   }
 
 
@@ -60,12 +62,44 @@ export default class Map extends Component {
   }
 
   makeAxiosRequests() {
-    axios.get('http://localhost:3000/api/actransitBusses').then(response => {
-      this.setState({ actransit_busses: response.data });
+    setInterval(()=>{
+      axios.get('http://localhost:3000/api/actransitBusses').then(response => {
+        this.setState({ actransit_busses: response.data.map(bus => (
+          <MapView.Marker
+            coordinate={{
+              latitude: bus.lat + 0.000060 || -36.82339,
+              longitude: bus.lon || -73.03569
+            }}
+            title={bus.trip_id}
+            key={bus.id}
+          >
+            <Image source={BUS_LOGO_GREEN} />
+          </MapView.Marker>
+        )
+      )
+      })
+
     });
-    axios.get('http://localhost:3000/api/muniBusses').then(response => {
-    this.setState({ muni_busses: response.data });
+
+        axios.get('http://localhost:3000/api/muniBusses').then(response => {
+          console.log("-------1", response.data);
+          this.setState({ muni_busses: response.data.map(bus => (
+            <MapView.Marker
+              coordinate={{
+                latitude: bus.lat + 0.000060 || -36.82339,
+                longitude: bus.lon || -73.03569
+              }}
+              title={bus.trip_id}
+              key={bus.id}
+            >
+              <Image source={BUS_LOGO_RED} />
+            </MapView.Marker>
+          )
+        )
+      })
     });
+  }, 60000)
+
   }
 
   componentDidMount() {
@@ -105,7 +139,7 @@ export default class Map extends Component {
       // fetch directions from google.
       const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${endLoc}`);
       const respJson = await resp.json();
-      console.log(respJson);
+      // console.log(respJson);
       // decode encoded polyline data.
       const points = Polyline.decode(respJson.routes[0].overview_polyline.points);
       // converts polyline data into a list of objects
@@ -113,7 +147,7 @@ export default class Map extends Component {
         return { latitude: point[0], longitude: point[1] };
       });
       this.setState({ coordo: coords });
-      console.log(this.state.coordo);
+      // console.log(this.state.coordo);
       return coords;
     } catch (error) {
       return error;
@@ -133,7 +167,7 @@ export default class Map extends Component {
   }
 
   renderMuni() {
-    console.log('from render', this.state.muni_stops_to_render);
+    // console.log('from render', this.state.muni_stops_to_render);
     return this.state.muni_stops_to_render.map(stop => (
       <MapView.Marker
         coordinate={{
@@ -160,35 +194,22 @@ export default class Map extends Component {
   }
 
   renderACTransitBusses() {
-    console.log(this.state.actransit_busses);
 
-    return this.state.actransit_busses.map(bus => (
-      <MapView.Marker
-        coordinate={{
-          latitude: bus.lat + 0.000060 || -36.82339,
-          longitude: bus.lon || -73.03569
-        }}
-        title={bus.trip_id}
-        key={bus.id}
-      >
-        <Image source={BUS_LOGO_GREEN} />
-      </MapView.Marker>
-    ));
+
+
+    // console.log(this.state.actransit_busses[0]);
+    // this.forceUpdate();
+    return this.state.actransit_busses;
+
   }
 
   renderMuniBusses() {
-    return this.state.muni_busses.map(bus => (
-      <MapView.Marker
-        coordinate={{
-          latitude: bus.lat + 0.000060 || -36.82339,
-          longitude: bus.lon || -73.03569
-        }}
-        title={bus.trip_id}
-        key={bus.id}
-      >
-        <Image source={BUS_LOGO_RED} />
-      </MapView.Marker>
-    ));
+
+
+    // console.log(this.state.muni_busses[0]);
+    // this.forceUpdate();
+    return this.state.muni_busses;
+
   }
 
 
@@ -224,7 +245,7 @@ export default class Map extends Component {
   }
 
   renderPol() {
-    console.log('yooukhkgughhhhhh');
+    // console.log('yooukhkgughhhhhh');
     return (
     <MapView.Polyline
        coordinates={this.state.coordo}
