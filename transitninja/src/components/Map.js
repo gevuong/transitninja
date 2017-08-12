@@ -78,6 +78,7 @@ export default class Map extends Component {
         )
       )
       })
+
     });
 
         axios.get('http://localhost:3000/api/muniBusses').then(response => {
@@ -197,7 +198,7 @@ export default class Map extends Component {
 
 
     // console.log(this.state.actransit_busses[0]);
-
+    // this.forceUpdate();
     return this.state.actransit_busses;
 
   }
@@ -206,6 +207,7 @@ export default class Map extends Component {
 
 
     // console.log(this.state.muni_busses[0]);
+    // this.forceUpdate();
     return this.state.muni_busses;
 
   }
