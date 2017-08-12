@@ -47,6 +47,7 @@ export default class Map extends Component {
     this.getDirections = this.getDirections.bind(this);
     this.toggleACTransit = this.toggleACTransit.bind(this);
     this.renderACTransitBusses = this.renderACTransitBusses.bind(this);
+    this.makeAxiosRequests = this.makeAxiosRequests.bind(this);
   }
 
 
@@ -60,12 +61,15 @@ export default class Map extends Component {
   }
 
   makeAxiosRequests() {
-    axios.get('http://localhost:3000/api/actransitBusses').then(response => {
-      this.setState({ actransit_busses: response.data });
-    });
-    axios.get('http://localhost:3000/api/muniBusses').then(response => {
-    this.setState({ muni_busses: response.data });
-    });
+    setInterval(()=>{
+      axios.get('http://localhost:3000/api/actransitBusses').then(response => {
+        this.setState({ actransit_busses: response.data });
+      axios.get('http://localhost:3000/api/muniBusses').then(response => {
+        this.setState({ muni_busses: response.data });
+        this.forceUpdate()});
+
+    }, 60000)
+
   }
 
   componentDidMount() {
