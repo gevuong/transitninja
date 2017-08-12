@@ -63,11 +63,35 @@ export default class Map extends Component {
   makeAxiosRequests() {
     setInterval(()=>{
       axios.get('http://localhost:3000/api/actransitBusses').then(response => {
-        this.setState({ actransit_busses: response.data });
-      axios.get('http://localhost:3000/api/muniBusses').then(response => {
-        this.setState({ muni_busses: response.data });
-        this.forceUpdate()});
-
+        this.setState({ actransit_busses: response.data.map(bus => (
+          <MapView.Marker
+            coordinate={{
+              latitude: bus.lat + 0.000060 || -36.82339,
+              longitude: bus.lon || -73.03569
+            }}
+            title={bus.trip_id}
+            key={bus.id}
+          >
+            <Image source={BUS_LOGO_GREEN} />
+          </MapView.Marker>
+        ));
+      });
+    })
+        axios.get('http://localhost:3000/api/muniBusses').then(response => {
+          this.setState({ muni_busses: response.data.map(bus => (
+            <MapView.Marker
+              coordinate={{
+                latitude: bus.lat + 0.000060 || -36.82339,
+                longitude: bus.lon || -73.03569
+              }}
+              title={bus.trip_id}
+              key={bus.id}
+            >
+              <Image source={BUS_LOGO_RED} />
+            </MapView.Marker>
+          ))
+        })
+      })
     }, 60000)
 
   }
@@ -166,33 +190,11 @@ export default class Map extends Component {
   renderACTransitBusses() {
     console.log(this.state.actransit_busses);
 
-    return this.state.actransit_busses.map(bus => (
-      <MapView.Marker
-        coordinate={{
-          latitude: bus.lat + 0.000060 || -36.82339,
-          longitude: bus.lon || -73.03569
-        }}
-        title={bus.trip_id}
-        key={bus.id}
-      >
-        <Image source={BUS_LOGO_GREEN} />
-      </MapView.Marker>
-    ));
+    return this.state.actransit_busses;
   }
 
   renderMuniBusses() {
-    return this.state.muni_busses.map(bus => (
-      <MapView.Marker
-        coordinate={{
-          latitude: bus.lat + 0.000060 || -36.82339,
-          longitude: bus.lon || -73.03569
-        }}
-        title={bus.trip_id}
-        key={bus.id}
-      >
-        <Image source={BUS_LOGO_RED} />
-      </MapView.Marker>
-    ));
+    return this.state.muni_busses;
   }
 
 
