@@ -30,16 +30,13 @@ const actransitBusController = function(app) {
     url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=actransit`,
     encoding: null
   }).then(function(arr){
+    console.log(GtfsRealtimeBindings.FeedMessage.decode(arr).entity);
     app.get('/api/actransitBusses', function(req, res) {
       actransitBusModel.remove().exec();
 
-      console.log({
-        method: 'GET',
-        url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=actransit`,
-        encoding: null
-      });
 
       let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
+      console.log(array[0]);
       let actransitArr = [];
       array.forEach(function(entity) {
         actransitArr.push({
