@@ -17,6 +17,7 @@
     "react-native": "0.47.1",
     "react-native-action-button": "^2.7.2",
     "react-native-button": "^2.1.0",
+    "react-native-google-places": "^2.4.2",
     "react-native-icons": "^0.7.1",
     "react-native-maps": "^0.15.3",
     "react-native-router-flux": "^4.0.0-beta.17",

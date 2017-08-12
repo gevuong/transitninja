@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity, Text } from 'react-native';
 import MapView from 'react-native-maps';
+import RNGooglePlaces from 'react-native-google-places';
 
 import Polyline from '@mapbox/polyline';
 import ToggleButton from './ToggleButton';
@@ -149,19 +150,30 @@ export default class Map extends Component {
   }
 
   renderMuniBusses() {
-    // return this.state.muni_busses.map(bus => (
-    //   <MapView.Marker
-    //     coordinate={{
-    //       latitude: bus.lat + 0.000060 || -36.82339,
-    //       longitude: bus.lon || -73.03569
-    //     }}
-    //     title={bus.trip_id}
-    //     key={bus.id}
-    //   >
-    //     <Image source={BUS_LOGO_RED} />
-    //   </MapView.Marker>
-    // ));
+    return this.state.muni_busses.map(bus => (
+      <MapView.Marker
+        coordinate={{
+          latitude: bus.lat + 0.000060 || -36.82339,
+          longitude: bus.lon || -73.03569
+        }}
+        title={bus.trip_id}
+        key={bus.id}
+      >
+        <Image source={BUS_LOGO_RED} />
+      </MapView.Marker>
+    ));
   }
+
+
+  openSearchModal() {
+   RNGooglePlaces.openAutocompleteModal()
+   .then((place) => {
+       console.log(place);
+       // place represents user's selection from the
+       // suggestions and it is a simplified Google Place object.
+   })
+   .catch(error => console.log(error.message));  // error is a Javascript Error object
+ }
 
 
 // note that I removed onRegionChange from the MapView props. This will speed up our app a bit. But if we WANT to update the mapRegion whenever we move the map around, then we'll need to put i back in.
@@ -222,6 +234,14 @@ export default class Map extends Component {
               />
             </View>
           </TouchableHighlight>
+          <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => this.openSearchModal()}
+        >
+          <Text>Pick a Place</Text>
+        </TouchableOpacity>
+      </View>
         </View>
       </View>
     );
