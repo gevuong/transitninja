@@ -1,3 +1,6 @@
+var bartRoutes = require('./bartRoute');
+
+
 var bartTrip = function(){
   var fs = require('fs');
   var initialData =[];
@@ -24,7 +27,24 @@ var bartTrip = function(){
 };
 
 
+var info = function (){
+  var arrs = [];
+  let bartInfo = bartRoutes.bartRoutes();
+  let tripping = bartTrip();
+  tripping.forEach(function(ops){
+    bartInfo.forEach(function(op2){
+      if(ops.route_id === op2.route_id){
+        arrs.push(Object.assign(ops, op2));
+      }
+    });
+  });
+  return arrs;
+};
+
+
+console.log(info());
 module.exports.bartTrip = bartTrip;
+module.exports.info = info;
 
 
-console.log(bartTrip());
+// console.log(bartTrip());

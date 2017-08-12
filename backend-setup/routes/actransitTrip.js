@@ -1,3 +1,5 @@
+var actransitRoutes = require('./actransitRoute');
+
 var actransitTrip = function(){
   var fs = require('fs');
   var initialData =[];
@@ -24,7 +26,25 @@ var actransitTrip = function(){
 };
 
 
+var info = function (){
+  var arrs = [];
+  let actransitInfo = actransitRoutes.actransitRoutes();
+  let tripping = actransitTrip();
+  tripping.forEach(function(ops){
+    actransitInfo.forEach(function(op2){
+      if(ops.route_id === op2.route_id){
+        arrs.push(Object.assign(ops, op2));
+      }
+    });
+  });
+  return arrs;
+};
+
+
+// console.log(info());
+
 module.exports.actransitTrip = actransitTrip;
+module.exports.info = info;
 
 
-console.log(actransitTrip());
+// console.log(actransitTrip());

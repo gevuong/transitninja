@@ -36,10 +36,13 @@
 //   // this.getDirections('40.1884979, 29.061018', '41.0082,28.9784');
 // }
 
+
+
   // logger() {
   //     // console.log('test');
   //
   // }
+
 
 
 // async getDirections() {
