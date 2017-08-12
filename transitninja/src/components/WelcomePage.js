@@ -9,14 +9,14 @@ import { Actions } from 'react-native-router-flux';
 //
 // const NINJA_ICON = require('../../assets/transitninjaicon.png');
 // const NINJA_LOGO = require('../../assets/transitninjalogo.png');
-const NINJA_ICON_YELLOW = require('../../assets/transitninjaicon2.png');
+const NINJA_ICON = require('../../assets/transitninjaicon2.png');
 
 const WelcomePage = () => {
   return (
     <View style={styles.container}>
     <TouchableHighlight onPress={() => { Actions.mapPage(); }}>
       <View style={styles.viewStyle}>
-        <Image source={NINJA_ICON_YELLOW} />
+        <Image source={NINJA_ICON} />
       </View>
     </TouchableHighlight>
     </View>

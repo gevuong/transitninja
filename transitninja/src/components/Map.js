@@ -1,17 +1,20 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, TouchableHighlight } from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
+import MapView from 'react-native-maps';
 
 import Polyline from '@mapbox/polyline';
 import SearchBar from 'react-native-searchbar';
 import ToggleButton from './ToggleButton';
 import Button from 'react-native-button';
+import { Actions } from 'react-native-router-flux';
+import Search from './Search';
 
 const BUS_LOGO_GREEN = require('../../assets/bus_icon_green.png');
 const BUS_LOGO_RED = require('../../assets/bus_icon_red.png');
 const AC_TRANSIT_LOGO = require('../../assets/ac_transit_logo.png');
 const PIN_SHOW = require('../../assets/pin_show.png');
+const HAMBURGER = require('../../assets/hamburger.png');
 
 const startLoc = 'sanjose';
 const endLoc = 'sanfrancisco';
@@ -131,56 +134,69 @@ export default class Map extends Component {
   }
 
   renderACTransitBusses() {
-    console.log(this.state.actransit_busses);
-
-    return this.state.actransit_busses.map(bus => (
-      <MapView.Marker
-        coordinate={{
-          latitude: bus.lat + 0.000060 || -36.82339,
-          longitude: bus.lon || -73.03569
-        }}
-        title={bus.trip_id}
-        key={bus.id}
-      >
-        <Image source={BUS_LOGO_GREEN} />
-      </MapView.Marker>
-    ));
+    // console.log(this.state.actransit_busses);
+    //
+    // return this.state.actransit_busses.map(bus => (
+    //   <MapView.Marker
+    //     coordinate={{
+    //       latitude: bus.lat + 0.000060 || -36.82339,
+    //       longitude: bus.lon || -73.03569
+    //     }}
+    //     title={bus.trip_id}
+    //     key={bus.id}
+    //   >
+    //     <Image source={BUS_LOGO_GREEN} />
+    //   </MapView.Marker>
+    // ));
   }
 
   renderMuniBusses() {
-    return this.state.muni_busses.map(bus => (
-      <MapView.Marker
-        coordinate={{
-          latitude: bus.lat + 0.000060 || -36.82339,
-          longitude: bus.lon || -73.03569
-        }}
-        title={bus.trip_id}
-        key={bus.id}
-      >
-        <Image source={BUS_LOGO_RED} />
-      </MapView.Marker>
-    ));
+    // return this.state.muni_busses.map(bus => (
+    //   <MapView.Marker
+    //     coordinate={{
+    //       latitude: bus.lat + 0.000060 || -36.82339,
+    //       longitude: bus.lon || -73.03569
+    //     }}
+    //     title={bus.trip_id}
+    //     key={bus.id}
+    //   >
+    //     <Image source={BUS_LOGO_RED} />
+    //   </MapView.Marker>
+    // ));
   }
 
 
 // note that I removed onRegionChange from the MapView props. This will speed up our app a bit. But if we WANT to update the mapRegion whenever we move the map around, then we'll need to put i back in.
 
+
+// <SearchBar
+//   ref={(ref) => { this.searchBar = ref; }}
+//   data={['sanjose, sanfrancisco']}
+//   handleResults={this.logger}
+//   showOnLoad
+//   textColor={'#FF0000'}
+//   handleChangeText={(e) => this.setState({ destination: e })}
+//   onSubmitEditing={() => this.getDirections().then(this.renderPol())}
+//   />
+
   render() {
     return (
       <View style={styles.viewStyle}>
-          <SearchBar
-            ref={(ref) => { this.searchBar = ref; }}
-            data={['sanjose, sanfrancisco']}
-            handleResults={this.logger}
-            showOnLoad
-            textColor={'#FF0000'}
-            handleChangeText={(e) => this.setState({ destination: e })}
-            onSubmitEditing={() => this.getDirections().then(this.renderPol())}
-            style={{ marginTop: -80 }}
+        <Search
+          ref={(ref) => { this.searchBar = ref; }}
+          data={['sanjose, sanfrancisco']}
+          handleResults={this.logger}
+          showOnLoad
+          textColor={'#FF0000'}
+          handleChangeText={(e) => this.setState({ destination: e })}
+          onSubmitEditing={() => this.getDirections().then(this.renderPol())}
           />
+      <View style={styles.hamburger}>
+        <TouchableOpacity onPress={() => Actions.modal()}>
+          <Image source={HAMBURGER} />
+        </TouchableOpacity>
+      </View>
         <MapView
-          provider={PROVIDER_GOOGLE}
-          customMapStyle={MapStyle}
           region={this.state.mapRegion}
           showsUserLocation
           followUserLocation
@@ -227,6 +243,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'stretch'
   },
+  hamburger: {
+    flex: 1,
+    position: 'absolute',
+    zIndex: 100,
+    marginTop: 40,
+    marginLeft: 340
+  },
   mapStyle: {
     flex: 1
   },
@@ -235,7 +258,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     bottom: 20,
-    top: 485,
+    top: 580,
     left: 50,
     right: 50
   },
@@ -246,234 +269,6 @@ const styles = StyleSheet.create({
     opacity: 1
   }
 });
-
-const mapStyle = [
-  {
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#242f3e'
-      }
-    ]
-  },
-  {
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#746855'
-      }
-    ]
-  },
-  {
-    'elementType': 'labels.text.stroke',
-    'stylers': [
-      {
-        'color': '#242f3e'
-      }
-    ]
-  },
-  {
-    'featureType': 'administrative.locality',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#d59563'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#d59563'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi.attraction',
-    'stylers': [
-      {
-        'visibility': 'off'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi.business',
-    'stylers': [
-      {
-        'visibility': 'off'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi.government',
-    'stylers': [
-      {
-        'visibility': 'off'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi.medical',
-    'stylers': [
-      {
-        'visibility': 'off'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi.park',
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#263c3f'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi.park',
-    'elementType': 'labels.text',
-    'stylers': [
-      {
-        'visibility': 'off'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi.park',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#6b9a76'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi.place_of_worship',
-    'stylers': [
-      {
-        'visibility': 'off'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi.school',
-    'stylers': [
-      {
-        'visibility': 'off'
-      }
-    ]
-  },
-  {
-    'featureType': 'poi.sports_complex',
-    'stylers': [
-      {
-        'visibility': 'off'
-      }
-    ]
-  },
-  {
-    'featureType': 'road',
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#38414e'
-      }
-    ]
-  },
-  {
-    'featureType': 'road',
-    'elementType': 'geometry.stroke',
-    'stylers': [
-      {
-        'color': '#212a37'
-      }
-    ]
-  },
-  {
-    'featureType': 'road',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#9ca5b3'
-      }
-    ]
-  },
-  {
-    'featureType': 'road.highway',
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#746855'
-      }
-    ]
-  },
-  {
-    'featureType': 'road.highway',
-    'elementType': 'geometry.stroke',
-    'stylers': [
-      {
-        'color': '#1f2835'
-      }
-    ]
-  },
-  {
-    'featureType': 'road.highway',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#f3d19c'
-      }
-    ]
-  },
-  {
-    'featureType': 'transit',
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#2f3948'
-      }
-    ]
-  },
-  {
-    'featureType': 'transit.station',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#d59563'
-      }
-    ]
-  },
-  {
-    'featureType': 'water',
-    'elementType': 'geometry',
-    'stylers': [
-      {
-        'color': '#17263c'
-      }
-    ]
-  },
-  {
-    'featureType': 'water',
-    'elementType': 'labels.text.fill',
-    'stylers': [
-      {
-        'color': '#515c6d'
-      }
-    ]
-  },
-  {
-    'featureType': 'water',
-    'elementType': 'labels.text.stroke',
-    'stylers': [
-      {
-        'color': '#17263c'
-      }
-    ]
-  }
-];
-
 
 // $link-color-nav: #353535;
 // $dark-medium-gray: rgb(62, 62, 62);

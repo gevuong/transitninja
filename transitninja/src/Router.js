@@ -14,11 +14,9 @@ const RouterComponent = () => {
           hideNavBar
         />
         <Scene
-          onRight={() => Actions.modal()}
-          rightTitle="Menu"
+          hideNavBar
           key="mapPage"
           component={Map}
-          title="Map Page"
           initial
         />
         <Scene
