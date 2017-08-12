@@ -12,7 +12,6 @@ const RouterComponent = () => {
           key="welcome"
           component={WelcomePage}
           hideNavBar
-          initial
         />
         <Scene
           onRight={() => Actions.modal()}
@@ -20,6 +19,7 @@ const RouterComponent = () => {
           key="mapPage"
           component={Map}
           title="Map Page"
+          initial
         />
         <Scene
           key="modal"

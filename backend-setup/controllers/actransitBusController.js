@@ -48,17 +48,23 @@ const actransitBusController = function(app) {
           'lon': entity.vehicle.position.longitude,
           'lat': entity.vehicle.position.latitude,
           'stop_id': entity.vehicle.stop_id
+          // 'route_name: getRoutename()
           });
       });
       actransitBussesModel.create(actransitArr, function(err, results){
         if (err) {
           return console.log(err);
         }
-
-        res.send(actransitArr);
       });
     });
   });
 };
+
+import joinTable from 'file'
+
+getRouteName(bus.trip_id){
+  return joinTable[trip_id]
+}
+
 
 module.exports = actransitBusController;
