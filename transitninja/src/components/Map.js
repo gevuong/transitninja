@@ -134,50 +134,40 @@ export default class Map extends Component {
   }
 
   renderACTransitBusses() {
-    // console.log(this.state.actransit_busses);
-    //
-    // return this.state.actransit_busses.map(bus => (
-    //   <MapView.Marker
-    //     coordinate={{
-    //       latitude: bus.lat + 0.000060 || -36.82339,
-    //       longitude: bus.lon || -73.03569
-    //     }}
-    //     title={bus.trip_id}
-    //     key={bus.id}
-    //   >
-    //     <Image source={BUS_LOGO_GREEN} />
-    //   </MapView.Marker>
-    // ));
+    console.log(this.state.actransit_busses);
+
+    return this.state.actransit_busses.map(bus => (
+      <MapView.Marker
+        coordinate={{
+          latitude: bus.lat + 0.000060 || -36.82339,
+          longitude: bus.lon || -73.03569
+        }}
+        title={bus.trip_id}
+        key={bus.id}
+      >
+        <Image source={BUS_LOGO_GREEN} />
+      </MapView.Marker>
+    ));
   }
 
   renderMuniBusses() {
-    // return this.state.muni_busses.map(bus => (
-    //   <MapView.Marker
-    //     coordinate={{
-    //       latitude: bus.lat + 0.000060 || -36.82339,
-    //       longitude: bus.lon || -73.03569
-    //     }}
-    //     title={bus.trip_id}
-    //     key={bus.id}
-    //   >
-    //     <Image source={BUS_LOGO_RED} />
-    //   </MapView.Marker>
-    // ));
+    return this.state.muni_busses.map(bus => (
+      <MapView.Marker
+        coordinate={{
+          latitude: bus.lat + 0.000060 || -36.82339,
+          longitude: bus.lon || -73.03569
+        }}
+        title={bus.trip_id}
+        key={bus.id}
+      >
+        <Image source={BUS_LOGO_RED} />
+      </MapView.Marker>
+    ));
   }
 
 
 // note that I removed onRegionChange from the MapView props. This will speed up our app a bit. But if we WANT to update the mapRegion whenever we move the map around, then we'll need to put i back in.
 
-
-// <SearchBar
-//   ref={(ref) => { this.searchBar = ref; }}
-//   data={['sanjose, sanfrancisco']}
-//   handleResults={this.logger}
-//   showOnLoad
-//   textColor={'#FF0000'}
-//   handleChangeText={(e) => this.setState({ destination: e })}
-//   onSubmitEditing={() => this.getDirections().then(this.renderPol())}
-//   />
 
   render() {
     return (
@@ -187,7 +177,8 @@ export default class Map extends Component {
           data={['sanjose, sanfrancisco']}
           handleResults={this.logger}
           showOnLoad
-          textColor={'#FF0000'}
+          hideBack
+          textColor={'black'}
           handleChangeText={(e) => this.setState({ destination: e })}
           onSubmitEditing={() => this.getDirections().then(this.renderPol())}
           />
@@ -208,6 +199,7 @@ export default class Map extends Component {
         <View style={styles.buttonView}>
           <TouchableHighlight
             activeOpacity={1}
+            underlayColor={'rgba(255, 0, 0, 0)'}
             onPress={this.toggleMuni}
             style={this.state.showMuni ? styles.buttonPress : styles.button}
           >
@@ -220,6 +212,7 @@ export default class Map extends Component {
           </TouchableHighlight>
           <TouchableHighlight
             activeOpacity={1}
+            underlayColor={'rgba(255, 0, 0, 0)'}
             onPress={this.toggleACTransit}
             style={this.state.showACTransit ? styles.buttonPress : styles.button}
           >
@@ -247,8 +240,8 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'absolute',
     zIndex: 100,
-    marginTop: 40,
-    marginLeft: 340
+    marginTop: 55,
+    marginLeft: 335
   },
   mapStyle: {
     flex: 1

@@ -86,7 +86,7 @@ export default class Search extends Component {
     fontFamily: 'System',
     allDataOnEmptySearch: false,
     backCloseSize: 28,
-    fontSize: 20
+    fontSize: 16
   }
 
   constructor(props) {
@@ -241,6 +241,7 @@ export default class Search extends Component {
       <Animated.View style={[styles.container, {
           top: this.state.top,
           shadowOpacity: iOSHideShadow ? 0 : 0.7,
+          backgroundColor: 'white'
       }]}>
         {
         this.state.show &&
@@ -251,7 +252,7 @@ export default class Search extends Component {
           }
           <View style={[
               styles.nav,
-              { height: (Platform.OS === 'ios' ? 52 : 62) + heightAdjust },
+              { height: (Platform.OS === 'ios' ? 40 : 62) + heightAdjust },
             ]}
           >
           {
@@ -315,7 +316,8 @@ export default class Search extends Component {
                 size={backCloseSize}
                 style={{
                   color: hideX || this.state.input == '' ? backgroundColor : iconColor,
-                  padding: heightAdjust / 2 + 10
+                  padding: heightAdjust / 2,
+                  marginRight: 25
                 }}
               />
               }
@@ -335,9 +337,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     elevation: 2,
     shadowRadius: 5,
+    marginLeft: 20,
+    marginTop: 40,
+    height: 45
   },
   navWrapper: {
-    width: Dimensions.get('window').width,
+    width: Dimensions.get('window').width - 75
   },
   nav: {
     ...Platform.select({
@@ -350,13 +355,13 @@ const styles = StyleSheet.create({
     flexBasis: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   input: {
     ...Platform.select({
         ios: { height: 30 },
-        android: { height: 50 },
+        android: { height: 40 },
     }),
-    width: Dimensions.get('window').width - 120,
+    width: Dimensions.get('window').width - 100,
   }
 });
