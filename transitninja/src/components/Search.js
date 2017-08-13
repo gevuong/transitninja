@@ -68,7 +68,7 @@ export default class Search extends Component {
     iconColor: 'gray',
     textColor: 'gray',
     selectionColor: 'lightskyblue',
-    placeholderTextColor: 'lightgray',
+    placeholderTextColor: 'gray',
     animate: true,
     animationDuration: 200,
     showOnLoad: false,

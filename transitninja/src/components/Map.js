@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity, Text, Picker } from 'react-native';
 import MapView from 'react-native-maps';
 import RNGooglePlaces from 'react-native-google-places';
+import Modal from 'react-native-animated-modal'
 
 import Polyline from '@mapbox/polyline';
-import ToggleButton from './ToggleButton';
+import ToggleButton from './ToggleButton'
 import Button from 'react-native-button';
 import { Actions } from 'react-native-router-flux';
 import Search from './Search';
@@ -41,13 +42,15 @@ export default class Map extends Component {
       longitude: '',
     destination: '',
     coordo: [],
-    res: ''
-
+    res: '',
+    predictions: [],
+    isPickerVisible: false
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.getDirections = this.getDirections.bind(this);
     this.toggleACTransit = this.toggleACTransit.bind(this);
     this.renderACTransitBusses = this.renderACTransitBusses.bind(this);
+    this.openSearchModal = this.openSearchModal.bind(this);
   }
 
 
@@ -164,19 +167,35 @@ export default class Map extends Component {
     ));
   }
 
-
   openSearchModal() {
-   RNGooglePlaces.openAutocompleteModal()
+   RNGooglePlaces.openAutocompleteModal(
+     {
+      //  passing in this options hash allows us to restric auto complete searches to places within 300 km of users current location.
+       latitude: this.state.lastLat,
+       longitude: this.state.lastLong,
+       radius: 300
+     }
+   )
    .then((place) => {
-       console.log(place);
+     this.setState({ destination: place.address })
        // place represents user's selection from the
        // suggestions and it is a simplified Google Place object.
+      //  we will set destination equal to place.address.
+      this.getDirections();
    })
    .catch(error => console.log(error.message));  // error is a Javascript Error object
  }
 
-
 // note that I removed onRegionChange from the MapView props. This will speed up our app a bit. But if we WANT to update the mapRegion whenever we move the map around, then we'll need to put i back in.
+
+            // (e) => this.setState({ destination: e })
+
+            // <TouchableOpacity
+            //   style={styles.button}
+            //   onPress={() => this.openSearchModal()}
+            // >
+            //   <Text>Pick a Place</Text>
+            // </TouchableOpacity>
 
 
   render() {
@@ -186,13 +205,15 @@ export default class Map extends Component {
           ref={(ref) => { this.searchBar = ref; }}
           data={['sanjose, sanfrancisco']}
           handleResults={this.logger}
+          onFocus={this.openSearchModal}
+          focusOnLayout={false}
           showOnLoad
           placeholder="Where To?"
           hideBack
           textColor={'black'}
-          handleChangeText={(e) => this.setState({ destination: e })}
+          handleChangeText={e => this.getAutoComplete(e)}
           onSubmitEditing={() => this.getDirections().then(this.renderPol())}
-          />
+        />
       <View style={styles.hamburger}>
         <TouchableOpacity onPress={() => Actions.modal()}>
           <Image source={HAMBURGER} />
@@ -234,15 +255,7 @@ export default class Map extends Component {
               />
             </View>
           </TouchableHighlight>
-          <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.openSearchModal()}
-        >
-          <Text>Pick a Place</Text>
-        </TouchableOpacity>
-      </View>
-        </View>
+          </View>
       </View>
     );
   }
@@ -267,18 +280,24 @@ const styles = StyleSheet.create({
   },
   buttonView: {
     position: 'absolute',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-around',
-    bottom: 20,
-    top: 580,
-    left: 50,
-    right: 50
+    bottom: 100,
+    top: 400,
+    left: 300,
+    right: 50,
+    height: 220
   },
   buttonPress: {
     opacity: 0.5
   },
   button: {
     opacity: 1
+  },
+  modalStyle: {
+    height: 100,
+    marginTop: 50,
+    backgroundColor: 'white'
   }
 });
 

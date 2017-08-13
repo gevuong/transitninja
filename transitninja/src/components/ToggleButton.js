@@ -5,7 +5,7 @@ const ToggleButton = ({ logo, text }) => {
   return (
     <View style={styles.toggleStyle}>
       <View style={styles.darkShadow}>
-      <Image source={logo} />
+        <Image source={logo} />
       </View>
       <View style={styles.lightShadow}>
         <Text style={styles.textStyle}>{text}</Text>
@@ -32,12 +32,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.6,
   },
   textStyle: {
-
     fontSize: 14,
-    textAlign: 'center',
     fontWeight: '400',
+    textAlign: 'center'
   },
   lightShadow: {
+    height: 100,
+    width: 100,
     marginTop: 40,
     padding: 10,
     shadowColor: '#ffffff',

@@ -12,12 +12,13 @@ const RouterComponent = () => {
           key="welcome"
           component={WelcomePage}
           hideNavBar
-          initial
+
         />
         <Scene
           hideNavBar
           key="mapPage"
           component={Map}
+                    initial
         />
         <Scene
           key="modal"
