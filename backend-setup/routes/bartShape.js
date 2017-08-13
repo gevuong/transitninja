@@ -25,4 +25,4 @@ var bartShape = function(){
 module.exports.bartShape = bartShape;
 
 
-console.log(bartShape());
+// console.log(bartShape());

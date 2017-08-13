@@ -17,8 +17,8 @@ var muniRoutes = function(){
   });
   var dummy = [];
   dataToArray.forEach(function(op, idx){
-  dummy.push({'route_id': op[0], 'agency_id': op[1], 'route_short_name':op[2],'route_long_name': op[3],
-  'route_desc': op[4], 'route_type': op[5], 'route_url': op[6], 'route_color': op[7], 'route_text_color': op[8]});
+  dummy.push({'route_long_name': op[0], 'route_type': op[1], 'route_text_color':op[2],'route_color': op[3],
+  'agency_id': op[4], 'route_id': op[5], 'route_url': op[6], 'route_desc': op[7], 'route_short_name': op[8]});
   });
   return dummy;
 };

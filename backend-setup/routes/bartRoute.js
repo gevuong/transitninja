@@ -27,4 +27,4 @@ module.exports.bartRoutes = bartRoutes;
 
 
 
-console.log(bartRoutes());
+// console.log(bartRoutes());

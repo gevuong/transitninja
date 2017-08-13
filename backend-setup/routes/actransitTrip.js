@@ -45,5 +45,5 @@ module.exports.info = info;
 
 module.exports.actransitTrip = actransitTrip;
 
-console.log(info());
+// console.log(info());
 // console.log(actransitTrip());

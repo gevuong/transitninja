@@ -26,6 +26,6 @@ dataToArray.forEach(function(op, idx){
 return dummy;
 };
 
-console.log(bartStations());
+// console.log(bartStations());
 
 module.exports.bartStations = bartStations;
