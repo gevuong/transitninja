@@ -1,18 +1,25 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import { Actions } from 'react-native-router-flux';
-import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity, Text, Button, Dimensions, AlertIOS } from 'react-native';
 import MapView from 'react-native-maps';
 import RNGooglePlaces from 'react-native-google-places';
+import SlidingUpPanel from 'react-native-sliding-up-panel';
 
 import Polyline from '@mapbox/polyline';
 import ToggleButton from './ToggleButton';
 import Search from './Search';
+import HandlerOne from './HandlerOne';
 
 const BUS_LOGO_GREEN = require('../../assets/bus_icon_green.png');
 const BUS_LOGO_RED = require('../../assets/bus_icon_red.png');
 const PIN_SHOW = require('../../assets/pin_show_orange.png');
 const HAMBURGER = require('../../assets/hamburger.png');
+
+var deviceHeight = Dimensions.get('window').height;
+
+var MAXIMUM_HEIGHT = deviceHeight - 100;
+var MINUMUM_HEIGHT = 80;
 
 export default class Map extends Component {
 
@@ -40,8 +47,8 @@ export default class Map extends Component {
       coordo: [],
       res: '',
       predictions: [],
-      isPickerVisible: false,
-      renderPol: false
+      renderPol: false,
+      containerHeight: 0
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.getDirections = this.getDirections.bind(this);
@@ -152,7 +159,7 @@ export default class Map extends Component {
   async getDirections(destination) {
     try {
       // fetch directions from google.
-      const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${`${this.state.userLat},${this.state.userLong}`}&destination=${destination.address}&mode=transit`);
+      const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${`${this.state.userLat},${this.state.userLong}`}&destination=${destination}&mode=transit`);
       const respJson = await resp.json();
       console.log(respJson);
       // decode encoded polyline data.
@@ -182,11 +189,17 @@ export default class Map extends Component {
   }
 
   renderMuniBusses() {
-    return this.state.muni_busses;
+    // return this.state.muni_busses;
   }
 
   renderACTransitBusses() {
-    return this.state.actransit_busses;
+    // return this.state.actransit_busses;
+  }
+
+  getContainerHeight = (height) => {
+    this.setState({
+      containerHeight: height
+    });
   }
 
   openSearchModal() {
@@ -199,6 +212,7 @@ export default class Map extends Component {
     )
     .then((place) => {
       this.setState({ destination: place });
+      console.log('place', place);
       // place represents user's selection from the
       // suggestions and it is a simplified Google Place object.
       //  we will set destination equal to place.address.
@@ -219,7 +233,7 @@ export default class Map extends Component {
        latitude: this.state.destination.latitude || -36.82339,
        longitude: this.state.destination.longitude || -36.82339
        }}
-       title={this.state.destinationname || 'temp'}
+       title={this.state.destination.name || 'temp'}
      />
    );
  }
@@ -261,53 +275,67 @@ export default class Map extends Component {
           <Image source={HAMBURGER} />
         </TouchableOpacity>
       </View>
-        <MapView
-          region={this.state.mapRegion}
-          loadingBackgroundColor='#e6f7ff'
-          loadingEnabled
-          loadingIndicatorColor='#ffffff'
-          onRegionChangeComplete={this.onRegionChange}
-          showsUserLocation
-          showsCompass
-          style={styles.mapStyle}
+      <MapView
+        region={this.state.mapRegion}
+        loadingBackgroundColor='#e6f7ff'
+        loadingEnabled
+        loadingIndicatorColor='#ffffff'
+        onRegionChangeComplete={this.onRegionChange}
+        showsUserLocation
+        showsCompass
+        style={styles.mapStyle}
+      >
+      { this.state.showACTransit ? this.renderACTransitBusses() : null }
+      { this.state.showMuni ? this.renderMuniBusses() : null }
+      { this.renderPol ? this.renderPol() : null }
+      </MapView>
+      <View style={styles.buttonView}>
+        <TouchableHighlight
+          activeOpacity={1}
+          underlayColor={'rgba(255, 0, 0, 0)'}
+          onPress={this.toggleMuni}
+          style={this.state.showMuni ? styles.buttonPress : styles.button}
         >
-        { this.state.showACTransit ? this.renderACTransitBusses() : null }
-        { this.state.showMuni ? this.renderMuniBusses() : null }
-        { this.renderPol ? this.renderPol() : null }
-        { this.renderPol ? this.renderEndLocation() : null }
-        </MapView>
-        <View style={styles.buttonView}>
-          <TouchableHighlight
-            activeOpacity={1}
-            underlayColor={'rgba(255, 0, 0, 0)'}
-            onPress={this.toggleMuni}
-            style={this.state.showMuni ? styles.buttonPress : styles.button}
-          >
-            <View>
-              <ToggleButton
-                logo={PIN_SHOW}
-                text={'SF Muni'}
-              />
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight
-            activeOpacity={1}
-            underlayColor={'rgba(255, 0, 0, 0)'}
-            onPress={this.toggleACTransit}
-            style={this.state.showACTransit ? styles.buttonPress : styles.button}
-          >
-            <View>
-              <ToggleButton
-                logo={PIN_SHOW}
-                text={'AC Transit'}
-              />
-            </View>
-          </TouchableHighlight>
+          <View>
+            <ToggleButton
+              logo={PIN_SHOW}
+              text={'SF Muni'}
+            />
           </View>
+        </TouchableHighlight>
+        <TouchableHighlight
+          activeOpacity={1}
+          underlayColor={'rgba(255, 0, 0, 0)'}
+          onPress={this.toggleACTransit}
+          style={this.state.showACTransit ? styles.buttonPress : styles.button}
+        >
+          <View>
+            <ToggleButton
+              logo={PIN_SHOW}
+              text={'AC Transit'}
+            />
+          </View>
+        </TouchableHighlight>
       </View>
+      <SlidingUpPanel
+          ref={panel => { this.panel = panel; }}
+          containerMaximumHeight={MAXIMUM_HEIGHT}
+          containerBackgroundColor={'green'}
+          handlerHeight={MINUMUM_HEIGHT}
+          allowStayMiddle
+          handlerDefaultView={<HandlerOne />}
+          getContainerHeight={this.getContainerHeight}
+      >
+        <View style={styles.frontContainer}>
+          <Text style={styles.panelText}>Hello guys!</Text>
+        </View>
+      </SlidingUpPanel>
+    </View>
     );
   }
 }
+
+
 
 const styles = StyleSheet.create({
   viewStyle: {
@@ -340,9 +368,8 @@ const styles = StyleSheet.create({
   button: {
     opacity: 1
   },
-  modalStyle: {
-    height: 100,
-    marginTop: 50,
+  frontContainer: {
+    flex: 1,
     backgroundColor: 'white'
   }
 });

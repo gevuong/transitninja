@@ -21,8 +21,8 @@
 {
   NSURL *jsCodeLocation;
 
-  [GMSPlacesClient provideAPIKey:@"AIzaSyDcyZRLtTfskr9jhPuFcHYZgiifGVD86os"];
-[GMSServices provideAPIKey:@"AIzaSyDcyZRLtTfskr9jhPuFcHYZgiifGVD86os"];
+  [GMSPlacesClient provideAPIKey:@"AIzaSyAMJOV5d0KVd2Jg6RnJ8jkEBQsRFvJ430U"];
+[GMSServices provideAPIKey:@"AIzaSyAMJOV5d0KVd2Jg6RnJ8jkEBQsRFvJ430U"];
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
 
