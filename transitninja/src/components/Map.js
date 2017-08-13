@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import { Actions } from 'react-native-router-flux';
-import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { Text, ScrollView, View, StyleSheet, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
 import MapView from 'react-native-maps';
 import RNGooglePlaces from 'react-native-google-places';
 
@@ -19,6 +19,8 @@ export default class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      deltalat: null,
+      deltalon: null,
       mapRegion: null,
       lastLat: null,
       lastLong: null,
@@ -41,7 +43,8 @@ export default class Map extends Component {
       res: '',
       predictions: [],
       isPickerVisible: false,
-      renderPol: false
+      renderPol: false,
+      mapcenter: false
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.getDirections = this.getDirections.bind(this);
@@ -53,6 +56,7 @@ export default class Map extends Component {
     this.onRegionChange = this.onRegionChange.bind(this);
     this.renderPol = this.renderPol.bind(this);
     this.togglePol = this.togglePol.bind(this);
+    this.resetMap = this.resetMap.bind(this);
   }
 
 
@@ -112,6 +116,7 @@ export default class Map extends Component {
           latitudeDelta: 0.00322 * 2.5,
           longitudeDelta: 0.00121 * 2.5
         };
+        this.setState({deltalat: region.latitudeDelta, deltalon: region.longitudeDelta});
         this.onRegionChange(region, region.latitude, region.longitude);
       },
       (error) => alert(error.message),
@@ -142,6 +147,7 @@ export default class Map extends Component {
   }
 
   onRegionChange(region, lastLat, lastLong) {
+    console.log('region', region);
     this.setState({
       mapRegion: region,
       lastLat: lastLat || this.state.lastLat,
@@ -189,6 +195,16 @@ export default class Map extends Component {
     return this.state.actransit_busses;
   }
 
+  resetMap() {
+    console.log('hitta');
+    this.setState({
+      mapRegion: { latitude: this.state.userLat, longitude: this.state.userLong, latitudeDelta: this.state.deltalat, longitudeDelta: this.state.deltalon},
+      lastLat: this.state.lastLat,
+      lastLong: this.state.lastLong
+
+    });
+  }
+
   openSearchModal() {
     RNGooglePlaces.openAutocompleteModal(
       {
@@ -229,7 +245,7 @@ export default class Map extends Component {
 // whenever we move the map around, then we'll need to put i back in.
 
   renderPol() {
-    console.log('coordinates', this.state.coordo);
+    // console.log('coordinates', this.state.coordo);
     return (
     <MapView.Polyline
       lineCap='round'
@@ -275,6 +291,7 @@ export default class Map extends Component {
         { this.state.showMuni ? this.renderMuniBusses() : null }
         { this.renderPol ? this.renderPol() : null }
         { this.renderPol ? this.renderEndLocation() : null }
+
         </MapView>
         <View style={styles.buttonView}>
           <TouchableHighlight
@@ -303,7 +320,22 @@ export default class Map extends Component {
               />
             </View>
           </TouchableHighlight>
+
+          <TouchableHighlight
+            activeOpacity={1}
+            underlayColor={'rgba(255, 0, 0, 0)'}
+            onPress={this.resetMap}
+            style={this.state.showACTransit ? styles.buttonPress : styles.button}
+          >
+            <View>
+              <ToggleButton
+                logo={PIN_SHOW}
+                text={'Recenter'}
+              />
+            </View>
+          </TouchableHighlight>
           </View>
+
       </View>
     );
   }
@@ -323,6 +355,8 @@ const styles = StyleSheet.create({
   },
   mapStyle: {
     flex: 1
+  }, voo: {
+
   },
   buttonView: {
     position: 'absolute',
