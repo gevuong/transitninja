@@ -173,7 +173,7 @@ export default class Map extends Component {
       //  passing in this options hash allows us to restric auto complete searches to places within 300 km of users current location.
        latitude: this.state.lastLat,
        longitude: this.state.lastLong,
-       radius: 300
+       radius: 200
      }
    )
    .then((place) => {
