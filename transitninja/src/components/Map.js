@@ -152,7 +152,7 @@ export default class Map extends Component {
   async getDirections(destination) {
     try {
       // fetch directions from google.
-      const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${`${this.state.userLat},${this.state.userLong}`}&destination=${destination.address}&mode=transit`);
+      const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${`${this.state.userLat},${this.state.userLong}`}&destination=${destination}&transit_mode=bus`);
       const respJson = await resp.json();
       console.log(respJson);
       // decode encoded polyline data.
@@ -198,6 +198,7 @@ export default class Map extends Component {
     )
     .then((place) => {
       this.setState({ destination: place });
+      console.log('place', place);
       // place represents user's selection from the
       // suggestions and it is a simplified Google Place object.
       //  we will set destination equal to place.address.
@@ -218,7 +219,7 @@ export default class Map extends Component {
        latitude: this.state.destination.latitude || -36.82339,
        longitude: this.state.destination.longitude || -36.82339
        }}
-       title={this.state.destinationname || 'temp'}
+       title={this.state.destination.name || 'temp'}
      />
    );
  }
@@ -272,7 +273,6 @@ export default class Map extends Component {
         { this.state.showACTransit ? this.renderACTransitBusses() : null }
         { this.state.showMuni ? this.renderMuniBusses() : null }
         { this.renderPol ? this.renderPol() : null }
-        { this.renderPol ? this.renderEndLocation() : null }
         </MapView>
         <View style={styles.buttonView}>
           <TouchableHighlight
