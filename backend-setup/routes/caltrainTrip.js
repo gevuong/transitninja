@@ -1,3 +1,5 @@
+var caltrainRoutes = require('./caltrainRoute');
+
 var caltrainTrip = function(){
   var fs = require('fs');
   var initialData =[];
@@ -24,6 +26,23 @@ var caltrainTrip = function(){
 };
 
 
-module.exports.caltrainTrip = caltrainTrip;
+var info = function (){
+  var arrs = [];
+  let caltrainInfo = caltrainRoutes.caltrainRoutes();
+  let tripping = caltrainTrip();
+  tripping.forEach(function(ops){
+    caltrainInfo.forEach(function(op2){
+      if(ops.route_id === op2.route_id){
+        arrs.push(Object.assign(ops, op2));
+      }
+    });
+  });
+  return arrs;
+};
 
-console.log(caltrainTrip());
+console.log(info());
+
+module.exports.caltrainTrip = caltrainTrip;
+module.exports.info = info;
+
+// console.log(caltrainTrip());

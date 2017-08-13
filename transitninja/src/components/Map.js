@@ -158,6 +158,7 @@ export default class Map extends Component {
     }
   }
 
+
   toggleMuni() {
     this.setState({
       showMuni: !this.state.showMuni
@@ -213,6 +214,7 @@ export default class Map extends Component {
     />
   );
   }
+
 
   render() {
     return (

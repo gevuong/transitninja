@@ -1,3 +1,5 @@
+var muniRoutes = require('./muniRoute');
+
 var muniTrip = function(){
   var fs = require('fs');
   var initialData =[];
@@ -23,8 +25,25 @@ var muniTrip = function(){
   return dummy;
 };
 
+var info = function (){
+  var arrs = [];
+  let muniInfo = muniRoutes.muniRoutes();
+  let tripping = muniTrip();
+  tripping.forEach(function(ops){
+    muniInfo.forEach(function(op2){
+      if(ops.route_id === op2.route_id){
+        arrs.push(Object.assign(ops, op2));
+      }
+    });
+  });
+  return arrs;
+};
+
+
+console.log(info());
 
 module.exports.muniTrip = muniTrip;
+module.exports.info = info;
 
 
-console.log(muniTrip());
+// console.log(muniTrip());
