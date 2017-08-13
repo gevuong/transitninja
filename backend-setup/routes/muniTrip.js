@@ -19,20 +19,20 @@ var muniTrip = function(){
   });
   var dummy = [];
   dataToArray.forEach(function(op, idx){
-  dummy.push({'route_id': op[0], 'service_id': op[1], 'trip_id':op[2],
-  'trip_headsign': op[3], 'direction_id': op[4], 'block_id': op[5], 'shape_id': op[6]});
-  });
+  dummy.push({'block_id': op[0], 'route_id': op[1], 'direction_id':op[2],
+  'trip_headsign': op[3], 'shape_id': op[4], 'service_id': op[5], 'trip_id': op[6]});
+});
   return dummy;
 };
 
 var info = function (){
-  var arrs = [];
+  var arrs = {};
   let muniInfo = muniRoutes.muniRoutes();
   let tripping = muniTrip();
   tripping.forEach(function(ops){
     muniInfo.forEach(function(op2){
       if(ops.route_id === op2.route_id){
-        arrs.push(Object.assign(ops, op2));
+        arrs[ops.trip_id] = Object.assign(ops, op2);
       }
     });
   });
@@ -40,7 +40,7 @@ var info = function (){
 };
 
 
-console.log(info());
+// console.log(info());
 
 module.exports.muniTrip = muniTrip;
 module.exports.info = info;
