@@ -11,6 +11,7 @@ import ToggleButton from './ToggleButton';
 import Search from './Search';
 import HandlerOne from './HandlerOne';
 
+const RECENTER_LOGO = require('../../assets/recenter.png');
 const BUS_LOGO_GREEN = require('../../assets/bus_icon_green.png');
 const BUS_LOGO_RED = require('../../assets/bus_icon_red.png');
 const PIN_SHOW = require('../../assets/pin_show_orange.png');
@@ -194,11 +195,11 @@ export default class Map extends Component {
   }
 
   renderMuniBusses() {
-    // return this.state.muni_busses;
+    return this.state.muni_busses;
   }
 
   renderACTransitBusses() {
-    // return this.state.actransit_busses;
+    return this.state.actransit_busses;
   }
 
   getContainerHeight = (height) => {
@@ -308,6 +309,16 @@ export default class Map extends Component {
         <TouchableHighlight
           activeOpacity={1}
           underlayColor={'rgba(255, 0, 0, 0)'}
+          onPress={this.resetMap}
+          style={styles.recenter}
+        >
+          <View>
+            <ToggleButton logo={RECENTER_LOGO} />
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight
+          activeOpacity={1}
+          underlayColor={'rgba(255, 0, 0, 0)'}
           onPress={this.toggleMuni}
           style={this.state.showMuni ? styles.buttonPress : styles.button}
         >
@@ -331,19 +342,6 @@ export default class Map extends Component {
             />
           </View>
         </TouchableHighlight>
-          <TouchableHighlight
-            activeOpacity={1}
-            underlayColor={'rgba(255, 0, 0, 0)'}
-            onPress={this.resetMap}
-            style={this.state.showACTransit ? styles.buttonPress : styles.button}
-          >
-            <View>
-              <ToggleButton
-                logo={PIN_SHOW}
-                text={'Recenter'}
-              />
-            </View>
-          </TouchableHighlight>
         </View>
       <SlidingUpPanel
           ref={panel => { this.panel = panel; }}
@@ -363,8 +361,6 @@ export default class Map extends Component {
   }
 }
 
-
-
 const styles = StyleSheet.create({
   viewStyle: {
     flex: 1,
@@ -379,21 +375,19 @@ const styles = StyleSheet.create({
   },
   mapStyle: {
     flex: 1
-  }, voo: {
-
   },
   buttonView: {
     position: 'absolute',
     flexDirection: 'column',
     justifyContent: 'space-around',
     bottom: 100,
-    top: 400,
+    top: 320,
     left: 300,
     right: 50,
-    height: 220
+    height: 300
   },
   buttonPress: {
-    opacity: 0.5
+    opacity: 0.7
   },
   button: {
     opacity: 1
