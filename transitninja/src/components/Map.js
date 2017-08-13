@@ -17,9 +17,6 @@ const AC_TRANSIT_LOGO = require('../../assets/ac_transit_logo.png');
 const PIN_SHOW = require('../../assets/pin_show_orange.png');
 const HAMBURGER = require('../../assets/hamburger.png');
 
-const startLoc = 'sanjose';
-const endLoc = 'sanfrancisco';
-
 export default class Map extends Component {
 
   constructor(props) {
@@ -28,23 +25,26 @@ export default class Map extends Component {
       mapRegion: null,
       lastLat: null,
       lastLong: null,
+      userLat: null,
+      userLong: null,
       muni_stops: [],
       actransit_stops: [],
       muni_busses: [],
       bart_stops: [],
       caltrain_stops: [],
       actransit_busses: [],
-      showACTransit: true,
-      showMuni: true,
+      showACTransit: false,
+      showMuni: false,
       showBart: true,
       showCaltrain: true,
       latitude: '',
       longitude: '',
-    destination: '',
-    coordo: [],
-    res: '',
-    predictions: [],
-    isPickerVisible: false
+      destination: '',
+      coordo: [],
+      res: '',
+      predictions: [],
+      isPickerVisible: false,
+      renderPol: false
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.getDirections = this.getDirections.bind(this);
@@ -53,6 +53,9 @@ export default class Map extends Component {
     this.openSearchModal = this.openSearchModal.bind(this);
     this.makeAxiosRequests = this.makeAxiosRequests.bind(this);
     this.renderMuniBusses = this.renderMuniBusses.bind(this);
+    this.onRegionChange = this.onRegionChange.bind(this);
+    this.renderPol = this.renderPol.bind(this);
+    this.togglePol = this.togglePol.bind(this);
   }
 
 
@@ -66,7 +69,6 @@ export default class Map extends Component {
   }
 
   makeAxiosRequests() {
-    setInterval(()=>{
       axios.get('http://localhost:3000/api/actransitBusses').then(response => {
         this.setState({ actransit_busses: response.data.map(bus => (
           <MapView.Marker
@@ -79,36 +81,34 @@ export default class Map extends Component {
           >
             <Image source={BUS_LOGO_GREEN} />
           </MapView.Marker>
+        )) });
+      });
+
+      axios.get('http://localhost:3000/api/muniBusses').then(response => {
+        this.setState({ muni_busses: response.data.map(bus => (
+          <MapView.Marker
+            coordinate={{
+              latitude: bus.lat + 0.000060 || -36.82339,
+              longitude: bus.lon || -73.03569
+            }}
+            title={bus.trip_id}
+            key={bus.id}
+          >
+            <Image source={BUS_LOGO_RED} />
+          </MapView.Marker>
         )
-      )
-      })
-
-    });
-
-        axios.get('http://localhost:3000/api/muniBusses').then(response => {
-          console.log("-------1", response.data);
-          this.setState({ muni_busses: response.data.map(bus => (
-            <MapView.Marker
-              coordinate={{
-                latitude: bus.lat + 0.000060 || -36.82339,
-                longitude: bus.lon || -73.03569
-              }}
-              title={bus.trip_id}
-              key={bus.id}
-            >
-              <Image source={BUS_LOGO_RED} />
-            </MapView.Marker>
-          )
         )
-      })
+      });
     });
-  }, 60000)
-
   }
 
   componentDidMount() {
     this.watchID = navigator.geolocation.watchPosition(
       (position) => {
+        this.setState({
+          userLat: position.coords.latitude,
+          userLong: position.coords.longitude
+        });
         const region = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -123,6 +123,20 @@ export default class Map extends Component {
     this.timer = setTimeout(() => {
       console.log('I do not leak!');
     }, 5000);
+    setInterval(() => {
+      this.makeAxiosRequests();
+    }, 60000);
+  }
+
+// this saves us some performance. It won't re-render everything when we move around the map. 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      this.state.mapRegion !== nextState.mapRegion ||
+      this.state.lastLat !== nextState.lastLat ||
+      this.state.lastLong !== nextState.lastLong) {
+        return false;
+      }
+    return true;
   }
 
   componentWillUnmount() {
@@ -138,12 +152,12 @@ export default class Map extends Component {
     });
   }
 
-  async getDirections() {
+  async getDirections(destination) {
     try {
       // fetch directions from google.
-      const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${endLoc}`);
+      const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${`${this.state.userLat},${this.state.userLong}`}&destination=${destination}&mode=transit`);
       const respJson = await resp.json();
-      // console.log(respJson);
+      console.log(respJson);
       // decode encoded polyline data.
       const points = Polyline.decode(respJson.routes[0].overview_polyline.points);
       // converts polyline data into a list of objects
@@ -151,7 +165,6 @@ export default class Map extends Component {
         return { latitude: point[0], longitude: point[1] };
       });
       this.setState({ coordo: coords });
-      // console.log(this.state.coordo);
       return coords;
     } catch (error) {
       return error;
@@ -175,42 +188,44 @@ export default class Map extends Component {
     return this.state.muni_busses;
   }
 
+  renderACTransitBusses() {
+    return this.state.actransit_busses;
+  }
+
   openSearchModal() {
-   RNGooglePlaces.openAutocompleteModal(
-     {
-       latitude: this.state.lastLat,
-       longitude: this.state.lastLong,
-       radius: 200
-     }
-   )
-   .then((place) => {
-     this.setState({ destination: place.address })
-       // place represents user's selection from the
-       // suggestions and it is a simplified Google Place object.
+    RNGooglePlaces.openAutocompleteModal(
+      {
+        latitude: this.state.lastLat,
+        longitude: this.state.lastLong,
+        radius: 200
+      }
+    )
+    .then((place) => {
+      this.setState({ destination: place.address });
+      // place represents user's selection from the
+      // suggestions and it is a simplified Google Place object.
       //  we will set destination equal to place.address.
-      this.getDirections();
-   })
+      this.getDirections(place.address).then(this.togglePol());
+      // this.renderPol();
+    })
    .catch(error => console.log(error.message));  // error is a Javascript Error object
  }
 
-// note that I removed onRegionChange from the MapView props. This will speed up our app a bit. But if we WANT to update the mapRegion whenever we move the map around, then we'll need to put i back in.
+ togglePol() {
+   this.setState({ renderPol: true });
+ }
 
-            // (e) => this.setState({ destination: e })
-
-            // <TouchableOpacity
-            //   style={styles.button}
-            //   onPress={() => this.openSearchModal()}
-            // >
-            //   <Text>Pick a Place</Text>
-            // </TouchableOpacity>
+// note that I removed onRegionChange from the MapView props.
+// This will speed up our app a bit. But if we WANT to update the mapRegion
+// whenever we move the map around, then we'll need to put i back in.
 
   renderPol() {
-    // console.log('yooukhkgughhhhhh');
+    console.log('coordinates', this.state.coordo);
     return (
     <MapView.Polyline
        coordinates={this.state.coordo}
-       strokeWidth={20}
-       strokeColor="green"
+       strokeWidth={7}
+       strokeColor='#00997a'
     />
   );
   }
@@ -229,8 +244,6 @@ export default class Map extends Component {
           placeholder="Where To?"
           hideBack
           textColor={'black'}
-          handleChangeText={e => this.getAutoComplete(e)}
-          onSubmitEditing={() => this.getDirections().then(this.renderPol())}
         />
       <View style={styles.hamburger}>
         <TouchableOpacity onPress={() => Actions.modal()}>
@@ -239,12 +252,13 @@ export default class Map extends Component {
       </View>
         <MapView
           region={this.state.mapRegion}
+          onRegionChange={this.onRegionChange}
           showsUserLocation
-          followUserLocation
           style={styles.mapStyle}
         >
         { this.state.showACTransit ? this.renderACTransitBusses() : null }
         { this.state.showMuni ? this.renderMuniBusses() : null }
+        { this.renderPol ? this.renderPol() : null }
         </MapView>
         <View style={styles.buttonView}>
           <TouchableHighlight
