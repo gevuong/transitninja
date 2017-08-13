@@ -17,8 +17,8 @@ var actransitRoutes = function(){
   });
   var dummy = [];
   dataToArray.forEach(function(op, idx){
-  dummy.push({'route_id': op[0], 'route_short_name': op[1], 'route_long_name':op[2],'route_desc': op[3],
-  'route_type': op[4], 'route_url': op[5]});
+  dummy.push({'route_long_name': op[0], 'route_id': op[1], 'route_type':op[2],'route_text_color': op[3],
+  'agency_id': op[4], 'route_color': op[5], 'route_url': op[6], 'route_short_name': op[7]});
   });
   return dummy;
 };
