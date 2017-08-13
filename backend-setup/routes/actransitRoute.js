@@ -24,6 +24,8 @@ var actransitRoutes = function(){
 };
 
 
+// all we need is route_id, and route_short_name
+
 module.exports.actransitRoutes = actransitRoutes;
 
 console.log(actransitRoutes());

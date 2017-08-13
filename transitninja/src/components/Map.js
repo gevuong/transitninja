@@ -1,19 +1,21 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity, Text, Picker } from 'react-native';
 import MapView from 'react-native-maps';
-// import Header from './Header';
+import RNGooglePlaces from 'react-native-google-places';
+import Modal from 'react-native-animated-modal'
 
-// import Button from 'react-native-button';
 import Polyline from '@mapbox/polyline';
-// import fetch from 'isomorphic-fetch';
-import SearchBar from 'react-native-searchbar';
-// const BUS_LOGO = require('../../assets/bus.png');
-
+import ToggleButton from './ToggleButton'
 import Button from 'react-native-button';
+import { Actions } from 'react-native-router-flux';
+import Search from './Search';
 
 const BUS_LOGO_GREEN = require('../../assets/bus_icon_green.png');
 const BUS_LOGO_RED = require('../../assets/bus_icon_red.png');
+const AC_TRANSIT_LOGO = require('../../assets/ac_transit_logo.png');
+const PIN_SHOW = require('../../assets/pin_show_orange.png');
+const HAMBURGER = require('../../assets/hamburger.png');
 
 const startLoc = 'sanjose';
 const endLoc = 'sanfrancisco';
@@ -40,13 +42,15 @@ export default class Map extends Component {
       longitude: '',
     destination: '',
     coordo: [],
-    res: ''
-
+    res: '',
+    predictions: [],
+    isPickerVisible: false
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.getDirections = this.getDirections.bind(this);
     this.toggleACTransit = this.toggleACTransit.bind(this);
     this.renderACTransitBusses = this.renderACTransitBusses.bind(this);
+    this.openSearchModal = this.openSearchModal.bind(this);
     this.makeAxiosRequests = this.makeAxiosRequests.bind(this);
     this.renderMuniBusses = this.renderMuniBusses.bind(this);
   }
@@ -108,8 +112,8 @@ export default class Map extends Component {
         const region = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          latitudeDelta: 0.00322,
-          longitudeDelta: 0.00121
+          latitudeDelta: 0.00322 * 2.5,
+          longitudeDelta: 0.00121 * 2.5
         };
         this.onRegionChange(region, region.latitude, region.longitude);
       },
@@ -166,83 +170,38 @@ export default class Map extends Component {
     });
   }
 
-  renderMuni() {
-    // console.log('from render', this.state.muni_stops_to_render);
-    return this.state.muni_stops_to_render.map(stop => (
-      <MapView.Marker
-        coordinate={{
-          latitude: stop.lat || -36.82339,
-          longitude: stop.lon || -73.03569
-        }}
-        title={stop.stop_name}
-        key={stop.stop_id}
-      />
-    ));
-  }
-
-  renderACTransit() {
-    return this.state.actransit_stops_to_render.map(stop => (
-      <MapView.Marker
-        coordinate={{
-          latitude: stop.lat || -36.82339,
-          longitude: stop.lon || -73.03569
-        }}
-        title={stop.stop_name}
-        key={stop.stop_id}
-      />
-    ));
-  }
-
-  renderACTransitBusses() {
-
-
-
-    // console.log(this.state.actransit_busses[0]);
-    // this.forceUpdate();
-    return this.state.actransit_busses;
-
-  }
-
   renderMuniBusses() {
-
-
-    // console.log(this.state.muni_busses[0]);
-    // this.forceUpdate();
     return this.state.muni_busses;
-
   }
 
+  openSearchModal() {
+   RNGooglePlaces.openAutocompleteModal(
+     {
+       latitude: this.state.lastLat,
+       longitude: this.state.lastLong,
+       radius: 200
+     }
+   )
+   .then((place) => {
+     this.setState({ destination: place.address })
+       // place represents user's selection from the
+       // suggestions and it is a simplified Google Place object.
+      //  we will set destination equal to place.address.
+      this.getDirections();
+   })
+   .catch(error => console.log(error.message));  // error is a Javascript Error object
+ }
 
 // note that I removed onRegionChange from the MapView props. This will speed up our app a bit. But if we WANT to update the mapRegion whenever we move the map around, then we'll need to put i back in.
-  renderBart() {
-    return this.state.bart_stops.map(stop => (
-      <MapView.Marker
-        coordinate={{
-          latitude: stop.stop_lat || -36.82339,
-          longitude: stop.stop_lon || -73.03569
-        }}
-        title={stop.stop_name}
-        key={stop.stop_id}
-      >
-        <Image source={BUS_STOP_GREEN} style={styles.busIconStyle} />
-      </MapView.Marker>
-    ));
-  }
 
-  renderCaltrain() {
-    return this.state.caltrain_stops.map(stop => (
-      <MapView.Marker
-        coordinate={{
-          latitude: stop.stop_lat || -36.82339,
-          longitude: stop.stop_lon || -73.03569
-        }}
-        title={stop.stop_name}
-        key={stop.stop_id}
-      >
-        <Image source={BUS_STOP_GREEN} style={styles.busIconStyle} />
-      </MapView.Marker>
-    ));
-  }
+            // (e) => this.setState({ destination: e })
+
+            // <TouchableOpacity
+            //   style={styles.button}
+            //   onPress={() => this.openSearchModal()}
+            // >
+            //   <Text>Pick a Place</Text>
+            // </TouchableOpacity>
 
   renderPol() {
     // console.log('yooukhkgughhhhhh');
@@ -258,15 +217,24 @@ export default class Map extends Component {
   render() {
     return (
       <View style={styles.viewStyle}>
-          <SearchBar
-            ref={(ref) => { this.searchBar = ref; }}
-            data={['sanjose, sanfrancisco']}
-            handleResults={this.logger}
-            showOnLoad
-            textColor={'#FF0000'}
-            handleChangeText={(e) => this.setState({ destination: e })}
-            onSubmitEditing={() => this.getDirections().then(this.renderPol())}
-          />
+        <Search
+          ref={(ref) => { this.searchBar = ref; }}
+          data={['sanjose, sanfrancisco']}
+          handleResults={this.logger}
+          onFocus={this.openSearchModal}
+          focusOnLayout={false}
+          showOnLoad
+          placeholder="Where To?"
+          hideBack
+          textColor={'black'}
+          handleChangeText={e => this.getAutoComplete(e)}
+          onSubmitEditing={() => this.getDirections().then(this.renderPol())}
+        />
+      <View style={styles.hamburger}>
+        <TouchableOpacity onPress={() => Actions.modal()}>
+          <Image source={HAMBURGER} />
+        </TouchableOpacity>
+      </View>
         <MapView
           region={this.state.mapRegion}
           showsUserLocation
@@ -277,73 +245,73 @@ export default class Map extends Component {
         { this.state.showMuni ? this.renderMuniBusses() : null }
         </MapView>
         <View style={styles.buttonView}>
-          <Button
-            containerStyle={this.state.showMuni ? styles.toggleOn : styles.toggleOff}
-            style={this.state.showMuni ? styles.textToggleOn : styles.textToggleOff}
+          <TouchableHighlight
+            activeOpacity={1}
+            underlayColor={'rgba(255, 0, 0, 0)'}
             onPress={this.toggleMuni}
-          >Muni
-          </Button>
-          <Button
-            containerStyle={this.state.showACTransit ? styles.toggleOn : styles.toggleOff}
+            style={this.state.showMuni ? styles.buttonPress : styles.button}
+          >
+            <View>
+              <ToggleButton
+                logo={PIN_SHOW}
+                text={'SF Muni'}
+              />
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight
+            activeOpacity={1}
+            underlayColor={'rgba(255, 0, 0, 0)'}
             onPress={this.toggleACTransit}
-            style={this.state.showMuni ? styles.textToggleOn : styles.textToggleOff}
-          >AC
-          </Button>
-        </View>
-
+            style={this.state.showACTransit ? styles.buttonPress : styles.button}
+          >
+            <View>
+              <ToggleButton
+                logo={PIN_SHOW}
+                text={'AC Transit'}
+              />
+            </View>
+          </TouchableHighlight>
+          </View>
       </View>
     );
   }
 }
-// {this.state.showACTransit ? this.renderACTransit() : null }
-// {this.state.showMuni ? this.renderMuni() : null }
 
 const styles = StyleSheet.create({
   viewStyle: {
     flex: 1,
     alignItems: 'stretch'
   },
+  hamburger: {
+    flex: 1,
+    position: 'absolute',
+    zIndex: 100,
+    marginTop: 55,
+    marginLeft: 335
+  },
   mapStyle: {
     flex: 1
   },
   buttonView: {
     position: 'absolute',
-    bottom: 20,
-    top: 300,
-    left: 270,
-    right: 100
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    bottom: 100,
+    top: 400,
+    left: 300,
+    right: 50,
+    height: 220
   },
-  toggleOn: {
-    marginTop: 30,
-    marginLeft: 30,
-    height: 60,
-    width: 60,
-    padding: 10,
-    borderRadius: 30,
-    backgroundColor: 'white',
-    shadowColor: '#353535',
-    shadowOffset: { width: 5, height: 5 },
-    shadowRadius: 10
+  buttonPress: {
+    opacity: 0.5
   },
-  textToggleOn: {
-    fontSize: 12,
-    color: '#797979',
+  button: {
+    opacity: 1
   },
-  toggleOff: {
-    marginTop: 30,
-    marginLeft: 30,
-    height: 60,
-    width: 60,
-    padding: 10,
-    borderRadius: 30,
-    backgroundColor: '#A1A1A1',
-    shadowColor: '#353535',
-    shadowOffset: { width: 5, height: 5 },
-    shadowRadius: 10
-  },
-  textToggleOff: {
-    fontSize: 12,
-    backgroundColor: '#A1A1A1',
+  modalStyle: {
+    height: 100,
+    marginTop: 50,
+    backgroundColor: 'white'
   }
 });
 
@@ -355,7 +323,3 @@ const styles = StyleSheet.create({
 // $lightest-gray: rgb(244, 244, 244);
 // $green: #2BDE73;
 // $off-white: #f2f2f2;
-
-// @mixin shadow-2 {
-//   box-shadow: 0 0.9px 4px 0 rgba(0,0,0,0.05);
-// }

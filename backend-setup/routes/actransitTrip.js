@@ -18,10 +18,13 @@ var actransitTrip = function(){
   var dummy = [];
   dataToArray.forEach(function(op, idx){
   dummy.push({'route_id': op[0], 'service_id': op[1], 'trip_id':op[2],
-  'trip_headsign': op[3], 'direction_id': op[4], 'block_id': op[5], 'shape_id': op[6]});
+  'trip_headsign': op[3], 'direction_id': op[4], 'block_id': op[5], 'shape_id': op[6], route_name: getroutename()});
   });
   return dummy;
 };
+
+
+// we just need route_id, trip_id
 
 
 module.exports.actransitTrip = actransitTrip;
