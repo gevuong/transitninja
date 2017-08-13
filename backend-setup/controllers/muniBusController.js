@@ -71,10 +71,13 @@ const muniBusController = function(app) {
         encoding: null
       }).then(function(arr){
 
+
         let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
         let muniArr = [];
         array.forEach(function(entity) {
-          console.log((muniInfo[entity.vehicle.trip.trip_id]).route_long_name);
+          if (muniInfo[entity.vehicle.trip.trip_id]) {
+
+
           muniArr.push({
             'id': entity.id,
             'trip_id': entity.vehicle.trip.trip_id,
@@ -85,6 +88,7 @@ const muniBusController = function(app) {
             "route_short_name": muniInfo[entity.vehicle.trip.trip_id].route_short_name,
             "route_long_name": muniInfo[entity.vehicle.trip.trip_id].route_long_name
             });
+          }
         });
 
       muniBussesModel.create(muniArr, function(err, results){

@@ -1,14 +1,14 @@
-# Flex-Project Proposal
+# transitninja
 
-## Background and Overview
-An iOS mobile app providing real time tracking of local public transit systems in the greater San Francisco bay area. Intended to provide public transit users a reliable app for finding optimal public transit routes based on current location and target destination. Users can also check to see if their route is on schedule, check current locations of vehicles, create favorite routes, and alert users if a favorite route is behind schedule.
+## Overview
+An iOS mobile app providing real time tracking of local public transit systems in the greater San Francisco bay area. Intended to provide public transit users a reliable app for finding optimal public transit routes based on current location and target destination. Users can also check to see if their route is on schedule, see current location of busses on the map, and can select a bus to see the route it is on.
 
-## Functionality and MVP
-* Real-time tracking of public transit vehicles
-* Display vehicles on map
-* Time estimates of routes
-* User can input start point and end point
-* Provides user optimal route to take
+## How to use transitninja
+transitninja was designed to be as intuitive as possible for users. Although, here are a few tips to the app:
+* Tap a bus to see that bus's route name
+* Click on the search bar to open the keyboard and enter a destination to get the optimal route
+* Tap the toggle buttons in the bottom right corner of the screen to toggle bus icons rendering to the map for the respective agencies (color fill denotes icons are currently being rendered)
+*
 
 ### Bonus Features
 * Users can set “My Routes”
