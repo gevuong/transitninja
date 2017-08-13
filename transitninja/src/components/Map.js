@@ -320,7 +320,7 @@ export default class Map extends Component {
           containerBackgroundColor={'green'}
           handlerHeight={MINUMUM_HEIGHT}
           allowStayMiddle
-          handlerDefaultView={<HandlerOne destination={this.state} />}
+          handlerDefaultView={<HandlerOne state={this.state} />}
           getContainerHeight={this.getContainerHeight}
       >
         <ScrollView style={styles.frontContainer}>
