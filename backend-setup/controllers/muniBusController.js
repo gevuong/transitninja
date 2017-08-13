@@ -24,39 +24,38 @@ let apiArr = ["3b31e671-cca3-4abf-9510-2ccf0996ef28",
 
 const muniBusController = function(app) {
 
-  rp({
-    method: 'GET',
-    url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=sf-muni`,
-    encoding: null
-  }).then(function(arr){
+
     app.get('/api/muniBusses', function(req, res) {
       muniBusModel.remove().exec();
 
 
-      console.log({
+
+      rp({
         method: 'GET',
         url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=sf-muni`,
         encoding: null
-      });
+      }).then(function(arr){
 
-      let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
-      let muniArr = [];
-      array.forEach(function(entity) {
-        muniArr.push({
-          'id': entity.id,
-          'trip_id': entity.vehicle.trip.trip_id,
-          'lon': entity.vehicle.position.longitude,
-          'lat': entity.vehicle.position.latitude,
-          'stop_id': entity.vehicle.stop_id
-          });
-      });
+        let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
+        console.log(array[0]);
+        let muniArr = [];
+        array.forEach(function(entity) {
+          muniArr.push({
+            'id': entity.id,
+            'trip_id': entity.vehicle.trip.trip_id,
+            'lon': entity.vehicle.position.longitude,
+            'lat': entity.vehicle.position.latitude,
+            'stop_id': entity.vehicle.stop_id
+            });
+        });
+
       muniBussesModel.create(muniArr, function(err, results){
         if (err) {
           return console.log(err);
         }
+        // console.log(muniArr);
         res.send(muniArr);
       });
-
     });
   });
 };
