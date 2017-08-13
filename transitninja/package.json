@@ -25,11 +25,13 @@
     "react-native-router-flux": "^4.0.0-beta.17",
     "react-native-search-box": "0.0.9",
     "react-native-searchbar": "^1.11.0",
+    "react-native-sliding-up-panel": "^1.1.12",
     "react-native-swipe-gestures": "^1.0.2",
     "react-native-vector-icons": "^4.3.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "rn-sliding-up-panel": "^1.1.5"
   },
   "devDependencies": {
     "babel-jest": "20.0.3",

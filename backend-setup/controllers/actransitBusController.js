@@ -10,6 +10,8 @@ let apiArr = ["7cec8694-c386-42b4-870c-a76aef58b40f",
 "1e63a81e-0a10-4ef8-991c-ed195c33a855",
 "b021f9d5-2fe8-4fd8-90f0-4b8b5807cf51"];
 
+let ACToken = "5D2C095B639A09CFD40259AE5E570747";
+
 const actransitBusController = function(app) {
 
     app.get('/api/actransitBusses', function(req, res) {
