@@ -122,7 +122,7 @@ export default class Map extends Component {
               latitude: bus.lat + 0.000060 || -36.82339,
               longitude: bus.lon || -73.03569
             }}
-            title={bus.trip_id}
+            title={bus.route_short_name}
             key={bus.id}
           >
             <Image source={BUS_LOGO_GREEN} />
@@ -137,7 +137,7 @@ export default class Map extends Component {
               latitude: bus.lat + 0.000060 || -36.82339,
               longitude: bus.lon || -73.03569
             }}
-            title={bus.trip_id}
+            title={bus.route_short_name}
             key={bus.id}
           >
             <Image source={BUS_LOGO_RED} />
