@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
+
+const BUS = require('../../assets/bus.png');
 
 var deviceHeight = Dimensions.get('window').height;
 var deviceWidth = Dimensions.get('window').width;
@@ -10,7 +12,10 @@ export default class HandlerOne extends Component {
     return (
       <View style={styles.handlerContainer}>
         <View style={styles.textContainer}>
-          <Text style={styles.handlerText}>Directions</Text>
+          <Text style={styles.handlerText}>
+            {this.props.destination.name}
+            <Image source={BUS} style={styles.busStyle} />
+          </Text>
         </View>
       </View>
     );
@@ -35,4 +40,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'gray',
     opacity: 0.7
   },
+  busStyle: {
+    height: 30,
+    width: 30
+  }
 });
