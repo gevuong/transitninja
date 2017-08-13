@@ -26,6 +26,8 @@ export default class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      deltalat: null,
+      deltalon: null,
       mapRegion: null,
       lastLat: null,
       lastLong: null,
@@ -60,6 +62,7 @@ export default class Map extends Component {
     this.onRegionChange = this.onRegionChange.bind(this);
     this.renderPol = this.renderPol.bind(this);
     this.togglePol = this.togglePol.bind(this);
+    this.resetMap = this.resetMap.bind(this);
   }
 
 
@@ -119,6 +122,7 @@ export default class Map extends Component {
           latitudeDelta: 0.00322 * 2.5,
           longitudeDelta: 0.00121 * 2.5
         };
+        this.setState({deltalat: region.latitudeDelta, deltalon: region.longitudeDelta});
         this.onRegionChange(region, region.latitude, region.longitude);
       },
       (error) => alert(error.message),
@@ -149,6 +153,7 @@ export default class Map extends Component {
   }
 
   onRegionChange(region, lastLat, lastLong) {
+    console.log('region', region);
     this.setState({
       mapRegion: region,
       lastLat: lastLat || this.state.lastLat,
@@ -175,6 +180,7 @@ export default class Map extends Component {
     }
   }
 
+
   toggleMuni() {
     this.setState({
       showMuni: !this.state.showMuni
@@ -198,6 +204,16 @@ export default class Map extends Component {
   getContainerHeight = (height) => {
     this.setState({
       containerHeight: height
+    });
+  }
+
+  resetMap() {
+    console.log('hitta');
+    this.setState({
+      mapRegion: { latitude: this.state.userLat, longitude: this.state.userLong, latitudeDelta: this.state.deltalat, longitudeDelta: this.state.deltalon},
+      lastLat: this.state.lastLat,
+      lastLong: this.state.lastLong
+
     });
   }
 
@@ -242,7 +258,7 @@ export default class Map extends Component {
 // whenever we move the map around, then we'll need to put i back in.
 
   renderPol() {
-    console.log('coordinates', this.state.coordo);
+    // console.log('coordinates', this.state.coordo);
     return (
     <MapView.Polyline
       lineCap='round'
@@ -253,6 +269,7 @@ export default class Map extends Component {
     />
   );
   }
+
 
   render() {
     return (
@@ -314,7 +331,20 @@ export default class Map extends Component {
             />
           </View>
         </TouchableHighlight>
-      </View>
+          <TouchableHighlight
+            activeOpacity={1}
+            underlayColor={'rgba(255, 0, 0, 0)'}
+            onPress={this.resetMap}
+            style={this.state.showACTransit ? styles.buttonPress : styles.button}
+          >
+            <View>
+              <ToggleButton
+                logo={PIN_SHOW}
+                text={'Recenter'}
+              />
+            </View>
+          </TouchableHighlight>
+        </View>
       <SlidingUpPanel
           ref={panel => { this.panel = panel; }}
           containerMaximumHeight={MAXIMUM_HEIGHT}
@@ -349,6 +379,8 @@ const styles = StyleSheet.create({
   },
   mapStyle: {
     flex: 1
+  }, voo: {
+
   },
   buttonView: {
     position: 'absolute',
