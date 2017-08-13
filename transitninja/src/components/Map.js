@@ -45,6 +45,7 @@ export default class Map extends Component {
       showMuni: false,
       showBart: true,
       showCaltrain: true,
+      showSlidingPanel: false,
       latitude: '',
       longitude: '',
       destination: {},
@@ -53,11 +54,6 @@ export default class Map extends Component {
       predictions: [],
       renderPol: false,
       containerHeight: 0,
-      // directionsAPI: {
-      //   destination: {
-      //     address: '',
-      //     name: ''
-      //   },
       directions: {
         routes: [{
             legs: [{
@@ -102,6 +98,7 @@ export default class Map extends Component {
     this.renderMuniBusses = this.renderMuniBusses.bind(this);
     this.onRegionChange = this.onRegionChange.bind(this);
     this.renderPol = this.renderPol.bind(this);
+    this.renderSlidingPanel = this.renderSlidingPanel.bind(this);
     this.togglePol = this.togglePol.bind(this);
     this.resetMap = this.resetMap.bind(this);
   }
@@ -216,7 +213,8 @@ export default class Map extends Component {
       });
       this.setState({
         directions: respJson || this.state.directions,
-        coordo: coords
+        coordo: coords,
+        showSlidingPanel: true
       });
       return coords;
     } catch (error) {
@@ -314,6 +312,54 @@ export default class Map extends Component {
   );
   }
 
+  renderSlidingPanel() {
+    return (
+      <SlidingUpPanel
+          ref={panel => { this.panel = panel; }}
+          containerMaximumHeight={MAXIMUM_HEIGHT}
+          containerBackgroundColor={'green'}
+          handlerHeight={MINUMUM_HEIGHT}
+          allowStayMiddle
+          handlerDefaultView={<HandlerOne destination={this.state} />}
+          getContainerHeight={this.getContainerHeight}
+      >
+        <ScrollView style={styles.frontContainer}>
+          {this.state.directions.routes[0].legs[0].steps.map(function(step) {
+            if (step.travel_mode === 'WALKING') {
+              return (
+                <View>
+                  <Text style={styles.baseText}>
+                    {'\n'}
+                    <Image source={WALK} style={styles.walkStyle} />
+                    {step.html_instructions}
+                    {'\n'}
+                    {step.distance.text} {step.duration.text}
+                    {'\n'}
+                  </Text>
+                </View>
+              );
+            } else if (step.travel_mode === 'TRANSIT') {
+              return (
+                <View>
+                  <Text style={styles.baseText}>
+                    <Image source={BUS} style={styles.busStyle} />
+                    {step.html_instructions} {'\n'}
+                    {step.transit_details.line.short_name}
+                    {step.transit_details.line.name} {'\n'}
+                    {step.distance.text} {step.duration.text} {'\n'}
+                    {step.transit_details.num_stops}
+                    {'\n'}
+                  </Text>
+                </View>
+              );
+            }
+            })
+          }
+        </ScrollView>
+      </SlidingUpPanel>
+    );
+  }
+
 
   render() {
     console.log('render-state', this.state);
@@ -391,49 +437,7 @@ export default class Map extends Component {
           </TouchableHighlight>
         </View>
 
-      <SlidingUpPanel
-          ref={panel => { this.panel = panel; }}
-          containerMaximumHeight={MAXIMUM_HEIGHT}
-          containerBackgroundColor={'green'}
-          handlerHeight={MINUMUM_HEIGHT}
-          allowStayMiddle
-          handlerDefaultView={<HandlerOne destination={this.state} />}
-          getContainerHeight={this.getContainerHeight}
-      >
-        <ScrollView style={styles.frontContainer}>
-          {this.state.directions.routes[0].legs[0].steps.map(function(step) {
-            if (step.travel_mode === 'WALKING') {
-              return (
-                <View>
-                  <Text style={styles.baseText}>
-                    {'\n'}
-                    <Image source={WALK} style={styles.walkStyle} />
-                    {step.html_instructions}
-                    {'\n'}
-                    {step.distance.text} {step.duration.text}
-                    {'\n'}
-                  </Text>
-                </View>
-              );
-            } else if (step.travel_mode === 'TRANSIT') {
-              return (
-                <View>
-                  <Text style={styles.baseText}>
-                    <Image source={BUS} style={styles.busStyle} />
-                    {step.html_instructions} {'\n'}
-                    {step.transit_details.line.short_name}
-                    {step.transit_details.line.name} {'\n'}
-                    {step.distance.text} {step.duration.text} {'\n'}
-                    {step.transit_details.num_stops}
-                    {'\n'}
-                  </Text>
-                </View>
-              );
-            }
-            })
-          }
-        </ScrollView>
-      </SlidingUpPanel>
+        {this.state.showSlidingPanel ? this.renderSlidingPanel() : null }
     </View>
     );
   }
