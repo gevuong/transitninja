@@ -1,19 +1,16 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity, Text, Picker } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
 import MapView from 'react-native-maps';
 import RNGooglePlaces from 'react-native-google-places';
-import Modal from 'react-native-animated-modal'
 
 import Polyline from '@mapbox/polyline';
-import ToggleButton from './ToggleButton'
-import Button from 'react-native-button';
-import { Actions } from 'react-native-router-flux';
+import ToggleButton from './ToggleButton';
 import Search from './Search';
 
 const BUS_LOGO_GREEN = require('../../assets/bus_icon_green.png');
 const BUS_LOGO_RED = require('../../assets/bus_icon_red.png');
-const AC_TRANSIT_LOGO = require('../../assets/ac_transit_logo.png');
 const PIN_SHOW = require('../../assets/pin_show_orange.png');
 const HAMBURGER = require('../../assets/hamburger.png');
 
@@ -39,7 +36,7 @@ export default class Map extends Component {
       showCaltrain: true,
       latitude: '',
       longitude: '',
-      destination: '',
+      destination: {},
       coordo: [],
       res: '',
       predictions: [],
@@ -128,10 +125,10 @@ export default class Map extends Component {
     }, 60000);
   }
 
-// this saves us some performance. It won't re-render everything when we move around the map. 
+// this saves us some performance. It won't re-render everything when we move around the map.
   shouldComponentUpdate(nextProps, nextState) {
     if (
-      this.state.mapRegion !== nextState.mapRegion ||
+
       this.state.lastLat !== nextState.lastLat ||
       this.state.lastLong !== nextState.lastLong) {
         return false;
@@ -155,7 +152,7 @@ export default class Map extends Component {
   async getDirections(destination) {
     try {
       // fetch directions from google.
-      const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${`${this.state.userLat},${this.state.userLong}`}&destination=${destination}&mode=transit`);
+      const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${`${this.state.userLat},${this.state.userLong}`}&destination=${destination.address}&mode=transit`);
       const respJson = await resp.json();
       console.log(respJson);
       // decode encoded polyline data.
@@ -200,7 +197,7 @@ export default class Map extends Component {
       }
     )
     .then((place) => {
-      this.setState({ destination: place.address });
+      this.setState({ destination: place });
       // place represents user's selection from the
       // suggestions and it is a simplified Google Place object.
       //  we will set destination equal to place.address.
@@ -214,6 +211,18 @@ export default class Map extends Component {
    this.setState({ renderPol: true });
  }
 
+ renderEndLocation() {
+   return (
+     <MapView.Marker
+       coordinate={{
+       latitude: this.state.destination.latitude || -36.82339,
+       longitude: this.state.destination.longitude || -36.82339
+       }}
+       title={this.state.destinationname || 'temp'}
+     />
+   );
+ }
+
 // note that I removed onRegionChange from the MapView props.
 // This will speed up our app a bit. But if we WANT to update the mapRegion
 // whenever we move the map around, then we'll need to put i back in.
@@ -222,9 +231,11 @@ export default class Map extends Component {
     console.log('coordinates', this.state.coordo);
     return (
     <MapView.Polyline
-       coordinates={this.state.coordo}
-       strokeWidth={7}
-       strokeColor='#00997a'
+      lineCap='round'
+      lineJoin='round'
+      coordinates={this.state.coordo}
+      strokeWidth={7}
+      strokeColor='#00997a'
     />
   );
   }
@@ -250,13 +261,18 @@ export default class Map extends Component {
       </View>
         <MapView
           region={this.state.mapRegion}
-          onRegionChange={this.onRegionChange}
+          loadingBackgroundColor='#e6f7ff'
+          loadingEnabled
+          loadingIndicatorColor='#ffffff'
+          onRegionChangeComplete={this.onRegionChange}
           showsUserLocation
+          showsCompass
           style={styles.mapStyle}
         >
         { this.state.showACTransit ? this.renderACTransitBusses() : null }
         { this.state.showMuni ? this.renderMuniBusses() : null }
         { this.renderPol ? this.renderPol() : null }
+        { this.renderPol ? this.renderEndLocation() : null }
         </MapView>
         <View style={styles.buttonView}>
           <TouchableHighlight
