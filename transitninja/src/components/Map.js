@@ -8,21 +8,20 @@ import SlidingUpPanel from 'react-native-sliding-up-panel';
 
 import Polyline from '@mapbox/polyline';
 import ToggleButton from './ToggleButton';
-import Search from './Search';
 import HandlerOne from './HandlerOne';
 
 const RECENTER_LOGO = require('../../assets/recenter.png');
 const BUS_LOGO_GREEN = require('../../assets/bus_icon_green.png');
 const BUS_LOGO_RED = require('../../assets/bus_icon_red.png');
 const PIN_SHOW = require('../../assets/pin_show_orange.png');
-const HAMBURGER = require('../../assets/hamburger.png');
 const BUS = require('../../assets/bus.png');
 const WALK = require('../../assets/walk_icon.png');
+const SEARCH_ICON = require('../../assets/show_icon.png');
 
-var deviceHeight = Dimensions.get('window').height;
+const deviceHeight = Dimensions.get('window').height;
 
-var MAXIMUM_HEIGHT = deviceHeight - 100;
-var MINUMUM_HEIGHT = 80;
+const MAXIMUM_HEIGHT = deviceHeight - 100;
+const MINUMUM_HEIGHT = 80;
 
 export default class Map extends Component {
 
@@ -96,7 +95,6 @@ export default class Map extends Component {
         }]
       }
     };
-    this.searching = this.searching.bind(this);
     this.toggleMuni = this.toggleMuni.bind(this);
     this.getDirections = this.getDirections.bind(this);
     this.toggleACTransit = this.toggleACTransit.bind(this);
@@ -113,15 +111,8 @@ export default class Map extends Component {
     this.zoomRoute = this.zoomRoute.bind(this);
     this.toggleZoom = this.toggleZoom.bind(this);
 
+    console.disableYellowBox = true;
   }
-
-// checker(){
-//   if(this.state.mapRegion === this.state.opsRegion ){
-//     this.setState({ok: true});
-//   }else{
-//     this.setState({ok: false});
-//   }
-// }
 
 // this is some code to customize eslint for this page.
   /*global navigator:true*/
@@ -130,7 +121,6 @@ export default class Map extends Component {
   /*eslint no-undef: "error"*/
   componentWillMount() {
     this.makeAxiosRequests();
-    console.log('willMount', this.state);
   }
 
   makeAxiosRequests() {
@@ -187,7 +177,6 @@ export default class Map extends Component {
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
     this.timer = setTimeout(() => {
-      // console.log('I do not leak!');
     }, 5000);
     setInterval(() => {
       this.makeAxiosRequests();
@@ -211,7 +200,6 @@ export default class Map extends Component {
   }
 
   onRegionChange(region, lastLat, lastLong) {
-    // console.log('region', region);
     this.setState({
       mapRegion: region,
       lastLat: lastLat || this.state.lastLat,
@@ -226,7 +214,6 @@ export default class Map extends Component {
       // fetch directions from google.
       const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${`${this.state.userLat},${this.state.userLong}`}&destination=${destination}&mode=transit`);
       const respJson = await resp.json();
-      // console.log(respJson);
       // decode encoded polyline data.
       const points = Polyline.decode(respJson.routes[0].overview_polyline.points);
       // converts polyline data into a list of objects
@@ -258,7 +245,6 @@ export default class Map extends Component {
   }
 
   renderMuniBusses() {
-    console.log(this.state.muni_busses);
     return this.state.muni_busses;
   }
 
@@ -273,11 +259,8 @@ export default class Map extends Component {
   }
 
   resetMap() {
-    // console.log('hitta');
-    // this.setState({zoomer: !this.state.zoomer});
     if(this.state.route){
     if(this.state.zoomer){
-      console.log('zoomer true', this.state.zoomer);
 
     this.setState({
       mapRegion: { latitude: this.state.userLat, longitude: this.state.userLong, latitudeDelta: this.state.deltalat, longitudeDelta: this.state.deltalon},
@@ -287,10 +270,6 @@ export default class Map extends Component {
 
     });
   }else{
-    // this.setState({zoomer: true});
-    console.log('zoomer false', this.state.zoomer);
-
-    // console.log('coordo', this.state.coordo);
     const points = this.state.coordo;
     const startLat = points[0].latitude;
     const startLon = points[0].longitude;
@@ -314,7 +293,6 @@ export default class Map extends Component {
     zoomer: !this.state.zoomer,
    });
   }} else {
-    console.log('routing false');
     this.setState({
       mapRegion: { latitude: this.state.userLat, longitude: this.state.userLong, latitudeDelta: this.state.deltalat, longitudeDelta: this.state.deltalon},
       lastLat: this.state.lastLat,
@@ -339,7 +317,6 @@ export default class Map extends Component {
         showSlidingPanel: false,
         route: true
        });
-      console.log('place', place);
 
       // place represents user's selection from the
       // suggestions and it is a simplified Google Place object.
@@ -367,23 +344,13 @@ export default class Map extends Component {
  }
 
  toggleZoom() {
-  //  console.log('toggggggling');
-  console.log(this.state.zoomer);
    this.setState({ zoomer: true });
    this.zoomRoute();
  }
 
-// note that I removed onRegionChange from the MapView props.
-// This will speed up our app a bit. But if we WANT to update the mapRegion
-// whenever we move the map around, then we'll need to put i back in.
-
   zoomRoute() {
-    // console.log(this.state.coordo);
-
     if (this.state.coordo.length > 0) {
       this.setState({zoomer: true});
-
-      // console.log('coordo', this.state.coordo);
       const points = this.state.coordo;
       const startLat = points[0].latitude;
       const startLon = points[0].longitude;
@@ -414,10 +381,7 @@ export default class Map extends Component {
 
 
   renderPol() {
-
-    // console.log('coordinates', this.state.coordo);
     return (
-
       <MapView>
         <MapView.Polyline
           lineCap='round'
@@ -426,7 +390,6 @@ export default class Map extends Component {
           strokeWidth={7}
           strokeColor='#00997a'
         />
-
         <MapView.Marker
           coordinate={{
             latitude: this.state.directions.routes[0].legs[0].end_location.lat,
@@ -439,10 +402,6 @@ export default class Map extends Component {
   }
 
   renderSlidingPanel() {
-    console.log('renderslidingPanel', this.state.showSlidingPanel);
-    // this.setState({
-    //   showSlidingPanel: false
-    // });
     return (
       <SlidingUpPanel
         ref={panel => { this.panel = panel; }}
@@ -489,32 +448,24 @@ export default class Map extends Component {
       </SlidingUpPanel>
 
     );
-
   }
 
-searching() {
-  return (
-    <Search
-      ref={(ref) => { this.searchBar = ref; }}
-      data={['sanjose, sanfrancisco']}
-      handleResults={this.logger}
-      onFocus={this.openSearchModal}
-      focusOnLayout={false}
-      showOnLoad
-      placeholder="Where To?"
-      hideBack
-      textColor={'black'}
-    />
-);
-}
-
-
   render() {
-    // console.log('render-state', this.state);
     return (
       <View style={styles.viewStyle}>
-
-
+      <View style={{ height: 20, width: 500, backgroundColor: 'white', position: 'absolute', zIndex: 1000 }} />
+      <View style={styles.searchButtonView}>
+        <TouchableHighlight
+          activeOpacity={1}
+          underlayColor={'rgba(255, 0, 0, 0)'}
+          onPress={this.openSearchModal}
+          style={styles.searchButton}
+        >
+          <View>
+            <Text style={styles.searchButtonText}>{`\u2022 Where to?`}</Text>
+          </View>
+        </TouchableHighlight>
+      </View>
       <MapView
         region={this.state.mapRegion}
         loadingBackgroundColor='#e6f7ff'
@@ -566,25 +517,9 @@ searching() {
             />
           </View>
         </TouchableHighlight>
-        <TouchableHighlight
-          activeOpacity={1}
-          underlayColor={'rgba(255, 0, 0, 0)'}
-          onPress={this.openSearchModal}
-          style={styles.buttonPress}
-        >
-          <View>
-            <ToggleButton
-              logo={PIN_SHOW}
-              text={'Search'}
-            />
-          </View>
-        </TouchableHighlight>
-
-
         </View>
 
         {this.state.showSlidingPanel ? this.renderSlidingPanel() : null }
-
     </View>
     );
   }
@@ -594,6 +529,25 @@ const styles = StyleSheet.create({
   viewStyle: {
     flex: 1,
     alignItems: 'stretch'
+  },
+  searchButtonView: {
+    zIndex: 10000,
+    flex: 1,
+    top: 60,
+    height: 45,
+    width: 250,
+    left: 70,
+    right: 75,
+    backgroundColor: 'white',
+    position: 'absolute',
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
+  },
+  searchButtonText: {
+    top: 15,
+    fontSize: 17,
+    left: 40,
+    color: 'gray'
   },
   busStyle: {
     width: 15,
