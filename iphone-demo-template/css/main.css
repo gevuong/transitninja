@@ -1,0 +1,105 @@
+body {
+    background: #4eadcf;
+}
+
+.content{
+  /*margin: 100px 100px 50px 100px;*/
+  display: flex;
+  background-image: url("http://res.cloudinary.com/noah-s-kang/image/upload/v1502653299/background-image_ggx96g.jpg");
+  justify-content: center;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  min-height: 100%;
+}
+
+.header-area{
+  display: flex;
+  flex-direction: column;
+  margin-top: 200px;
+}
+
+.header{
+  color: #fff;
+  font-family: 'Montserrat';
+  /*letter-spacing: 0.08em;*/
+  font-weight: 700;
+  font-size: 55px;
+  text-align: right;
+}
+
+h1{
+  color: #fff;
+  margin-bottom: 18px;
+}
+
+h2{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 100;
+  letter-spacing: 0.1em;
+  text-align: right;
+}
+
+#learn-more{
+  margin-top: 20px;
+  background-color: rgba(255, 255, 255, 0.075);
+  border: 2px solid rgba(255,255,255, 0.5);
+  border-radius: 6px;
+  /*transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;*/
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+  height: 2.85em;
+  line-height: 2.95em;
+  padding: 0 1.75em;
+  width: 300px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Montserrat';
+  letter-spacing: 0.09em;
+  font-size: 20px;
+  color: #ffffff;
+  -webkit-animation: hue 60s infinite linear;
+  font-weight: 300;
+}
+
+#learn-more:hover{
+  border-color: rgba(255, 255, 255, 1);
+}
+
+.iphone-box {
+  display: flex;
+  margin: 100px 0px 0 100px;
+}
+
+.screen {
+    /*position: absolute;
+    display: block;
+    top: 104px;
+    left: 25px;
+    width: 365px;
+    height: 672px;
+    border-radius: 2px;
+    background: #000;
+    color: #fff;
+    border: 1px solid #b5b5b5;
+    border-top: 1px solid #949494;
+    border-left: 1px solid #949494;
+    text-align: center;*/
+}
+
+.screen iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.details {
+  height: 1000px;
+  background-color: #fff;
+}
