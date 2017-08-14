@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     marginTop: 40,
+    marginBottom: 20,
     padding: 10,
     shadowColor: '#ffffff',
     shadowOffset: {

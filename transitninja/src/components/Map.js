@@ -19,7 +19,7 @@ const PIN_SHOW_GREEN = require('../../assets/pin_show_green.png');
 const HAMBURGER = require('../../assets/hamburger.png');
 const BUS = require('../../assets/bus.png');
 const WALK = require('../../assets/walk_icon.png');
-
+const SEARCHER = require('../../assets/show_icon.png');
 var deviceHeight = Dimensions.get('window').height;
 
 var MAXIMUM_HEIGHT = deviceHeight - 100;
@@ -427,17 +427,17 @@ export default class Map extends Component {
           strokeWidth={7}
           strokeColor='#00997a'
         />
-
-        <MapView.Marker
-          coordinate={{
-            latitude: this.state.directions.routes[0].legs[0].end_location.lat,
-            longitude: this.state.directions.routes[0].legs[0].end_location.lng
-          }}
-        >
-        </MapView.Marker>
       </MapView>
     );
   }
+
+  // <MapView.Marker
+  //   coordinate={{
+  //     latitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lat),
+  //     longitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lng)
+  //   }}
+  // >
+  // </MapView.Marker>
 
   renderSlidingPanel() {
     console.log('renderslidingPanel', this.state.showSlidingPanel);
@@ -575,7 +575,7 @@ searching() {
         >
           <View>
             <ToggleButton
-              logo={PIN_SHOW}
+              logo={SEARCHER}
               text={'Search'}
             />
           </View>
@@ -622,7 +622,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    bottom: 100,
+    bottom: 500,
     top: 320,
     left: 300,
     right: 10,
