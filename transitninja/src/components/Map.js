@@ -135,7 +135,7 @@ export default class Map extends Component {
   }
 
   makeAxiosRequests() {
-      axios.get('http://localhost:3000/api/actransitBusses').then(response => {
+      axios.get('https://transitninja.herokuapp.com/api/actransitBusses').then(response => {
         this.setState({ actransit_busses: response.data.map(bus => (
           <MapView.Marker
             coordinate={{
@@ -150,7 +150,7 @@ export default class Map extends Component {
         )) });
       });
 
-      axios.get('http://localhost:3000/api/muniBusses').then(response => {
+      axios.get('https://transitninja.herokuapp.com/api/muniBusses').then(response => {
         this.setState({ muni_busses: response.data.map(bus => (
           <MapView.Marker
             coordinate={{
