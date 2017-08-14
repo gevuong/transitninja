@@ -395,13 +395,13 @@ export default class Map extends Component {
     );
   }
 
-  <MapView.Marker
-    coordinate={{
-      latitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lat),
-      longitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lng)
-    }}
-  >
-  </MapView.Marker>
+  // <MapView.Marker
+  //   coordinate={{
+  //     latitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lat),
+  //     longitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lng)
+  //   }}
+  // >
+  // </MapView.Marker>
 //
   renderSlidingPanel() {
     return (
@@ -464,7 +464,7 @@ export default class Map extends Component {
           style={styles.searchButton}
         >
           <View>
-            <Text style={styles.searchButtonText}>{`\u2022 Where to?`}</Text>
+            <Text style={styles.searchButtonText}>{`Where to?`}</Text>
           </View>
         </TouchableHighlight>
       </View>
@@ -609,3 +609,4 @@ const styles = StyleSheet.create({
 //     <Image source={HAMBURGER} />
 //   </TouchableOpacity>
 // </View>
+// \u2022
