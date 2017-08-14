@@ -436,7 +436,7 @@ export default class Map extends Component {
     }}
   >
   </MapView.Marker>
-
+//
   renderSlidingPanel() {
     console.log('renderslidingPanel', this.state.showSlidingPanel);
     // this.setState({
