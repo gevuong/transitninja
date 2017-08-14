@@ -429,13 +429,13 @@ export default class Map extends Component {
     );
   }
 
-  // <MapView.Marker
-  //   coordinate={{
-  //     latitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lat),
-  //     longitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lng)
-  //   }}
-  // >
-  // </MapView.Marker>
+  <MapView.Marker
+    coordinate={{
+      latitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lat),
+      longitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lng)
+    }}
+  >
+  </MapView.Marker>
 
   renderSlidingPanel() {
     console.log('renderslidingPanel', this.state.showSlidingPanel);
