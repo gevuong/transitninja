@@ -15,6 +15,7 @@ const RECENTER_LOGO = require('../../assets/recenter.png');
 const BUS_LOGO_GREEN = require('../../assets/bus_icon_green.png');
 const BUS_LOGO_RED = require('../../assets/bus_icon_red.png');
 const PIN_SHOW = require('../../assets/pin_show_orange.png');
+const PIN_SHOW_GREEN = require('../../assets/pin_show_green.png');
 const HAMBURGER = require('../../assets/hamburger.png');
 const BUS = require('../../assets/bus.png');
 const WALK = require('../../assets/walk_icon.png');
@@ -561,7 +562,7 @@ searching() {
         >
           <View>
             <ToggleButton
-              logo={PIN_SHOW}
+              logo={PIN_SHOW_GREEN}
               text={'AC Transit'}
             />
           </View>
@@ -624,11 +625,11 @@ const styles = StyleSheet.create({
     bottom: 100,
     top: 320,
     left: 300,
-    right: 50,
+    right: 10,
     height: 300
   },
   buttonPress: {
-    opacity: 0.7
+    opacity: 0.55
   },
   button: {
     opacity: 1

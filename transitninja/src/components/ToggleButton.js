@@ -5,7 +5,7 @@ const ToggleButton = ({ logo, text }) => {
   return (
     <View style={styles.toggleStyle}>
       <View style={styles.darkShadow}>
-        <Image source={logo} />
+        <Image style={{ overflow: 'visible' }} source={logo} />
       </View>
       <View style={styles.lightShadow}>
         <Text style={styles.textStyle}>{text}</Text>
