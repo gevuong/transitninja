@@ -2,7 +2,6 @@ import React from 'react';
 import { Scene, Router, Actions } from 'react-native-router-flux';
 import Map from './components/Map';
 import WelcomePage from './components/WelcomePage';
-import ModalMenu from './components/ModalMenu';
 
 const RouterComponent = () => {
   return (
@@ -12,19 +11,12 @@ const RouterComponent = () => {
           key="welcome"
           component={WelcomePage}
           hideNavBar
-          initial
         />
         <Scene
           hideNavBar
           key="mapPage"
           component={Map}
-        />
-        <Scene
-          key="modal"
-          direction="vertical"
-          component={ModalMenu}
-          title="Modal"
-          hideNavBar
+          initial
         />
       </Scene>
     </Router>
