@@ -96,6 +96,7 @@ export default class Map extends Component {
         }]
       }
     };
+    this.searching = this.searching.bind(this);
     this.toggleMuni = this.toggleMuni.bind(this);
     this.getDirections = this.getDirections.bind(this);
     this.toggleACTransit = this.toggleACTransit.bind(this);
@@ -491,22 +492,28 @@ export default class Map extends Component {
 
   }
 
+searching() {
+  return (
+    <Search
+      ref={(ref) => { this.searchBar = ref; }}
+      data={['sanjose, sanfrancisco']}
+      handleResults={this.logger}
+      onFocus={this.openSearchModal}
+      focusOnLayout={false}
+      showOnLoad
+      placeholder="Where To?"
+      hideBack
+      textColor={'black'}
+    />
+);
+}
+
 
   render() {
     // console.log('render-state', this.state);
     return (
       <View style={styles.viewStyle}>
-        <Search
-          ref={(ref) => { this.searchBar = ref; }}
-          data={['sanjose, sanfrancisco']}
-          handleResults={this.logger}
-          onFocus={this.openSearchModal}
-          focusOnLayout={false}
-          showOnLoad
-          placeholder="Where To?"
-          hideBack
-          textColor={'black'}
-        />
+
 
       <MapView
         region={this.state.mapRegion}
@@ -556,6 +563,19 @@ export default class Map extends Component {
             <ToggleButton
               logo={PIN_SHOW}
               text={'AC Transit'}
+            />
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight
+          activeOpacity={1}
+          underlayColor={'rgba(255, 0, 0, 0)'}
+          onPress={this.openSearchModal}
+          style={styles.buttonPress}
+        >
+          <View>
+            <ToggleButton
+              logo={PIN_SHOW}
+              text={'Search'}
             />
           </View>
         </TouchableHighlight>
