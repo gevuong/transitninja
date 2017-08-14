@@ -43,10 +43,11 @@ export default class Map extends Component {
       caltrain_stops: [],
       actransit_busses: [],
       showACTransit: false,
-      showMuni: false,
-      showBart: true,
-      showCaltrain: true,
+      showMuni: true,
+      showBart: false,
+      showCaltrain: false,
       showSlidingPanel: false,
+      updateHandlerOne: false,
       latitude: '',
       longitude: '',
       destination: {},
@@ -100,6 +101,7 @@ export default class Map extends Component {
     this.onRegionChange = this.onRegionChange.bind(this);
     this.renderPol = this.renderPol.bind(this);
     this.renderSlidingPanel = this.renderSlidingPanel.bind(this);
+    // this.updateHandlerOne = this.updateHandlerOne.bind(this);
     this.togglePol = this.togglePol.bind(this);
     this.resetMap = this.resetMap.bind(this);
   }
@@ -112,6 +114,7 @@ export default class Map extends Component {
   /*eslint no-undef: "error"*/
   componentWillMount() {
     this.makeAxiosRequests();
+    console.log('willMount', this.state);
   }
 
   makeAxiosRequests() {
@@ -161,7 +164,7 @@ export default class Map extends Component {
           latitudeDelta: 0.00322 * 2.5,
           longitudeDelta: 0.00121 * 2.5
         };
-        this.setState({deltalat: region.latitudeDelta, deltalon: region.longitudeDelta});
+        this.setState({ deltalat: region.latitudeDelta, deltalon: region.longitudeDelta });
         this.onRegionChange(region, region.latitude, region.longitude);
       },
       (error) => alert(error.message),
@@ -205,7 +208,7 @@ export default class Map extends Component {
       // fetch directions from google.
       const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${`${this.state.userLat},${this.state.userLong}`}&destination=${destination}&mode=transit`);
       const respJson = await resp.json();
-      console.log(respJson);
+      // console.log(respJson);
       // decode encoded polyline data.
       const points = Polyline.decode(respJson.routes[0].overview_polyline.points);
       // converts polyline data into a list of objects
@@ -269,7 +272,10 @@ export default class Map extends Component {
       }
     )
     .then((place) => {
-      this.setState({ destination: place });
+      this.setState({
+        destination: place,
+        showSlidingPanel: false
+       });
       console.log('place', place);
       // place represents user's selection from the
       // suggestions and it is a simplified Google Place object.
@@ -303,32 +309,55 @@ export default class Map extends Component {
   renderPol() {
     // console.log('coordinates', this.state.coordo);
     return (
-    <MapView.Polyline
-      lineCap='round'
-      lineJoin='round'
-      coordinates={this.state.coordo}
-      strokeWidth={7}
-      strokeColor='#00997a'
-    />
-  );
+      <MapView>
+        <MapView.Polyline
+          lineCap='round'
+          lineJoin='round'
+          coordinates={this.state.coordo}
+          strokeWidth={7}
+          strokeColor='#00997a'
+        />
+
+        <MapView.Marker
+          coordinate={{
+            latitude: this.state.directions.routes[0].legs[0].end_location.lat,
+            longitude: this.state.directions.routes[0].legs[0].end_location.lng
+          }}
+        >
+        </MapView.Marker>
+      </MapView>
+    );
   }
 
+  updateHandlerOne() {
+    // this.state.updateHandlerOne = false;
+    console.log('updateHandlerOne');
+    return (
+      <HandlerOne state={this.state} />
+    );
+  }
+
+      // <HandlerOne state={this.state} />}
   renderSlidingPanel() {
+    console.log('renderslidingPanel', this.state.showSlidingPanel);
+    // this.setState({
+    //   showSlidingPanel: false
+    // });
     return (
       <SlidingUpPanel
-          ref={panel => { this.panel = panel; }}
-          containerMaximumHeight={MAXIMUM_HEIGHT}
-          containerBackgroundColor={'green'}
-          handlerHeight={MINUMUM_HEIGHT}
-          allowStayMiddle
-          handlerDefaultView={<HandlerOne state={this.state} />}
-          getContainerHeight={this.getContainerHeight}
+        ref={panel => { this.panel = panel; }}
+        containerMaximumHeight={MAXIMUM_HEIGHT}
+        containerBackgroundColor={'green'}
+        handlerHeight={MINUMUM_HEIGHT}
+        allowStayMiddle
+        handlerDefaultView={<HandlerOne state={this.state} />}
+        getContainerHeight={this.getContainerHeight}
       >
         <ScrollView style={styles.frontContainer}>
-          {this.state.directions.routes[0].legs[0].steps.map(function(step) {
+          {this.state.directions.routes[0].legs[0].steps.map(function(step, idx) {
             if (step.travel_mode === 'WALKING') {
               return (
-                <View>
+                <View key={idx}>
                   <Text style={styles.baseText}>
                     {'\n'}
                     <Image source={WALK} style={styles.walkStyle} />
@@ -341,7 +370,7 @@ export default class Map extends Component {
               );
             } else if (step.travel_mode === 'TRANSIT') {
               return (
-                <View>
+                <View key={idx}>
                   <Text style={styles.baseText}>
                     <Image source={BUS} style={styles.busStyle} />
                     {step.html_instructions} {'\n'}
@@ -358,7 +387,9 @@ export default class Map extends Component {
           }
         </ScrollView>
       </SlidingUpPanel>
+
     );
+
   }
 
 
@@ -436,11 +467,12 @@ export default class Map extends Component {
         </View>
 
         {this.state.showSlidingPanel ? this.renderSlidingPanel() : null }
+
     </View>
     );
   }
 }
-
+        // {this.state.updateHandlerOne ? this.updateHandlerOne() : null }
 const styles = StyleSheet.create({
   viewStyle: {
     flex: 1,
