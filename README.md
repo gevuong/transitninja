@@ -7,6 +7,8 @@ An iOS mobile app providing real time tracking of local public transit systems i
 transitninja was designed to be as intuitive as possible for users. Although, here are a few tips to the app:
 * Tap a bus to see that bus's route name
 ![Bus_Label](images/bus_label_screenshot.png)
+
+
 * Click on the search bar to open the keyboard and enter a destination to get the optimal route
 * Tap the toggle buttons in the bottom right corner of the screen to toggle bus icons rendering to the map for the respective agencies (by default busses are rendered)
 * Tap the icon above the toggles to reset the map to your current location
@@ -60,3 +62,7 @@ app.get('/api/actransitBusses', function(req, res) {
 });
 });
 ```
+
+## Future Plans
+
+We would like to add functionality to allow users to store favorite routes, and set up alerts that will notify the user if their route is running behind schedule. Additionally, add views that would allow users access to more information in regards to routes and stations. We hope to have this app on the Apple Store once we have added the aforementioned functionality.
