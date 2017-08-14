@@ -422,8 +422,8 @@ export default class Map extends Component {
           lineCap='round'
           lineJoin='round'
           coordinates={this.state.coordo}
-          strokeWidth={7}
-          strokeColor='#00997a'
+          strokeWidth={5}
+          strokeColor='#428ff4'
         />
 
         <MapView.Marker
@@ -488,7 +488,6 @@ export default class Map extends Component {
       </SlidingUpPanel>
 
     );
-
   }
 
 searching() {

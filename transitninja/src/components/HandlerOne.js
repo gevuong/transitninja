@@ -66,7 +66,8 @@ const styles = StyleSheet.create({
   busDuration: {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: 10
     // color: 'white'
   },
   handlerContainer: {
