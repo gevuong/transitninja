@@ -6,15 +6,26 @@ const BUS = require('../../assets/bus.png');
 var deviceHeight = Dimensions.get('window').height;
 var deviceWidth = Dimensions.get('window').width;
 
-
+    //
 export default class HandlerOne extends Component {
+
+
   render() {
-    console.log('props', this.props);
+    console.log('handlerOneProps', this.props);
+    const address = this.props.state.destination.address;
+    const location = address.slice(address.indexOf(',') + 2);
     return (
       <View style={styles.handlerContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.handlerText}>
-            {this.props.state.destination.name}
+
+            <Text style={styles.destination}>
+            {this.props.state.destination.name} {'\n'}
+            </Text>
+            <Text style={styles.address}>
+              {location}
+            </Text>
+
           </Text>
           <View style={styles.busDuration}>
             <Image source={BUS} style={styles.busStyle} />
@@ -29,15 +40,22 @@ export default class HandlerOne extends Component {
 }
 
 const styles = StyleSheet.create({
+  address: {
+    fontSize: 15,
+    fontWeight: '400'
+  },
+  destination: {
+    padding: 5,
+    fontSize: 17,
+    fontWeight: '700'
+  },
   handlerText: {
     color: 'white',
-    fontSize: 15,
-    fontWeight: '700',
   },
   textContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    // flex: 1,
+    // flexDirection: 'row',
+    // justifyContent: 'space-between',
     // backgroundColor: 'transparent',
     padding: 15,
     height: 80
