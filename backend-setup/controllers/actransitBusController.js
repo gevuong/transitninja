@@ -12,23 +12,21 @@ let apiArr = ["7cec8694-c386-42b4-870c-a76aef58b40f",
 "b021f9d5-2fe8-4fd8-90f0-4b8b5807cf51"];
 
 let actransitInfo = info.info();
-console.log(actransitInfo);
+// console.log(actransitInfo);
 
 const actransitBusController = function(app) {
 
     app.get('/api/actransitBusses', function(req, res) {
       actransitBusModel.remove().exec();
-
       rp({
         method: 'GET',
         url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=actransit`,
         encoding: null
       }).then(function(arr){
-
         let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
         let actransitArr = [];
         array.forEach(function(entity) {
-
+          if (actransitInfo[entity.vehicle.trip.trip_id]) {
           actransitArr.push({
             'id': entity.id,
             'trip_id': entity.vehicle.trip.trip_id,
@@ -39,13 +37,12 @@ const actransitBusController = function(app) {
             "route_short_name": actransitInfo[entity.vehicle.trip.trip_id].route_short_name,
             "route_long_name": actransitInfo[entity.vehicle.trip.trip_id].route_long_name
             });
+          }
         });
-
       actransitBussesModel.create(actransitArr, function(err, results){
         if (err) {
           return console.log(err);
         }
-        console.log(actransitArr[0]);
         res.send(actransitArr);
       });
     });

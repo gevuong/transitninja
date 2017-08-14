@@ -29,6 +29,8 @@ export default class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      ok: false,
+      opsRegion: null,
       deltalat: null,
       deltalon: null,
       mapRegion: null,
@@ -42,10 +44,12 @@ export default class Map extends Component {
       bart_stops: [],
       caltrain_stops: [],
       actransit_busses: [],
-      showACTransit: false,
+
+      showACTransit: true,
       showMuni: true,
-      showBart: false,
-      showCaltrain: false,
+      showBart: true,
+      showCaltrain: true,
+
       showSlidingPanel: false,
       updateHandlerOne: false,
       latitude: '',
@@ -56,6 +60,7 @@ export default class Map extends Component {
       predictions: [],
       renderPol: false,
       containerHeight: 0,
+      zoomer: false,
       directions: {
         routes: [{
             legs: [{
@@ -104,8 +109,18 @@ export default class Map extends Component {
     // this.updateHandlerOne = this.updateHandlerOne.bind(this);
     this.togglePol = this.togglePol.bind(this);
     this.resetMap = this.resetMap.bind(this);
+    this.zoomRoute = this.zoomRoute.bind(this);
+    this.toggleZoom = this.toggleZoom.bind(this);
+
   }
 
+// checker(){
+//   if(this.state.mapRegion === this.state.opsRegion ){
+//     this.setState({ok: true});
+//   }else{
+//     this.setState({ok: false});
+//   }
+// }
 
 // this is some code to customize eslint for this page.
   /*global navigator:true*/
@@ -125,7 +140,7 @@ export default class Map extends Component {
               latitude: bus.lat + 0.000060 || -36.82339,
               longitude: bus.lon || -73.03569
             }}
-            title={bus.trip_id}
+            title={bus.route_short_name}
             key={bus.id}
           >
             <Image source={BUS_LOGO_GREEN} />
@@ -140,7 +155,7 @@ export default class Map extends Component {
               latitude: bus.lat + 0.000060 || -36.82339,
               longitude: bus.lon || -73.03569
             }}
-            title={bus.trip_id}
+            title={bus.route_short_name}
             key={bus.id}
           >
             <Image source={BUS_LOGO_RED} />
@@ -171,7 +186,7 @@ export default class Map extends Component {
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
     this.timer = setTimeout(() => {
-      console.log('I do not leak!');
+      // console.log('I do not leak!');
     }, 5000);
     setInterval(() => {
       this.makeAxiosRequests();
@@ -195,12 +210,14 @@ export default class Map extends Component {
   }
 
   onRegionChange(region, lastLat, lastLong) {
-    console.log('region', region);
+    // console.log('region', region);
     this.setState({
       mapRegion: region,
       lastLat: lastLat || this.state.lastLat,
-      lastLong: lastLong || this.state.lastLong
+      lastLong: lastLong || this.state.lastLong,
     });
+
+
   }
 
   async getDirections(destination) {
@@ -240,6 +257,7 @@ export default class Map extends Component {
   }
 
   renderMuniBusses() {
+    console.log(this.state.muni_busses);
     return this.state.muni_busses;
   }
 
@@ -254,14 +272,56 @@ export default class Map extends Component {
   }
 
   resetMap() {
-    console.log('hitta');
+    // console.log('hitta');
+    // this.setState({zoomer: !this.state.zoomer});
+    if(this.state.route){
+    if(this.state.zoomer){
+      console.log('zoomer true', this.state.zoomer);
+
     this.setState({
       mapRegion: { latitude: this.state.userLat, longitude: this.state.userLong, latitudeDelta: this.state.deltalat, longitudeDelta: this.state.deltalon},
       lastLat: this.state.lastLat,
-      lastLong: this.state.lastLong
+      lastLong: this.state.lastLong,
+      zoomer: !this.state.zoomer
+
+    });
+  }else{
+    // this.setState({zoomer: true});
+    console.log('zoomer false', this.state.zoomer);
+
+    // console.log('coordo', this.state.coordo);
+    const points = this.state.coordo;
+    const startLat = points[0].latitude;
+    const startLon = points[0].longitude;
+    const endLat = points[points.length - 1].latitude;
+    const endLon = points[points.length - 1].longitude;
+    const minX = Math.min(startLat, endLat);
+    const maxX = Math.max(startLat, endLat);
+    const minY = Math.min(startLon, endLon);
+    const maxY = Math.max(startLon, endLon);
+    const midX = (minX + maxX) / 2;
+    const midY = (minY + maxY) / 2;
+    const deltX = (maxX - minX) * 2.5;
+    const deltY = (maxY - minY) * 2.5;
+
+    this.setState({ mapRegion: {
+      latitude: midX,
+      longitude: midY,
+      latitudeDelta: deltX,
+      longitudeDelta: deltY
+    },
+    zoomer: !this.state.zoomer,
+   });
+  }} else {
+    console.log('routing false');
+    this.setState({
+      mapRegion: { latitude: this.state.userLat, longitude: this.state.userLong, latitudeDelta: this.state.deltalat, longitudeDelta: this.state.deltalon},
+      lastLat: this.state.lastLat,
+      lastLong: this.state.lastLong,
 
     });
   }
+}
 
   openSearchModal() {
     RNGooglePlaces.openAutocompleteModal(
@@ -272,11 +332,14 @@ export default class Map extends Component {
       }
     )
     .then((place) => {
+
       this.setState({
         destination: place,
-        showSlidingPanel: false
+        showSlidingPanel: false,
+        route: true
        });
       console.log('place', place);
+
       // place represents user's selection from the
       // suggestions and it is a simplified Google Place object.
       //  we will set destination equal to place.address.
@@ -302,13 +365,58 @@ export default class Map extends Component {
    );
  }
 
+ toggleZoom() {
+  //  console.log('toggggggling');
+  console.log(this.state.zoomer);
+   this.setState({ zoomer: true });
+   this.zoomRoute();
+ }
+
 // note that I removed onRegionChange from the MapView props.
 // This will speed up our app a bit. But if we WANT to update the mapRegion
 // whenever we move the map around, then we'll need to put i back in.
 
+  zoomRoute() {
+    // console.log(this.state.coordo);
+
+    if (this.state.coordo.length > 0) {
+      this.setState({zoomer: true});
+
+      // console.log('coordo', this.state.coordo);
+      const points = this.state.coordo;
+      const startLat = points[0].latitude;
+      const startLon = points[0].longitude;
+      const endLat = points[points.length - 1].latitude;
+      const endLon = points[points.length - 1].longitude;
+      const minX = Math.min(startLat, endLat);
+      const maxX = Math.max(startLat, endLat);
+      const minY = Math.min(startLon, endLon);
+      const maxY = Math.max(startLon, endLon);
+      const midX = (minX + maxX) / 2;
+      const midY = (minY + maxY) / 2;
+      const deltX = (maxX - minX) * 2.5;
+      const deltY = (maxY - minY) * 2.5;
+
+      this.setState({ mapRegion: {
+        latitude: midX,
+        longitude: midY,
+        latitudeDelta: deltX,
+        longitudeDelta: deltY
+      }, opsRegion: {
+        latitude: midX,
+        longitude: midY,
+        latitudeDelta: deltX,
+        longitudeDelta: deltY
+      } });
+    }
+  }
+
+
   renderPol() {
+
     // console.log('coordinates', this.state.coordo);
     return (
+
       <MapView>
         <MapView.Polyline
           lineCap='round'
@@ -329,15 +437,6 @@ export default class Map extends Component {
     );
   }
 
-  updateHandlerOne() {
-    // this.state.updateHandlerOne = false;
-    console.log('updateHandlerOne');
-    return (
-      <HandlerOne state={this.state} />
-    );
-  }
-
-      // <HandlerOne state={this.state} />}
   renderSlidingPanel() {
     console.log('renderslidingPanel', this.state.showSlidingPanel);
     // this.setState({
@@ -394,7 +493,7 @@ export default class Map extends Component {
 
 
   render() {
-    console.log('render-state', this.state);
+    // console.log('render-state', this.state);
     return (
       <View style={styles.viewStyle}>
         <Search
@@ -408,11 +507,7 @@ export default class Map extends Component {
           hideBack
           textColor={'black'}
         />
-      <View style={styles.hamburger}>
-        <TouchableOpacity onPress={() => Actions.modal()}>
-          <Image source={HAMBURGER} />
-        </TouchableOpacity>
-      </View>
+
       <MapView
         region={this.state.mapRegion}
         loadingBackgroundColor='#e6f7ff'
@@ -464,6 +559,8 @@ export default class Map extends Component {
             />
           </View>
         </TouchableHighlight>
+
+
         </View>
 
         {this.state.showSlidingPanel ? this.renderSlidingPanel() : null }
@@ -530,3 +627,9 @@ const styles = StyleSheet.create({
 // $lightest-gray: rgb(244, 244, 244);
 // $green: #2BDE73;
 // $off-white: #f2f2f2;
+
+// <View style={styles.hamburger}>
+//   <TouchableOpacity onPress={() => Actions.modal()}>
+//     <Image source={HAMBURGER} />
+//   </TouchableOpacity>
+// </View>
