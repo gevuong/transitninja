@@ -2,6 +2,7 @@ import React from 'react';
 import {
   StyleSheet,
   View,
+  Text,
   Image,
   TouchableHighlight
 } from 'react-native';
@@ -16,7 +17,9 @@ const WelcomePage = () => {
     <View style={styles.container}>
     <TouchableHighlight onPress={() => { Actions.mapPage(); }}>
       <View style={styles.viewStyle}>
+
         <Image source={NINJA_ICON} />
+        <Text> Click to Begin!</Text>
       </View>
     </TouchableHighlight>
     </View>

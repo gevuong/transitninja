@@ -14,11 +14,14 @@ const RECENTER_LOGO = require('../../assets/recenter.png');
 const BUS_LOGO_GREEN = require('../../assets/bus_icon_green.png');
 const BUS_LOGO_RED = require('../../assets/bus_icon_red.png');
 const PIN_SHOW = require('../../assets/pin_show_orange.png');
-const BUS = require('../../assets/bus.png');
-const WALK = require('../../assets/walk_icon.png');
-const SEARCH_ICON = require('../../assets/show_icon.png');
 
 const deviceHeight = Dimensions.get('window').height;
+
+const PIN_SHOW_GREEN = require('../../assets/pin_show_green.png');
+const HAMBURGER = require('../../assets/hamburger.png');
+const BUS = require('../../assets/bus.png');
+const WALK = require('../../assets/walk_icon.png');
+const SEARCHER = require('../../assets/show_icon.png');
 
 const MAXIMUM_HEIGHT = deviceHeight - 100;
 const MINUMUM_HEIGHT = 80;
@@ -110,7 +113,6 @@ export default class Map extends Component {
     this.resetMap = this.resetMap.bind(this);
     this.zoomRoute = this.zoomRoute.bind(this);
     this.toggleZoom = this.toggleZoom.bind(this);
-
     console.disableYellowBox = true;
   }
 
@@ -124,7 +126,7 @@ export default class Map extends Component {
   }
 
   makeAxiosRequests() {
-      axios.get('http://localhost:3000/api/actransitBusses').then(response => {
+      axios.get('https://transitninja.herokuapp.com/api/actransitBusses').then(response => {
         this.setState({ actransit_busses: response.data.map(bus => (
           <MapView.Marker
             coordinate={{
@@ -139,7 +141,7 @@ export default class Map extends Component {
         )) });
       });
 
-      axios.get('http://localhost:3000/api/muniBusses').then(response => {
+      axios.get('https://transitninja.herokuapp.com/api/muniBusses').then(response => {
         this.setState({ muni_busses: response.data.map(bus => (
           <MapView.Marker
             coordinate={{
@@ -311,7 +313,6 @@ export default class Map extends Component {
       }
     )
     .then((place) => {
-
       this.setState({
         destination: place,
         showSlidingPanel: false,
@@ -350,7 +351,7 @@ export default class Map extends Component {
 
   zoomRoute() {
     if (this.state.coordo.length > 0) {
-      this.setState({zoomer: true});
+      this.setState({ zoomer: true });
       const points = this.state.coordo;
       const startLat = points[0].latitude;
       const startLon = points[0].longitude;
@@ -387,20 +388,21 @@ export default class Map extends Component {
           lineCap='round'
           lineJoin='round'
           coordinates={this.state.coordo}
-          strokeWidth={7}
-          strokeColor='#00997a'
+          strokeWidth={5}
+          strokeColor='#428ff4'
         />
-        <MapView.Marker
-          coordinate={{
-            latitude: this.state.directions.routes[0].legs[0].end_location.lat,
-            longitude: this.state.directions.routes[0].legs[0].end_location.lng
-          }}
-        >
-        </MapView.Marker>
       </MapView>
     );
   }
 
+  <MapView.Marker
+    coordinate={{
+      latitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lat),
+      longitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lng)
+    }}
+  >
+  </MapView.Marker>
+//
   renderSlidingPanel() {
     return (
       <SlidingUpPanel
@@ -512,7 +514,7 @@ export default class Map extends Component {
         >
           <View>
             <ToggleButton
-              logo={PIN_SHOW}
+              logo={PIN_SHOW_GREEN}
               text={'AC Transit'}
             />
           </View>
@@ -575,14 +577,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    bottom: 100,
+    bottom: 500,
     top: 320,
     left: 300,
-    right: 50,
+    right: 10,
     height: 300
   },
   buttonPress: {
-    opacity: 0.7
+    opacity: 0.55
   },
   button: {
     opacity: 1
