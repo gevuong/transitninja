@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     height: 300
   },
   buttonPress: {
-    opacity: 0.7
+    opacity: 0.55
   },
   button: {
     opacity: 1
