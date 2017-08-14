@@ -6,94 +6,57 @@ An iOS mobile app providing real time tracking of local public transit systems i
 ## How to use transitninja
 transitninja was designed to be as intuitive as possible for users. Although, here are a few tips to the app:
 * Tap a bus to see that bus's route name
+![Bus_Label](images/bus_label_screenshot.png)
 * Click on the search bar to open the keyboard and enter a destination to get the optimal route
-* Tap the toggle buttons in the bottom right corner of the screen to toggle bus icons rendering to the map for the respective agencies (color fill denotes icons are currently being rendered)
-*
-
-### Bonus Features
-* Users can set “My Routes”
-* Users will be alerted if their route is delayed
+* Tap the toggle buttons in the bottom right corner of the screen to toggle bus icons rendering to the map for the respective agencies (by default busses are rendered)
+* Tap the icon above the toggles to reset the map to your current location
 
 
-## Technologies and Technical Challenges
-* JavaScript/Node.js
-* PostgresQL
-* React Native
+## Technologies
 
-### Challenges
-* Ensuring that the data obtained from the API calls will be accurate and timely/verifying this
-* Integrating Google Maps API to our route time calculations
+#### Backend
+On the backend we used MongoDB for our database to store information pertaining to busses and transit agencies. We also used Node.js with a Express.js framework on the backend.
 
+#### Frontend
+Our frontend was created using React Native. We used Axios to make API calls to our backend to retrieve data from our database.
 
-## Things Accomplished Over the Weekend
-* Successfully acquired tokens to make API calls for 511 and Bart, also tested API calls to verify ability to obtain information
-* Covered a few tutorials on how to use and understand React Native and Node.js
-* Installed Xcode on all of our computers and walked through Xcode
-* Researched various phone apps for styling, single page app vs. multi view apps, UX/UI flaws, etc.
+#### APIs
+* 511.org - We made API calls to 511.org to retrieve information pertaining to realtime vehicle positions. These API calls were returned in GTFS-RT format, which is a language agnostic message system used in the transportation industry. We converted the results of these calls into javascript objects using NPM's GTFS-realtime Language Bindings library.
 
-### Wireframes
-Loading Page
-![Loading_page](images/loading_page.png)
+#### Technical Challenges
+* One significant challenge we encountered occurred in our backend while trying to send updated bus API data to the frontend. We had three asynchronous functions that were dependent on each other, and the function that posts our data into the database was executing prior to receiving the necessary data to send. We corrected this by associating a request-promise to the function it was dependent on so that it would wait until the prior function was executed.
 
-Home Page
-![Home_page](images/home_page.png)
+```javascript
 
-Modal Nav Bar
-![Modal_NavBar](images/modal_nav_bar.png)
-
-Route Options
-![Next Bus](images/Route_Options.png)
-
-Show Bus on Map
-![Show Bus](images/Show_Bus.png)
-
-Next Bus
-![Next Bus](images/Next_Bus.png)
-
-My Favorite Routes
-![My Routes](images/Favorites Page.png)
-
-New Favorite
-![New Favorite](images/New_Favorite.png)
-
-
-
-## Group Members and Work Breakdown
-	Josh Chen, Noah Kang, John Matthews, George Vuong
-
-
-## Implementation Timeline
-
-### Day 1: Day is dedicated to setting up each type of API call for relative feeds
-https://code.google.com/archive/p/googletransitdatafeed/wikis/PublicFeeds.wiki
-
-* Obtain data from API call, including real-time data.
-* Google Maps API, (https://developers.google.com/maps/documentation/javascript/get-api-key)
-* BART API, API Bart documentation (http://api.bart.gov/docs/overview/index.aspx), BART API Key: ZKZB-5NI5-9J6T-DWE9
-* Caltrain API http://www.caltrain.com/developer.html
-* SFMTA/SF Muni API General Transit Feed Specification (GTFS) route and schedule data (https://www.sfmta.com/about-sfmta/reports/gtfs-transit-data)
-* Getting project/skeleton setup - JOSH
-* Insheet styling/UI aspect - NOAH
-* Begin setup of database and node.js - GEORGE
-
-### Day 2:
-* Calculate how to estimate current locations of buses - JOSH
-* Set up database with stations, vehicles, routes, etc. - GEORGE
-* Render google maps api for the main screen -NOAH
-
-### Day 3:
-* Create and structure containers and components - EVERYBODY
-* Render stations on map - JOHN
-* Render routes on map - NOAH
-
-### Day 4:
-* Search bar and user input for start/end location -GEORGE
-* Parse information and return results based on user input - JOHN
-* Improve UX
-
-### Day 5:
-* Finish up styling - NOAH
-* Render buses, trains, and barts real-time -GEORGE
-* Push to app store - JOHN
-* Set up emulator since it is a mobile app - JOSH
-* Get reviews and users - EVERYBODY
+app.get('/api/actransitBusses', function(req, res) {
+  actransitBusModel.remove().exec();
+  rp({
+    method: 'GET',
+    url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=actransit`,
+    encoding: null
+  }).then(function(arr){
+    let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
+    let actransitArr = [];
+    array.forEach(function(entity) {
+      if (actransitInfo[entity.vehicle.trip.trip_id]) {
+      actransitArr.push({
+        'id': entity.id,
+        'trip_id': entity.vehicle.trip.trip_id,
+        'lon': entity.vehicle.position.longitude,
+        'lat': entity.vehicle.position.latitude,
+        'stop_id': entity.vehicle.stop_id,
+        'trip_headsign': actransitInfo[entity.vehicle.trip.trip_id].trip_headsign,
+        "route_short_name": actransitInfo[entity.vehicle.trip.trip_id].route_short_name,
+        "route_long_name": actransitInfo[entity.vehicle.trip.trip_id].route_long_name
+        });
+      }
+    });
+  actransitBussesModel.create(actransitArr, function(err, results){
+    if (err) {
+      return console.log(err);
+    }
+    res.send(actransitArr);
+  });
+});
+});
+```
