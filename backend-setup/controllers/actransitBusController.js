@@ -18,13 +18,11 @@ const actransitBusController = function(app) {
 
     app.get('/api/actransitBusses', function(req, res) {
       actransitBusModel.remove().exec();
-
       rp({
         method: 'GET',
         url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=actransit`,
         encoding: null
       }).then(function(arr){
-
         let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
         let actransitArr = [];
         array.forEach(function(entity) {
@@ -41,12 +39,10 @@ const actransitBusController = function(app) {
             });
           }
         });
-
       actransitBussesModel.create(actransitArr, function(err, results){
         if (err) {
           return console.log(err);
         }
-        console.log(actransitArr[0]);
         res.send(actransitArr);
       });
     });
