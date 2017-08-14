@@ -1,5 +1,7 @@
 # transitninja
 
+[Demo Page](https://noahskang.github.io/TransitNinja-Demo/)
+
 ## Overview
 An iOS mobile app providing real time tracking of local public transit systems in the greater San Francisco bay area. Intended to provide public transit users a reliable app for finding optimal public transit routes based on current location and target destination. Users can also check to see if their route is on schedule, see current location of busses on the map, and can select a bus to see the route it is on.
 
