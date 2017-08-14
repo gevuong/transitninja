@@ -29,7 +29,7 @@ export default class HandlerOne extends Component {
           </Text>
           <View style={styles.busDuration}>
             <Image source={BUS} style={styles.busStyle} />
-            <Text>
+            <Text style={styles.duration}>
               {this.props.state.directions.routes[0].legs[0].duration.text}
             </Text>
           </View>
@@ -51,19 +51,22 @@ const styles = StyleSheet.create({
   },
   handlerText: {
     color: 'white',
+    padding: 10
+  },
+  duration: {
+    color: 'white'
   },
   textContainer: {
-    // flex: 1,
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     // backgroundColor: 'transparent',
-    padding: 15,
     height: 80
   },
   busDuration: {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'center'
     // color: 'white'
   },
   handlerContainer: {

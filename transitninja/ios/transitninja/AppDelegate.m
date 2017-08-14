@@ -22,7 +22,7 @@
   NSURL *jsCodeLocation;
 
 
-  [GMSPlacesClient provideAPIKey:@"AIzaSyD7lWmxCsApv576egaDwd9pf1fsNmMz6XI"];
+  [GMSPlacesClient provideAPIKey:@"AIzaSyDWEaruFqhKhL6UBnnl_1tU4lnh5ZxNP64"];
 
 
 

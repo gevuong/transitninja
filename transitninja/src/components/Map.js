@@ -113,7 +113,7 @@ export default class Map extends Component {
     this.resetMap = this.resetMap.bind(this);
     this.zoomRoute = this.zoomRoute.bind(this);
     this.toggleZoom = this.toggleZoom.bind(this);
-
+    console.disableYellowBox = true;
   }
 
 // checker(){
@@ -334,7 +334,6 @@ export default class Map extends Component {
       }
     )
     .then((place) => {
-
       this.setState({
         destination: place,
         showSlidingPanel: false,
@@ -382,7 +381,7 @@ export default class Map extends Component {
     // console.log(this.state.coordo);
 
     if (this.state.coordo.length > 0) {
-      this.setState({zoomer: true});
+      this.setState({ zoomer: true });
 
       // console.log('coordo', this.state.coordo);
       const points = this.state.coordo;
@@ -415,7 +414,6 @@ export default class Map extends Component {
 
 
   renderPol() {
-
     // console.log('coordinates', this.state.coordo);
     return (
 
