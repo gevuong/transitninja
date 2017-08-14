@@ -21,7 +21,7 @@ mongoose.connect(config.getDBConnectionString(), (err, database) => {
   if (err) return console.log(err);
   db = database;
   app.listen(port, function() {
-    console.log('listening to 3000');
+    // console.log('listening to 3000');
   });
 });
 
