@@ -16,6 +16,7 @@ const INITIAL_TOP = Platform.OS === 'ios' ? -80 : -60;
 
 export default class Search extends Component {
 
+
   static propTypes = {
     data: PropTypes.array,
     placeholder: PropTypes.string,
