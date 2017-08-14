@@ -40,7 +40,7 @@ var info = function (){
   return arrs;
 };
 
-console.log(info());
+// console.log(info());
 
 module.exports.caltrainTrip = caltrainTrip;
 module.exports.info = info;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import { Actions } from 'react-native-router-flux';
-import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity, Text, Button, Dimensions, AlertIOS } from 'react-native';
+import { ScrollView, View, StyleSheet, Image, TouchableHighlight, TouchableOpacity, Text, Button, Dimensions, AlertIOS } from 'react-native';
 import MapView from 'react-native-maps';
 import RNGooglePlaces from 'react-native-google-places';
 import SlidingUpPanel from 'react-native-sliding-up-panel';
@@ -11,10 +11,13 @@ import ToggleButton from './ToggleButton';
 import Search from './Search';
 import HandlerOne from './HandlerOne';
 
+const RECENTER_LOGO = require('../../assets/recenter.png');
 const BUS_LOGO_GREEN = require('../../assets/bus_icon_green.png');
 const BUS_LOGO_RED = require('../../assets/bus_icon_red.png');
 const PIN_SHOW = require('../../assets/pin_show_orange.png');
 const HAMBURGER = require('../../assets/hamburger.png');
+const BUS = require('../../assets/bus.png');
+const WALK = require('../../assets/walk_icon.png');
 
 var deviceHeight = Dimensions.get('window').height;
 
@@ -39,10 +42,11 @@ export default class Map extends Component {
       bart_stops: [],
       caltrain_stops: [],
       actransit_busses: [],
-      showACTransit: false,
-      showMuni: false,
+      showACTransit: true,
+      showMuni: true,
       showBart: true,
       showCaltrain: true,
+      showSlidingPanel: false,
       latitude: '',
       longitude: '',
       destination: {},
@@ -50,7 +54,41 @@ export default class Map extends Component {
       res: '',
       predictions: [],
       renderPol: false,
-      containerHeight: 0
+      containerHeight: 0,
+      directions: {
+        routes: [{
+            legs: [{
+              arrival_time: {
+                text: ''
+              },
+              distance: {
+                text: ''
+              },
+              duration: {
+                text: ''
+              },
+              end_address: '',
+              end_location: {
+                lat: '',
+                lng: ''
+              },
+              start_location: {
+                lat: '',
+                lng: ''
+              },
+              steps: [{
+                duration: {
+                  text: ''
+                },
+                distance: {
+                  text: ''
+                },
+                html_instructions: '',
+                travel_mode: ''
+              }]
+            }]
+        }]
+      }
     };
     this.toggleMuni = this.toggleMuni.bind(this);
     this.getDirections = this.getDirections.bind(this);
@@ -61,6 +99,7 @@ export default class Map extends Component {
     this.renderMuniBusses = this.renderMuniBusses.bind(this);
     this.onRegionChange = this.onRegionChange.bind(this);
     this.renderPol = this.renderPol.bind(this);
+    this.renderSlidingPanel = this.renderSlidingPanel.bind(this);
     this.togglePol = this.togglePol.bind(this);
     this.resetMap = this.resetMap.bind(this);
   }
@@ -83,7 +122,7 @@ export default class Map extends Component {
               latitude: bus.lat + 0.000060 || -36.82339,
               longitude: bus.lon || -73.03569
             }}
-            title={bus.trip_id}
+            title={bus.route_short_name}
             key={bus.id}
           >
             <Image source={BUS_LOGO_GREEN} />
@@ -98,7 +137,7 @@ export default class Map extends Component {
               latitude: bus.lat + 0.000060 || -36.82339,
               longitude: bus.lon || -73.03569
             }}
-            title={bus.trip_id}
+            title={bus.route_short_name}
             key={bus.id}
           >
             <Image source={BUS_LOGO_RED} />
@@ -173,7 +212,11 @@ export default class Map extends Component {
       const coords = points.map((point) => {
         return { latitude: point[0], longitude: point[1] };
       });
-      this.setState({ coordo: coords });
+      this.setState({
+        directions: respJson || this.state.directions,
+        coordo: coords,
+        showSlidingPanel: true
+      });
       return coords;
     } catch (error) {
       return error;
@@ -194,11 +237,11 @@ export default class Map extends Component {
   }
 
   renderMuniBusses() {
-    // return this.state.muni_busses;
+    return this.state.muni_busses;
   }
 
   renderACTransitBusses() {
-    // return this.state.actransit_busses;
+    return this.state.actransit_busses;
   }
 
   getContainerHeight = (height) => {
@@ -270,8 +313,57 @@ export default class Map extends Component {
   );
   }
 
+  renderSlidingPanel() {
+    return (
+      <SlidingUpPanel
+          ref={panel => { this.panel = panel; }}
+          containerMaximumHeight={MAXIMUM_HEIGHT}
+          containerBackgroundColor={'green'}
+          handlerHeight={MINUMUM_HEIGHT}
+          allowStayMiddle
+          handlerDefaultView={<HandlerOne state={this.state} />}
+          getContainerHeight={this.getContainerHeight}
+      >
+        <ScrollView style={styles.frontContainer}>
+          {this.state.directions.routes[0].legs[0].steps.map(function(step) {
+            if (step.travel_mode === 'WALKING') {
+              return (
+                <View>
+                  <Text style={styles.baseText}>
+                    {'\n'}
+                    <Image source={WALK} style={styles.walkStyle} />
+                    {step.html_instructions}
+                    {'\n'}
+                    {step.distance.text} {step.duration.text}
+                    {'\n'}
+                  </Text>
+                </View>
+              );
+            } else if (step.travel_mode === 'TRANSIT') {
+              return (
+                <View>
+                  <Text style={styles.baseText}>
+                    <Image source={BUS} style={styles.busStyle} />
+                    {step.html_instructions} {'\n'}
+                    {step.transit_details.line.short_name}
+                    {step.transit_details.line.name} {'\n'}
+                    {step.distance.text} {step.duration.text} {'\n'}
+                    {step.transit_details.num_stops}
+                    {'\n'}
+                  </Text>
+                </View>
+              );
+            }
+            })
+          }
+        </ScrollView>
+      </SlidingUpPanel>
+    );
+  }
+
 
   render() {
+    console.log('render-state', this.state);
     return (
       <View style={styles.viewStyle}>
         <Search
@@ -308,6 +400,16 @@ export default class Map extends Component {
         <TouchableHighlight
           activeOpacity={1}
           underlayColor={'rgba(255, 0, 0, 0)'}
+          onPress={this.resetMap}
+          style={styles.recenter}
+        >
+          <View>
+            <ToggleButton logo={RECENTER_LOGO} />
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight
+          activeOpacity={1}
+          underlayColor={'rgba(255, 0, 0, 0)'}
           onPress={this.toggleMuni}
           style={this.state.showMuni ? styles.buttonPress : styles.button}
         >
@@ -331,46 +433,31 @@ export default class Map extends Component {
             />
           </View>
         </TouchableHighlight>
-          <TouchableHighlight
-            activeOpacity={1}
-            underlayColor={'rgba(255, 0, 0, 0)'}
-            onPress={this.resetMap}
-            style={this.state.showACTransit ? styles.buttonPress : styles.button}
-          >
-            <View>
-              <ToggleButton
-                logo={PIN_SHOW}
-                text={'Recenter'}
-              />
-            </View>
-          </TouchableHighlight>
         </View>
-      <SlidingUpPanel
-          ref={panel => { this.panel = panel; }}
-          containerMaximumHeight={MAXIMUM_HEIGHT}
-          containerBackgroundColor={'green'}
-          handlerHeight={MINUMUM_HEIGHT}
-          allowStayMiddle
-          handlerDefaultView={<HandlerOne />}
-          getContainerHeight={this.getContainerHeight}
-      >
-        <View style={styles.frontContainer}>
-          <Text style={styles.panelText}>Hello guys!</Text>
-        </View>
-      </SlidingUpPanel>
+
+        {this.state.showSlidingPanel ? this.renderSlidingPanel() : null }
     </View>
     );
   }
 }
-
-
 
 const styles = StyleSheet.create({
   viewStyle: {
     flex: 1,
     alignItems: 'stretch'
   },
-  hamburger: {
+  busStyle: {
+    width: 15,
+    height: 15
+  },
+  walkStyle: {
+    width: 15,
+    height: 25
+  },
+  baseText: {
+    textAlign: 'center'
+  },
+    hamburger: {
     flex: 1,
     position: 'absolute',
     zIndex: 100,
@@ -379,7 +466,6 @@ const styles = StyleSheet.create({
   },
   mapStyle: {
     flex: 1
-  }, voo: {
 
   },
   buttonView: {
@@ -387,13 +473,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     bottom: 100,
-    top: 400,
+    top: 320,
     left: 300,
     right: 50,
-    height: 220
+    height: 300
   },
   buttonPress: {
-    opacity: 0.5
+    opacity: 0.7
   },
   button: {
     opacity: 1

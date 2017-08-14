@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "gtfs-realtime-bindings": "0.0.4",
+    "promise": "^8.0.1",
     "request": "^2.81.0",
     "request-promise": "^4.2.1"
   }
