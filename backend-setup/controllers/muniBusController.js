@@ -14,15 +14,10 @@ let apiArr = ["3b31e671-cca3-4abf-9510-2ccf0996ef28",
 
 let muniInfo = info.info();
 
-
-
 const muniBusController = function(app) {
-
 
     app.get('/api/muniBusses', function(req, res) {
       muniBusModel.remove().exec();
-
-
 
       rp({
         method: 'GET',
@@ -54,7 +49,7 @@ const muniBusController = function(app) {
         if (err) {
           return console.log(err);
         }
-        console.log(muniArr);
+        // console.log(muniArr);
         res.send(muniArr);
       });
     });

@@ -24,6 +24,7 @@ const actransitBusController = function(app) {
         encoding: null
       }).then(function(arr){
         let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
+        console.log(array);
         let actransitArr = [];
         console.log(array);
         array.forEach(function(entity) {
