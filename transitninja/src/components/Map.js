@@ -402,7 +402,11 @@ export default class Map extends Component {
             if (step.travel_mode === 'WALKING') {
               return (
                 <View key={idx} style={styles.directionItem}>
-                  <Image source={WALK} style={styles.walkStyle} />
+                  <View style ={styles.directionItemLeft}>
+                    <Image source={WALK} style={styles.walkStyle} />
+                    <Text style={styles.duration}>{step.duration.text}</Text>
+                  </View>
+
                   <Text style={styles.baseText}>
                     {'\n'}
                     {step.html_instructions}
@@ -410,13 +414,15 @@ export default class Map extends Component {
                     {step.distance.text}
                     {'\n'}
                   </Text>
-                  <Text style={styles.duration}>{step.duration.text}</Text>
                 </View>
               );
             } else if (step.travel_mode === 'TRANSIT') {
               return (
                 <View key={idx} style={styles.directionItem}>
-                  <Image source={BUS} style={styles.busStyle} />
+                  <View style ={styles.directionItemLeft}>
+                    <Image source={BUS} style={styles.busStyle} />
+                    <Text style={styles.duration}>{step.duration.text}</Text>
+                  </View>
                   <Text style={styles.baseText}>
                     {step.html_instructions} {'\n'}
                     {step.transit_details.line.short_name}
@@ -425,7 +431,7 @@ export default class Map extends Component {
                     {step.transit_details.num_stops}
                     {'\n'}
                   </Text>
-                  <Text style={styles.duration}>{step.duration.text}</Text>
+
                 </View>
               );
             }
@@ -537,8 +543,8 @@ const styles = StyleSheet.create({
     color: 'gray'
   },
   busStyle: {
-    width: 15,
-    height: 15,
+    width: 18,
+    height: 18,
     marginRight: 20,
     marginTop: 10
   },
@@ -546,12 +552,12 @@ const styles = StyleSheet.create({
     width: 15,
     height: 25,
     marginRight: 20,
-    marginTop: 5
+    marginTop: 20
   },
   baseText: {
     textAlign: 'left',
     width: 250,
-    fontSize: 11
+    fontSize: 12
   },
     hamburger: {
     flex: 1,
@@ -588,11 +594,17 @@ const styles = StyleSheet.create({
   },
   directionItem: {
     flexDirection: 'row',
+    marginBottom: 20,
   },
   duration: {
-    marginLeft: 5,
-    marginTop: 30,
+    marginTop: 8,
     fontSize: 13,
     fontWeight: '400'
+  },
+  directionItemLeft: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center'
   }
+
 });

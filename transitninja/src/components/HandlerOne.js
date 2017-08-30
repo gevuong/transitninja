@@ -41,17 +41,19 @@ export default class HandlerOne extends Component {
 const styles = StyleSheet.create({
   address: {
     fontSize: 15,
-    fontWeight: '400'
+    fontWeight: '400',
+    marginTop: 10
   },
   destination: {
-    paddingTop: 15,
+    paddingTop: 25,
     paddingLeft: 10,
     fontSize: 17,
     fontWeight: '700'
   },
   handlerText: {
     color: 'white',
-    padding: 10
+    padding: 10,
+    paddingTop: 10
   },
   duration: {
     color: 'white'
@@ -60,13 +62,16 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 80
+    height: 70,
+    top: 10,
+    marginLeft: 15
   },
   busDuration: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: 10
+    left: 10,
+    top: 2
   },
   handlerContainer: {
     height: 80,
@@ -75,7 +80,8 @@ const styles = StyleSheet.create({
     opacity: 0.7
   },
   busStyle: {
-    height: 30,
-    width: 30
+    height: 21,
+    width: 21,
+    marginBottom: 5
   }
 });
