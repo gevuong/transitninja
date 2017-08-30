@@ -3,10 +3,8 @@ import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 
 const BUS = require('../../assets/bus.png');
 
-var deviceHeight = Dimensions.get('window').height;
-var deviceWidth = Dimensions.get('window').width;
+const deviceWidth = Dimensions.get('window').width;
 
-    //
 export default class HandlerOne extends Component {
 
 
@@ -42,43 +40,51 @@ export default class HandlerOne extends Component {
 const styles = StyleSheet.create({
   address: {
     fontSize: 15,
-    fontWeight: '400'
+    fontWeight: '400',
+    marginTop: 10
   },
   destination: {
-    padding: 5,
+    paddingTop: 25,
+    paddingLeft: 10,
     fontSize: 17,
     fontWeight: '700'
   },
   handlerText: {
     color: 'white',
-    padding: 10
+    padding: 10,
+    paddingTop: 10
   },
   duration: {
-    color: 'white'
+    color: 'white',
+    fontSize: 11,
+    marginTop: 5
   },
   textContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // backgroundColor: 'transparent',
-    height: 80
+    height: 70,
+    top: 10,
+    marginLeft: 15
   },
   busDuration: {
     flex: 1,
     flexDirection: 'column',
+    justifyContent: 'flex-start',
+    height: 80,
     alignItems: 'center',
-    marginTop: 10
-    // color: 'white'
+    left: 10
   },
   handlerContainer: {
     height: 80,
     width: deviceWidth,
-    // alignItems: 'center',
     backgroundColor: 'red',
     opacity: 0.7
   },
   busStyle: {
-    height: 30,
-    width: 30
+    top: 10,
+    height: 21,
+    width: 21,
+    marginBottom: 10
   }
 });

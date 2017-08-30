@@ -5,5 +5,3 @@ module.exports = {
     return 'mongodb://' + configValues.username + ':' + configValues.password + '@ds057234.mlab.com:57234/nodetodosample';
   }
 };
-
-//mongodb://<dbuser>:<dbpassword>@ds057234.mlab.com:57234/nodetodosample
