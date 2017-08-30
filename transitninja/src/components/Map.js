@@ -315,7 +315,6 @@ export default class Map extends Component {
       // suggestions and it is a simplified Google Place object.
       //  we will set destination equal to place.address.
       this.getDirections(place.address).then(this.togglePol());
-      // this.renderPol();
     })
    .catch(error => console.log(error.message));  // error is a Javascript Error object
  }
@@ -465,6 +464,7 @@ export default class Map extends Component {
       { this.state.showACTransit ? this.renderACTransitBusses() : null }
       { this.state.showMuni ? this.renderMuniBusses() : null }
       { this.renderPol ? this.renderPol() : null }
+      { this.renderPol ? this.renderEndLocation() : null}
       </MapView>
       <View style={styles.buttonView}>
         <TouchableHighlight
