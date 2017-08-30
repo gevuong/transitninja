@@ -1,15 +1,18 @@
 # transitninja
 
+[Demo Page](https://noahskang.github.io/TransitNinja-Demo/)
+
 ## Overview
 An iOS mobile app providing real time tracking of local public transit systems in the greater San Francisco bay area. Intended to provide public transit users a reliable app for finding optimal public transit routes based on current location and target destination. Users can also check to see if their route is on schedule, see current location of busses on the map, and can select a bus to see the route it is on.
 
 ## How to use transitninja
 transitninja was designed to be as intuitive as possible for users. Although, here are a few tips to the app:
 * Tap a bus to see that bus's route name
-![Bus_Label](images/bus_label_screenshot.png)
+![Bus_Label](images/bus_label.png)
 
 
 * Click on the search bar to open the keyboard and enter a destination to get the optimal route
+![Route_Example](images/route_example.png)
 * Tap the toggle buttons in the bottom right corner of the screen to toggle bus icons rendering to the map for the respective agencies (by default busses are rendered)
 * Tap the icon above the toggles to reset the map to your current location
 
@@ -24,6 +27,10 @@ Our frontend was created using React Native. We used Axios to make API calls to 
 
 #### APIs
 * 511.org - We made API calls to 511.org to retrieve information pertaining to realtime vehicle positions. These API calls were returned in GTFS-RT format, which is a language agnostic message system used in the transportation industry. We converted the results of these calls into javascript objects using NPM's GTFS-realtime Language Bindings library.
+
+* Google Map Directions API - This API was used for the logic behind determining the optimal route for a user to take. An API call is sent when a user enters a destination in the search bar. This API was also used for providing the steps to get to the destination.
+
+* Google Places API - Google Places API renders labels for street names, business names, etc. to the map.
 
 #### Technical Challenges
 * One significant challenge we encountered occurred in our backend while trying to send updated bus API data to the frontend. We had three asynchronous functions that were dependent on each other, and the function that posts our data into the database was executing prior to receiving the necessary data to send. We corrected this by associating a request-promise to the function it was dependent on so that it would wait until the prior function was executed.
@@ -62,6 +69,29 @@ app.get('/api/actransitBusses', function(req, res) {
 });
 });
 ```
+
+
+* Another technical challenge was determining the best way to render the busses to the map. We decided to map each bus to a ```Mapview.Marker```, and set our state equal to an array of markers.
+
+```javascript
+makeAxiosRequests() {
+    axios.get('https://transitninja.herokuapp.com/api/actransitBusses').then(response => {
+      this.setState({ actransit_busses: response.data.map(bus => (
+        <MapView.Marker
+          coordinate={{
+            latitude: bus.lat + 0.000060 || -36.82339,
+            longitude: bus.lon || -73.03569
+          }}
+          title={bus.route_short_name}
+          key={bus.id}
+        >
+          <Image source={BUS_LOGO_GREEN} />
+        </MapView.Marker>
+      )) });
+    });
+```
+
+
 
 ## Future Plans
 

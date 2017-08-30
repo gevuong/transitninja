@@ -12,7 +12,7 @@ let apiArr = ["7cec8694-c386-42b4-870c-a76aef58b40f",
 "b021f9d5-2fe8-4fd8-90f0-4b8b5807cf51"];
 
 let actransitInfo = info.info();
-// console.log(actransitInfo);
+
 
 const actransitBusController = function(app) {
 
@@ -24,7 +24,9 @@ const actransitBusController = function(app) {
         encoding: null
       }).then(function(arr){
         let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
+        console.log(array);
         let actransitArr = [];
+        console.log(array);
         array.forEach(function(entity) {
           if (actransitInfo[entity.vehicle.trip.trip_id]) {
           actransitArr.push({
@@ -39,10 +41,12 @@ const actransitBusController = function(app) {
             });
           }
         });
+
       actransitBussesModel.create(actransitArr, function(err, results){
         if (err) {
           return console.log(err);
         }
+
         res.send(actransitArr);
       });
     });
