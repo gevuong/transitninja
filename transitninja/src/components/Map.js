@@ -253,39 +253,40 @@ export default class Map extends Component {
 
   resetMap() {
     if (this.state.route) {
-    if (this.state.zoomer) {
+      if (this.state.zoomer) {
 
-    this.setState({
-      mapRegion: { latitude: this.state.userLat, longitude: this.state.userLong, latitudeDelta: this.state.deltalat, longitudeDelta: this.state.deltalon},
-      lastLat: this.state.lastLat,
-      lastLong: this.state.lastLong,
-      zoomer: !this.state.zoomer
+      this.setState({
+        mapRegion: { latitude: this.state.userLat, longitude: this.state.userLong, latitudeDelta: this.state.deltalat, longitudeDelta: this.state.deltalon},
+        lastLat: this.state.lastLat,
+        lastLong: this.state.lastLong,
+        zoomer: !this.state.zoomer
 
-    });
-  }else{
-    const points = this.state.coordo;
-    const startLat = points[0].latitude;
-    const startLon = points[0].longitude;
-    const endLat = points[points.length - 1].latitude;
-    const endLon = points[points.length - 1].longitude;
-    const minX = Math.min(startLat, endLat);
-    const maxX = Math.max(startLat, endLat);
-    const minY = Math.min(startLon, endLon);
-    const maxY = Math.max(startLon, endLon);
-    const midX = (minX + maxX) / 2;
-    const midY = (minY + maxY) / 2;
-    const deltX = (maxX - minX) * 2.5;
-    const deltY = (maxY - minY) * 2.5;
+      });
+      }else{
+        const points = this.state.coordo;
+        const startLat = points[0].latitude;
+        const startLon = points[0].longitude;
+        const endLat = points[points.length - 1].latitude;
+        const endLon = points[points.length - 1].longitude;
+        const minX = Math.min(startLat, endLat);
+        const maxX = Math.max(startLat, endLat);
+        const minY = Math.min(startLon, endLon);
+        const maxY = Math.max(startLon, endLon);
+        const midX = (minX + maxX) / 2;
+        const midY = (minY + maxY) / 2;
+        const deltX = (maxX - minX) * 2.5;
+        const deltY = (maxY - minY) * 2.5;
 
-    this.setState({ mapRegion: {
-      latitude: midX,
-      longitude: midY,
-      latitudeDelta: deltX,
-      longitudeDelta: deltY
-    },
-    zoomer: !this.state.zoomer,
-   });
-  }} else {
+        this.setState({ mapRegion: {
+          latitude: midX,
+          longitude: midY,
+          latitudeDelta: deltX,
+          longitudeDelta: deltY
+        },
+        zoomer: !this.state.zoomer,
+      });
+    }
+  } else {
     this.setState({
       mapRegion: { latitude: this.state.userLat, longitude: this.state.userLong, latitudeDelta: this.state.deltalat, longitudeDelta: this.state.deltalon},
       lastLat: this.state.lastLat,
@@ -402,36 +403,28 @@ export default class Map extends Component {
             if (step.travel_mode === 'WALKING') {
               return (
                 <View key={idx} style={styles.directionItem}>
-                  <View style ={styles.directionItemLeft}>
-                    <Image source={WALK} style={styles.walkStyle} />
-                    <Text style={styles.duration}>{step.duration.text}</Text>
+                  <Image source={WALK} style={styles.walkStyle} />
+                  <View style={styles.baseText}>
+                    <Text style={styles.directionBold}>{step.html_instructions}</Text>
+                    <Text>
+                      {step.distance.text}{'     '}({step.duration.text})
+                    </Text>
                   </View>
-
-                  <Text style={styles.baseText}>
-                    {'\n'}
-                    {step.html_instructions}
-                    {'\n'}
-                    {step.distance.text}
-                    {'\n'}
-                  </Text>
                 </View>
               );
             } else if (step.travel_mode === 'TRANSIT') {
               return (
                 <View key={idx} style={styles.directionItem}>
-                  <View style ={styles.directionItemLeft}>
-                    <Image source={BUS} style={styles.busStyle} />
-                    <Text style={styles.duration}>{step.duration.text}</Text>
+                  <Image source={BUS} style={styles.busStyle} />
+                  <View style={styles.baseText}>
+                    <Text style={styles.directionBold}>
+                      {step.html_instructions}
+                    </Text>
+                    <Text>
+                      {step.transit_details.line.name} {'\n'}
+                      {step.distance.text}{'     '}({step.duration.text}){'     '}{step.transit_details.num_stops}{' stops'}
+                    </Text>
                   </View>
-                  <Text style={styles.baseText}>
-                    {step.html_instructions} {'\n'}
-                    {step.transit_details.line.short_name}
-                    {step.transit_details.line.name} {'\n'}
-                    {step.distance.text}{'\n'}
-                    {step.transit_details.num_stops}
-                    {'\n'}
-                  </Text>
-
                 </View>
               );
             }
@@ -545,26 +538,21 @@ const styles = StyleSheet.create({
   busStyle: {
     width: 18,
     height: 18,
-    marginRight: 20,
-    marginTop: 10
+    marginRight: 17,
+    marginTop: 25
   },
   walkStyle: {
     width: 15,
     height: 25,
     marginRight: 20,
-    marginTop: 20
+    top: 25
   },
   baseText: {
     textAlign: 'left',
-    width: 250,
-    fontSize: 12
-  },
-    hamburger: {
-    flex: 1,
-    position: 'absolute',
-    zIndex: 100,
-    marginTop: 55,
-    marginLeft: 335
+    width: 280,
+    fontSize: 12,
+    top: 20,
+    left: 10
   },
   mapStyle: {
     flex: 1
@@ -589,22 +577,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'flex-start',
-    marginLeft: 20,
-    marginRight: 20,
+    marginLeft: 25,
+    marginRight: 15
   },
   directionItem: {
     flexDirection: 'row',
-    marginBottom: 20,
+    marginBottom: 15,
+    borderBottomColor: '#797979',
+    borderBottomWidth: 0.5,
+    paddingBottom: 40
   },
-  duration: {
-    marginTop: 8,
-    fontSize: 13,
-    fontWeight: '400'
-  },
-  directionItemLeft: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+  directionBold: {
+    fontWeight: 'bold'
   }
-
 });

@@ -3,8 +3,7 @@ import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 
 const BUS = require('../../assets/bus.png');
 
-var deviceHeight = Dimensions.get('window').height;
-var deviceWidth = Dimensions.get('window').width;
+const deviceWidth = Dimensions.get('window').width;
 
 export default class HandlerOne extends Component {
 
@@ -56,7 +55,9 @@ const styles = StyleSheet.create({
     paddingTop: 10
   },
   duration: {
-    color: 'white'
+    color: 'white',
+    fontSize: 11,
+    marginTop: 5
   },
   textContainer: {
     flex: 1,
@@ -69,9 +70,10 @@ const styles = StyleSheet.create({
   busDuration: {
     flex: 1,
     flexDirection: 'column',
+    justifyContent: 'flex-start',
+    height: 80,
     alignItems: 'center',
-    left: 10,
-    top: 2
+    left: 10
   },
   handlerContainer: {
     height: 80,
@@ -80,8 +82,9 @@ const styles = StyleSheet.create({
     opacity: 0.7
   },
   busStyle: {
+    top: 10,
     height: 21,
     width: 21,
-    marginBottom: 5
+    marginBottom: 10
   }
 });
