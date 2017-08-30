@@ -225,8 +225,12 @@ export default class Map extends Component {
       this.setState({
         directions: respJson || this.state.directions,
         coordo: coords,
-        showSlidingPanel: true
+        showSlidingPanel: true,
+        zoomer: true
       });
+      this.toggleZoom();
+      console.log(this.state.coordo);
+      console.log('c');
       return coords;
     } catch (error) {
       return error;
@@ -322,14 +326,16 @@ export default class Map extends Component {
       // place represents user's selection from the
       // suggestions and it is a simplified Google Place object.
       //  we will set destination equal to place.address.
-      this.getDirections(place.address).then(this.togglePol());
+      this.getDirections(place.address).then( this.togglePol());
       // this.renderPol();
     })
    .catch(error => console.log(error.message));  // error is a Javascript Error object
  }
 
  togglePol() {
-   this.setState({ renderPol: true });
+   this.setState({ renderPol: true, zoomer: true });
+  //  this.toggleZoom();
+  // console.log(this.state.coordo);
  }
 
  renderEndLocation() {
@@ -345,11 +351,13 @@ export default class Map extends Component {
  }
 
  toggleZoom() {
+   console.log('hittt');
    this.setState({ zoomer: true });
    this.zoomRoute();
  }
 
   zoomRoute() {
+    console.log('c', this.state.coordo);
     if (this.state.coordo.length > 0) {
       this.setState({ zoomer: true });
       const points = this.state.coordo;
@@ -383,6 +391,7 @@ export default class Map extends Component {
 
   renderPol() {
     return (
+
       <MapView>
         <MapView.Polyline
           lineCap='round'
@@ -481,6 +490,7 @@ export default class Map extends Component {
       { this.state.showACTransit ? this.renderACTransitBusses() : null }
       { this.state.showMuni ? this.renderMuniBusses() : null }
       { this.renderPol ? this.renderPol() : null }
+      {this.zoomer ? this.zoomRoute() : null}
       </MapView>
       <View style={styles.buttonView}>
         <TouchableHighlight
