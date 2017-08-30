@@ -6,7 +6,6 @@ const BUS = require('../../assets/bus.png');
 var deviceHeight = Dimensions.get('window').height;
 var deviceWidth = Dimensions.get('window').width;
 
-    //
 export default class HandlerOne extends Component {
 
 
@@ -45,7 +44,8 @@ const styles = StyleSheet.create({
     fontWeight: '400'
   },
   destination: {
-    padding: 5,
+    paddingTop: 15,
+    paddingLeft: 10,
     fontSize: 17,
     fontWeight: '700'
   },
@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // backgroundColor: 'transparent',
     height: 80
   },
   busDuration: {
@@ -68,12 +67,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     marginTop: 10
-    // color: 'white'
   },
   handlerContainer: {
     height: 80,
     width: deviceWidth,
-    // alignItems: 'center',
     backgroundColor: 'red',
     opacity: 0.7
   },

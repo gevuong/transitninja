@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import { Actions } from 'react-native-router-flux';
-import { ScrollView, View, StyleSheet, Image, TouchableHighlight, TouchableOpacity, Text, Button, Dimensions, AlertIOS } from 'react-native';
+import { ScrollView, View, StyleSheet, Image, TouchableHighlight, TouchableOpacity, Text, Dimensions } from 'react-native';
 import MapView from 'react-native-maps';
 import RNGooglePlaces from 'react-native-google-places';
 import SlidingUpPanel from 'react-native-sliding-up-panel';
@@ -18,10 +17,8 @@ const PIN_SHOW = require('../../assets/pin_show_orange.png');
 const deviceHeight = Dimensions.get('window').height;
 
 const PIN_SHOW_GREEN = require('../../assets/pin_show_green.png');
-const HAMBURGER = require('../../assets/hamburger.png');
 const BUS = require('../../assets/bus.png');
 const WALK = require('../../assets/walk_icon.png');
-const SEARCHER = require('../../assets/show_icon.png');
 
 const MAXIMUM_HEIGHT = deviceHeight - 100;
 const MINUMUM_HEIGHT = 80;
@@ -46,7 +43,6 @@ export default class Map extends Component {
       bart_stops: [],
       caltrain_stops: [],
       actransit_busses: [],
-
       showACTransit: true,
       showMuni: true,
       showBart: true,
@@ -108,7 +104,6 @@ export default class Map extends Component {
     this.onRegionChange = this.onRegionChange.bind(this);
     this.renderPol = this.renderPol.bind(this);
     this.renderSlidingPanel = this.renderSlidingPanel.bind(this);
-    // this.updateHandlerOne = this.updateHandlerOne.bind(this);
     this.togglePol = this.togglePol.bind(this);
     this.resetMap = this.resetMap.bind(this);
     this.zoomRoute = this.zoomRoute.bind(this);
@@ -126,36 +121,35 @@ export default class Map extends Component {
   }
 
   makeAxiosRequests() {
-      axios.get('https://transitninja.herokuapp.com/api/actransitBusses').then(response => {
-        this.setState({ actransit_busses: response.data.map(bus => (
-          <MapView.Marker
-            coordinate={{
-              latitude: bus.lat + 0.000060 || -36.82339,
-              longitude: bus.lon || -73.03569
-            }}
-            title={bus.route_short_name}
-            key={bus.id}
-          >
-            <Image source={BUS_LOGO_GREEN} />
-          </MapView.Marker>
-        )) });
-      });
+    axios.get('https://transitninja.herokuapp.com/api/actransitBusses').then(response => {
+      this.setState({ actransit_busses: response.data.map(bus => (
 
-      axios.get('https://transitninja.herokuapp.com/api/muniBusses').then(response => {
-        this.setState({ muni_busses: response.data.map(bus => (
-          <MapView.Marker
-            coordinate={{
-              latitude: bus.lat + 0.000060 || -36.82339,
-              longitude: bus.lon || -73.03569
-            }}
-            title={bus.route_short_name}
-            key={bus.id}
-          >
-            <Image source={BUS_LOGO_RED} />
-          </MapView.Marker>
-        )
-        )
-      });
+        <MapView.Marker
+          coordinate={{
+            latitude: bus.lat + 0.000060 || -36.82339,
+            longitude: bus.lon || -73.03569
+          }}
+          title={bus.route_short_name}
+          key={bus.id}
+        >
+          <Image source={BUS_LOGO_GREEN} />
+        </MapView.Marker>
+      )) });
+    });
+
+    axios.get('https://transitninja.herokuapp.com/api/muniBusses').then(response => {
+      this.setState({ muni_busses: response.data.map(bus => (
+        <MapView.Marker
+          coordinate={{
+            latitude: bus.lat + 0.000060 || -36.82339,
+            longitude: bus.lon || -73.03569
+          }}
+          title={bus.route_short_name}
+          key={bus.id}
+        >
+          <Image source={BUS_LOGO_RED} />
+        </MapView.Marker>
+      )) });
     });
   }
 
@@ -188,7 +182,6 @@ export default class Map extends Component {
 // this saves us some performance. It won't re-render everything when we move around the map.
   shouldComponentUpdate(nextProps, nextState) {
     if (
-
       this.state.lastLat !== nextState.lastLat ||
       this.state.lastLong !== nextState.lastLong) {
         return false;
@@ -207,8 +200,6 @@ export default class Map extends Component {
       lastLat: lastLat || this.state.lastLat,
       lastLong: lastLong || this.state.lastLong,
     });
-
-
   }
 
   async getDirections(destination) {
@@ -261,8 +252,8 @@ export default class Map extends Component {
   }
 
   resetMap() {
-    if(this.state.route){
-    if(this.state.zoomer){
+    if (this.state.route) {
+    if (this.state.zoomer) {
 
     this.setState({
       mapRegion: { latitude: this.state.userLat, longitude: this.state.userLong, latitudeDelta: this.state.deltalat, longitudeDelta: this.state.deltalon},
@@ -395,52 +386,46 @@ export default class Map extends Component {
     );
   }
 
-  // <MapView.Marker
-  //   coordinate={{
-  //     latitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lat),
-  //     longitude: parseFloat(this.state.directions.routes[0].legs[0].end_location.lng)
-  //   }}
-  // >
-  // </MapView.Marker>
-//
   renderSlidingPanel() {
     return (
       <SlidingUpPanel
         ref={panel => { this.panel = panel; }}
         containerMaximumHeight={MAXIMUM_HEIGHT}
-        containerBackgroundColor={'green'}
+        containerBackgroundColor={'white'}
         handlerHeight={MINUMUM_HEIGHT}
         allowStayMiddle
         handlerDefaultView={<HandlerOne state={this.state} />}
         getContainerHeight={this.getContainerHeight}
       >
-        <ScrollView style={styles.frontContainer}>
-          {this.state.directions.routes[0].legs[0].steps.map(function(step, idx) {
+        <ScrollView contentContainerStyle={styles.frontContainer}>
+          {this.state.directions.routes[0].legs[0].steps.map((step, idx)=>{
             if (step.travel_mode === 'WALKING') {
               return (
-                <View key={idx}>
+                <View key={idx} style={styles.directionItem}>
+                  <Image source={WALK} style={styles.walkStyle} />
                   <Text style={styles.baseText}>
                     {'\n'}
-                    <Image source={WALK} style={styles.walkStyle} />
                     {step.html_instructions}
                     {'\n'}
-                    {step.distance.text} {step.duration.text}
+                    {step.distance.text}
                     {'\n'}
                   </Text>
+                  <Text style={styles.duration}>{step.duration.text}</Text>
                 </View>
               );
             } else if (step.travel_mode === 'TRANSIT') {
               return (
-                <View key={idx}>
+                <View key={idx} style={styles.directionItem}>
+                  <Image source={BUS} style={styles.busStyle} />
                   <Text style={styles.baseText}>
-                    <Image source={BUS} style={styles.busStyle} />
                     {step.html_instructions} {'\n'}
                     {step.transit_details.line.short_name}
                     {step.transit_details.line.name} {'\n'}
-                    {step.distance.text} {step.duration.text} {'\n'}
+                    {step.distance.text}{'\n'}
                     {step.transit_details.num_stops}
                     {'\n'}
                   </Text>
+                  <Text style={styles.duration}>{step.duration.text}</Text>
                 </View>
               );
             }
@@ -455,22 +440,22 @@ export default class Map extends Component {
   render() {
     return (
       <View style={styles.viewStyle}>
-      <View style={{ height: 20, width: 500, backgroundColor: 'white', position: 'absolute', zIndex: 1000 }} />
-      <View style={styles.searchButtonView}>
-        <TouchableHighlight
-          activeOpacity={1}
-          underlayColor={'rgba(255, 0, 0, 0)'}
-          onPress={this.openSearchModal}
-          style={styles.searchButton}
-        >
-          <View>
-            <Text style={styles.searchButtonText}>{`Where to?`}</Text>
-          </View>
-        </TouchableHighlight>
-      </View>
+        <View style={{ height: 20, width: 500, backgroundColor: 'white', position: 'absolute', zIndex: 1000 }} />
+        <View style={styles.searchButtonView}>
+          <TouchableHighlight
+            activeOpacity={1}
+            underlayColor={'rgba(255, 0, 0, 0)'}
+            onPress={this.openSearchModal}
+            style={styles.searchButton}
+          >
+            <View>
+              <Text style={styles.searchButtonText}>{'Where to?'}</Text>
+            </View>
+          </TouchableHighlight>
+        </View>
       <MapView
         region={this.state.mapRegion}
-        loadingBackgroundColor='#e6f7ff'
+        loadingBackgroundColor='#000000'
         loadingEnabled
         loadingIndicatorColor='#ffffff'
         onRegionChangeComplete={this.onRegionChange}
@@ -526,7 +511,7 @@ export default class Map extends Component {
     );
   }
 }
-        // {this.state.updateHandlerOne ? this.updateHandlerOne() : null }
+
 const styles = StyleSheet.create({
   viewStyle: {
     flex: 1,
@@ -553,14 +538,20 @@ const styles = StyleSheet.create({
   },
   busStyle: {
     width: 15,
-    height: 15
+    height: 15,
+    marginRight: 20,
+    marginTop: 10
   },
   walkStyle: {
     width: 15,
-    height: 25
+    height: 25,
+    marginRight: 20,
+    marginTop: 5
   },
   baseText: {
-    textAlign: 'center'
+    textAlign: 'left',
+    width: 250,
+    fontSize: 11
   },
     hamburger: {
     flex: 1,
@@ -571,7 +562,6 @@ const styles = StyleSheet.create({
   },
   mapStyle: {
     flex: 1
-
   },
   buttonView: {
     position: 'absolute',
@@ -591,22 +581,18 @@ const styles = StyleSheet.create({
   },
   frontContainer: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    alignItems: 'flex-start',
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  directionItem: {
+    flexDirection: 'row',
+  },
+  duration: {
+    marginLeft: 5,
+    marginTop: 30,
+    fontSize: 13,
+    fontWeight: '400'
   }
 });
-
-// $link-color-nav: #353535;
-// $dark-medium-gray: rgb(62, 62, 62);
-// $medium-gray: #797979;
-// $light-gray: #A1A1A1;
-// $lighter-gray: #e9e9e9;
-// $lightest-gray: rgb(244, 244, 244);
-// $green: #2BDE73;
-// $off-white: #f2f2f2;
-
-// <View style={styles.hamburger}>
-//   <TouchableOpacity onPress={() => Actions.modal()}>
-//     <Image source={HAMBURGER} />
-//   </TouchableOpacity>
-// </View>
-// \u2022
