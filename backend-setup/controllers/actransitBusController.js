@@ -14,16 +14,17 @@ let apiArr = ["7cec8694-c386-42b4-870c-a76aef58b40f",
 let actransitInfo = info.info();
 // console.log(actransitInfo);
 
-const actransitBusController = function(app) {
+let actransitBusController = function(app) {
 
     app.get('/api/actransitBusses', function(req, res) {
       actransitBusModel.remove().exec();
       rp({
         method: 'GET',
-        url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=actransit`,
+        url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=AC`,
         encoding: null
       }).then(function(arr){
         let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
+        console.log('array', array);
         let actransitArr = [];
         array.forEach(function(entity) {
           if (actransitInfo[entity.vehicle.trip.trip_id]) {
@@ -39,6 +40,7 @@ const actransitBusController = function(app) {
             });
           }
         });
+
       actransitBussesModel.create(actransitArr, function(err, results){
         if (err) {
           return console.log(err);

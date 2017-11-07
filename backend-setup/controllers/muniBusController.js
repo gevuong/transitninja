@@ -13,49 +13,6 @@ let apiArr = ["3b31e671-cca3-4abf-9510-2ccf0996ef28",
 "299a8fd5-2137-4546-b9ee-d09da9d31535"];
 
 let muniInfo = info.info();
-console.log(muniInfo);
-
-// let routeShortName = function(tripId) {
-//   muniInfo.forEach(function(obj){
-//     if (tripId === obj.tripId){
-//       console.log(obj.route_short_name);
-//       return obj.route_short_name;
-//     }
-//   });
-// };
-//
-// let routeLongName = function(tripId) {
-//   muniInfo.forEach(function(obj){
-//     if (tripId === obj.tripId){
-//       console.log(obj.route_long_name);
-//       return obj.route_long_name;
-//
-//     }
-//   });
-// };
-
-
-// let routeShortName = function() {
-//    let promise = new Promise(function(resolve, reject){
-//      resolve(muniInfo.forEach(function(obj){
-//        if (entity.vehicle.trip.trip_id === obj.tripId){
-//          console.log(obj.route_long_name);
-//          return obj.route_long_name;
-//        }
-//      }));
-//
-//    });
-//    return promise;
-// };
-
-
-
-
-// const muniRequestSettings = {
-//   method: 'GET',
-//   url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=sf-muni`,
-//   encoding: null
-// };
 
 const muniBusController = function(app) {
 
@@ -63,11 +20,11 @@ const muniBusController = function(app) {
     app.get('/api/muniBusses', function(req, res) {
       muniBusModel.remove().exec();
 
-
-
+      // we use this request promise so that we FIRST get an array of all vehicle positions from the 511 API.
+      // Only after the API has returned the list of vehicle positions, we create an array of POJOS for each bus, and then create models.
       rp({
         method: 'GET',
-        url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=sf-muni`,
+        url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=SF`,
         encoding: null
       }).then(function(arr){
 
@@ -90,12 +47,12 @@ const muniBusController = function(app) {
             });
           }
         });
-
+      console.log(muniArr);
       muniBussesModel.create(muniArr, function(err, results){
         if (err) {
           return console.log(err);
         }
-        console.log(muniArr);
+        // console.log(muniArr);
         res.send(muniArr);
       });
     });
