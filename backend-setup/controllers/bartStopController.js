@@ -1,6 +1,6 @@
 var bartStationModel = require('../models/bartStationModel');
 var bart = require('../stations/bartStations');
-// console.log('-----', "1");
+
 module.exports = function(app) {
   app.get('/api/bartStations', function(req, res) {
     let bartStationsArray = bart.bartStations();
@@ -13,5 +13,4 @@ module.exports = function(app) {
       res.send(results);
     });
   });
-  // });
 };

@@ -1,10 +1,10 @@
 let actransitBussesModel = require('../models/actransitBussesModel');
 let express = require('express');
-// let app = express();
+
 let GtfsRealtimeBindings = require('gtfs-realtime-bindings');
 let request = require('request');
 let rp = require('request-promise');
-let actransitBusModel = require('../models/actransitBussesModel');
+
 let info = require('../routes/actransitTrip');
 
 let apiArr = ["7cec8694-c386-42b4-870c-a76aef58b40f",
@@ -12,18 +12,19 @@ let apiArr = ["7cec8694-c386-42b4-870c-a76aef58b40f",
 "b021f9d5-2fe8-4fd8-90f0-4b8b5807cf51"];
 
 let actransitInfo = info.info();
-// console.log(actransitInfo);
+// console.log('actransitInfo: ', actransitInfo);
 
 let actransitBusController = function(app) {
 
     app.get('/api/actransitBusses', function(req, res) {
-      actransitBusModel.remove().exec();
+      actransitBussesModel.remove().exec();
       rp({
         method: 'GET',
         url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=AC`,
         encoding: null
       }).then(function(arr){
         let array = GtfsRealtimeBindings.FeedMessage.decode(arr).entity;
+        
         console.log('array', array);
         let actransitArr = [];
         array.forEach(function(entity) {

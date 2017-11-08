@@ -2,7 +2,6 @@ let express = require('express');
 let app = express(); // start express app
 let mongoose = require('mongoose');
 let config = require('./config'); // requires folder
-let setupController = require('./controllers/setupController');
 
 // port setup, if in production, you'll have environment variable that says what port is, otherwise default to 3000
 let port = process.env.PORT || 3000;
