@@ -1,11 +1,13 @@
+// modules
 let express = require('express');
 let app = express(); // start express app
 let mongoose = require('mongoose');
+// let bodyParser = require('body-parser'); // helps with submitting data as JSON
+let morgan = require('morgan') // displays on terminal when API endpoint is hit
+
+// import files
+let router = require('./services/routes');
 let config = require('./config'); // requires folder
-let router = require('express').Router();
-let bodyParser = require('body-parser');
-let morgan = require('morgan')
-let router = require('./services/router');
 
 // port setup, if in production, you'll have environment variable that says what port is, otherwise default to 3000
 let port = process.env.PORT || 3000;
@@ -39,10 +41,10 @@ mongoose.connect(config.getDBConnectionString(), (err, database) => {
 // to prevent from running again, can put some checks to see if there's a bunch of records in there, if it's not empty, that lets you do this only on dev, never on prod.
 
 // Routes
-
+console.log(router);
 // router.get
 app.use(morgan('combined'));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use('/v1', router);
 
 //
