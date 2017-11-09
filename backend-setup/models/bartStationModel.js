@@ -16,6 +16,6 @@ var bartStationSchema = new Schema({
   wheelchair_boarding: Number
 });
 
-var bartStations = mongoose.model('bartStations', bartStationSchema);
+var bartStations = mongoose.model('bartStationsTest', bartStationSchema);
 
 module.exports = bartStations;
