@@ -1,5 +1,5 @@
 var caltrainStationModel = require('../models/caltrainStationModel');
-var caltrain = require('../stations/caltrainStations');
+var caltrain = require('../seed-stations/caltrainStations');
 // console.log('-----', "1");
 module.exports = function(app) {
   app.get('/api/caltrainStations', function(req, res) {

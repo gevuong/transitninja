@@ -1,5 +1,5 @@
 var actransitStationModel = require('../models/actransitStationModel');
-var actransit = require('../stations/actransitStations');
+var actransit = require('../seed-stations/actransitStations');
 
 module.exports = function(app) {
   app.get('/api/actransitStations', function(req, res) {

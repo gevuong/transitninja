@@ -14,12 +14,14 @@ const muniStopController = require('../controllers/muniStopController');
 
 // Routes
 console.log('router starts here');
-console.log('muniStopController', muniStopController);
+// console.log('muniStopController', muniStopController);
 router.get('/api/actransitBusses', actransitBusController);
-router.get('/api/actransitStations', actransitStopController);
-router.get('/api/bartStations', bartStopController);
-router.get('/api/caltrainStations', caltrainStopController);
-router.get('/api/muniStations', muniStopController.receiveMuniStations);
 router.get('/api/muniBusses', muniBusController);
+
+
+// router.get('/api/actransitStations', actransitStopController);
+// router.get('/api/bartStations', bartStopController);
+// router.get('/api/caltrainStations', caltrainStopController);
+// router.get('/api/muniStations', muniStopController.receiveMuniStations);
 
 module.exports = router;

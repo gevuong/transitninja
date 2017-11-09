@@ -28,7 +28,7 @@ let port = process.env.PORT || 3000;
 // app.set(name, value) => Assigns setting name to value.
 // app.set('view engine', 'ejs');
 
-mongoose.connect(config.getDBConnectionString(), (err, database) => {
+mongoose.connect(config.getDBConnectionString(), (err) => {
   if (err) return console.log(err);
 
   app.listen(port, function() {
