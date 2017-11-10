@@ -23,11 +23,14 @@ let createCaltrainStations = function() {
   let caltrainStationsArray = caltrain.caltrainStations();
 
   caltrainStationModel.create(caltrainStationsArray, function(err, results){
+    console.log('initiate caltrainStations persistence...');
     if (err) {
       return console.log(err);
     }
-    console.log('caltrainStation persisted!');
+    console.log('caltrainStations persisted!');
   });
 };
-
+//
 createCaltrainStations();
+
+module.exports.createCaltrainStations = createCaltrainStations;

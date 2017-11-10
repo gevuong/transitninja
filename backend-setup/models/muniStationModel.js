@@ -14,6 +14,6 @@ let muniStationSchema = new Schema({
 
 // to create a new model using Schema, which provides methods to find, findById, findByIdAndUpdate, findByIdAndRemove, create, update, delete, records inside MongoDB.
 
-let muniStations = mongoose.model('muniStationsTest2', muniStationSchema);
+let muniStations = mongoose.model('muniStationsTest4', muniStationSchema);
 
 module.exports = muniStations;

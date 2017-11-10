@@ -17,6 +17,6 @@ var caltrainStationSchema = new Schema({
   wheelchair_boarding: Number
 });
 
-var caltrainStations = mongoose.model('caltrainStationsTest1', caltrainStationSchema);
+var caltrainStations = mongoose.model('caltrainStationsTest4', caltrainStationSchema);
 
 module.exports = caltrainStations;

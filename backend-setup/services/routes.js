@@ -1,8 +1,10 @@
+// Express router
 let router = require('express').Router();
 
 // Controllers
 const actransitBusController = require('../controllers/actransitBusController');
 const muniBusController = require('../controllers/muniBusController');
+// const muniStopController = require('../controllers/muniStopController');
 
 // Routes
 console.log('router starts here');
@@ -10,6 +12,6 @@ console.log('router starts here');
 router.get('/api/actransitBusses', actransitBusController);
 router.get('/api/muniBusses', muniBusController);
 
-// router.get('/api/muniStations', muniStopController.receiveMuniStations);
+// router.get('/api/muniStations', muniStopController.createMuniStations);
 
 module.exports = router;

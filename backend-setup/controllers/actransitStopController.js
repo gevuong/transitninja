@@ -23,6 +23,7 @@ let createACTransitStations = function() {
   let actransitStationsArray = actransit.actransitStations();
 
   actransitStationModel.create(actransitStationsArray, function(err, results){
+    console.log('initiate actransitStations persistence...');
     if (err) {
       return console.log(err);
     }
@@ -31,3 +32,5 @@ let createACTransitStations = function() {
 };
 
 createACTransitStations();
+
+module.exports.createACTransitStations = createACTransitStations;

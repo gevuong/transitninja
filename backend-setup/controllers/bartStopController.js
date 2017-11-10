@@ -23,11 +23,14 @@ let createBartStations = function() {
   let bartStationsArray = bart.bartStations();
 
   bartStationModel.create(bartStationsArray, function(err, results){
+    console.log('initiate bartStations persistence...');
     if (err) {
       return console.log(err);
     }
-    console.log('barStations persisted!');
+    console.log('bartStations persisted!');
   });
 };
 
 createBartStations();
+
+module.exports.createBartStations = createBartStations;

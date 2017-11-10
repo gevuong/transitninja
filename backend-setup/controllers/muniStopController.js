@@ -19,13 +19,13 @@ mongoose.connect(config.getDBConnectionString(), err => {
   });
 });
 
-// export function that will take the express app as an argument.
 let createMuniStations = function() {
   muniStationModel.remove().exec(); // clears collection in database
   let muniStationsArray = muni.muniStations();
-  
+
   // model.create accepts an array
   muniStationModel.create(muniStationsArray, (err, results) => {
+    console.log('initiate muniStations persistence...');
     // error first callback
     if (err) {
       return console.log(err);
@@ -34,6 +34,6 @@ let createMuniStations = function() {
   });
 };
 
-createMuniStations();
+// createMuniStations();
 
 module.exports.createMuniStations = createMuniStations;

@@ -11,6 +11,6 @@ var actransitBussesSchema = new Schema({
 });
 
 // console.log('actransitBussesSchema', actransitBussesSchema);
-var actransitBusses = mongoose.model('actransitBusses', actransitBussesSchema);
+var actransitBusses = mongoose.model('actransitBussesTest', actransitBussesSchema);
 
 module.exports = actransitBusses;

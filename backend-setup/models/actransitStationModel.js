@@ -16,6 +16,6 @@ var actransitStationSchema = new Schema({
 // stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,zone_id,stop_url,location_type,parent_station
 
 
-var actransitStations = mongoose.model('actransitStationsTest', actransitStationSchema);
+var actransitStations = mongoose.model('actransitStationsTest4', actransitStationSchema);
 
 module.exports = actransitStations;
