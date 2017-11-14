@@ -1,3 +1,4 @@
+
 // modules
 let express = require('express');
 let app = express(); // start express app
@@ -27,6 +28,7 @@ let port = process.env.PORT || 3000;
 // templating with the server side. EJS is a templating engine that transforms template into an HTML file sent to client, making it easier to design an HTML page on server side.
 // app.set(name, value) => Assigns setting name to value.
 // app.set('view engine', 'ejs');
+
 
 mongoose.connect(config.getDBConnectionString(), (err) => {
   if (err) return console.log(err);
