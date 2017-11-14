@@ -1,3 +1,4 @@
+
 let express = require('express');
 let app = express(); // start express app
 let mongoose = require('mongoose');
@@ -24,6 +25,7 @@ let caltrainStopController = require('./controllers/caltrainStopController');
 // app.set('view engine', 'ejs');
 
 mongoose.connect(config.getDBConnectionString(), (err, database) => {
+
   if (err) return console.log(err);
 
   app.listen(port, function() {
