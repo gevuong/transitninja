@@ -19,9 +19,12 @@ const muniBusController = function(app) {
     app.get('/api/muniBusses', function(req, res) {
       muniBusModel.remove().exec();
 
+      // we use this request promise so that we FIRST get an array of all vehicle positions from the 511 API.
+      // Only after the API has returned the list of vehicle positions, we create an array of POJOS for each bus, and then create models.
+
       rp({
         method: 'GET',
-        url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=sf-muni`,
+        url: `https://api.511.org/transit/vehiclepositions?api_key=${apiArr[Math.floor(Math.random()*apiArr.length)]}&agency=SF`,
         encoding: null
       }).then(function(arr){
 
@@ -44,7 +47,7 @@ const muniBusController = function(app) {
             });
           }
         });
-
+      console.log(muniArr);
       muniBussesModel.create(muniArr, function(err, results){
         if (err) {
           return console.log(err);

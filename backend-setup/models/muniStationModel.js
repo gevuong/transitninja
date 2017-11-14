@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
-var muniStationSchema = new Schema({
+let muniStationSchema = new Schema({
   stop_id: Number,
   stop_name: String,
   stop_desc: Number,
@@ -12,6 +12,8 @@ var muniStationSchema = new Schema({
   stop_url: String
 });
 
-var muniStations = mongoose.model('muniStations', muniStationSchema);
+// to create a new model using Schema, which provides methods to find, findById, findByIdAndUpdate, findByIdAndRemove, create, update, delete, records inside MongoDB.
+
+let muniStations = mongoose.model('muniStations', muniStationSchema);
 
 module.exports = muniStations;
