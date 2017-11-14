@@ -1,12 +1,11 @@
 let muniBussesModel = require('../models/muniBussesModel');
 let express = require('express');
-// let app = express();
+
 let GtfsRealtimeBindings = require('gtfs-realtime-bindings');
 let request = require('request');
 let rp = require('request-promise');
-let muniBusModel = require('../models/muniBussesModel');
-let info = require('../routes/muniTrip');
 
+let info = require('../routes/muniTrip');
 
 let apiArr = ["3b31e671-cca3-4abf-9510-2ccf0996ef28",
 "69ca5ef3-1acd-476d-93bc-7173838f5c79",
@@ -17,7 +16,7 @@ let muniInfo = info.info();
 const muniBusController = function(app) {
 
     app.get('/api/muniBusses', function(req, res) {
-      muniBusModel.remove().exec();
+      muniBussesModel.remove().exec();
 
       // we use this request promise so that we FIRST get an array of all vehicle positions from the 511 API.
       // Only after the API has returned the list of vehicle positions, we create an array of POJOS for each bus, and then create models.
@@ -47,12 +46,11 @@ const muniBusController = function(app) {
             });
           }
         });
-      console.log(muniArr);
+      // console.log(muniArr);
       muniBussesModel.create(muniArr, function(err, results){
         if (err) {
           return console.log(err);
         }
-        // console.log(muniArr);
         res.send(muniArr);
       });
     });

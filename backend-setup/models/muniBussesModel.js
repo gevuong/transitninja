@@ -13,7 +13,6 @@ var muniBussesSchema = new Schema({
   route_long_name: String
 });
 
-console.log('muniBusses', muniBussesSchema);
 var muniBusses = mongoose.model('muniBusses', muniBussesSchema);
 
 module.exports = muniBusses;
