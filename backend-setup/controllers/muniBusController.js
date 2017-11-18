@@ -39,6 +39,7 @@ const muniBusController = function(req, res) {
           'trip_headsign': muniInfo[entity.vehicle.trip.trip_id].trip_headsign,
           "route_short_name": muniInfo[entity.vehicle.trip.trip_id].route_short_name,
           "route_long_name": muniInfo[entity.vehicle.trip.trip_id].route_long_name
+
         });
       }
     });

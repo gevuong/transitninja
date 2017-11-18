@@ -42,6 +42,7 @@ const actransitBusController = function(req, res) {
         'trip_headsign': actransitInfo[entity.vehicle.trip.trip_id].trip_headsign,
         "route_short_name": actransitInfo[entity.vehicle.trip.trip_id].route_short_name,
         "route_long_name": actransitInfo[entity.vehicle.trip.trip_id].route_long_name
+
         });
       }
     });
@@ -55,6 +56,7 @@ const actransitBusController = function(req, res) {
       }
       console.log('actransitBusses persisted!');
       res.send(actransitArr);
+
     });
   });
 };

@@ -9,6 +9,3 @@ module.exports = {
   }
 };
 
-//mongodb://<dbuser>:<dbpassword>@ds057234.mlab.com:57234/nodetodosample
-
-// In real environments, you want to encrypt the uname and pw, instead of storing uname and pw to DB in plain text in index.js. This means you would have a decrypter in this file that is required
