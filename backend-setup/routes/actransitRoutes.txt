@@ -1,3 +1,4 @@
+route_id,route_short_name,route_long_name,route_desc,route_type,route_url
 10-142,10,"San Leandro BART - Hayward BART",,3,
 1-142,1,"San Leandro Bart- Dtn. Oakland",,3,
 12-142,12,"Dtn. Oakland /Dtn. Berkeley/4th St. Harrison",,3,
