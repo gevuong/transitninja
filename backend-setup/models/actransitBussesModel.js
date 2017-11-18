@@ -10,7 +10,7 @@ var actransitBussesSchema = new Schema({
   stop_id: String
 });
 
-console.log('actransitBussesSchema', actransitBussesSchema);
+// console.log('actransitBussesSchema', actransitBussesSchema);
 var actransitBusses = mongoose.model('actransitBusses', actransitBussesSchema);
 
 module.exports = actransitBusses;

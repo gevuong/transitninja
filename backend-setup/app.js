@@ -1,18 +1,24 @@
 
+// modules
 let express = require('express');
 let app = express(); // start express app
 let mongoose = require('mongoose');
+// let bodyParser = require('body-parser'); // helps with submitting data as JSON
+let morgan = require('morgan') // displays on terminal when API endpoint is hit
+
+// import files
+let router = require('./services/routes');
 let config = require('./config'); // requires folder
 
 // port setup, if in production, you'll have environment variable that says what port is, otherwise default to 3000
 let port = process.env.PORT || 3000;
 
-let muniStopController = require('./controllers/muniStopController');
-let actransitBusController = require('./controllers/actransitBusController');
-let muniBusController = require('./controllers/muniBusController');
-let actransitStopController = require('./controllers/actransitStopController');
-let bartStopController = require('./controllers/bartStopController');
-let caltrainStopController = require('./controllers/caltrainStopController');
+// let muniStopController = require('./controllers/muniStopController');
+// let actransitBusController = require('./controllers/actransitBusController');
+// let muniBusController = require('./controllers/muniBusController');
+// let actransitStopController = require('./controllers/actransitStopController');
+// let bartStopController = require('./controllers/bartStopController');
+// let caltrainStopController = require('./controllers/caltrainStopController');
 
 // setup public assets folder to build code for the browser, which will be delivered straight to the browser
 // app.use([path], callback)
@@ -23,8 +29,8 @@ let caltrainStopController = require('./controllers/caltrainStopController');
 // app.set(name, value) => Assigns setting name to value.
 // app.set('view engine', 'ejs');
 
-mongoose.connect(config.getDBConnectionString(), (err, database) => {
 
+mongoose.connect(config.getDBConnectionString(), (err) => {
   if (err) return console.log(err);
 
   app.listen(port, function() {
@@ -35,12 +41,21 @@ mongoose.connect(config.getDBConnectionString(), (err, database) => {
 // following function adds API endpoint to Express app. Run Node server (nodemon app.js) and express will setup everything, run API endpoint which should then connect to Mongoose. MongoDB will see schema for the first time, set it up, and then add data to DB via Mongoose .create method.
 
 // to prevent from running again, can put some checks to see if there's a bunch of records in there, if it's not empty, that lets you do this only on dev, never on prod.
-actransitBusController(app);
-muniBusController(app);
 
-actransitStopController(app);
+// Routes
+console.log(router);
+// router.get
+app.use(morgan('combined'));
+// app.use(bodyParser.json());
+app.use('/v1', router);
 
-bartStopController(app);
-caltrainStopController(app);
-
-muniStopController(app);
+//
+// actransitBusController(app);
+// muniBusController(app);
+//
+// actransitStopController(app);
+//
+// bartStopController(app);
+// caltrainStopController(app);
+//
+// muniStopController(app);

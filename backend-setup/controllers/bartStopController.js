@@ -1,5 +1,5 @@
 var bartStationModel = require('../models/bartStationModel');
-var bart = require('../stations/bartStations');
+var bart = require('../seed-stations/bartStations');
 
 module.exports = function(app) {
   app.get('/api/bartStations', function(req, res) {
