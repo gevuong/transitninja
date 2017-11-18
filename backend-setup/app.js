@@ -3,10 +3,9 @@
 let express = require('express');
 let app = express(); // start express app
 let mongoose = require('mongoose');
-// let bodyParser = require('body-parser'); // helps with submitting data as JSON
 let morgan = require('morgan') // displays on terminal when API endpoint is hit
 
-// import files
+// import directories
 let router = require('./services/routes');
 let config = require('./config'); // requires folder
 
@@ -38,24 +37,5 @@ mongoose.connect(config.getDBConnectionString(), (err) => {
   });
 });
 
-// following function adds API endpoint to Express app. Run Node server (nodemon app.js) and express will setup everything, run API endpoint which should then connect to Mongoose. MongoDB will see schema for the first time, set it up, and then add data to DB via Mongoose .create method.
-
-// to prevent from running again, can put some checks to see if there's a bunch of records in there, if it's not empty, that lets you do this only on dev, never on prod.
-
-// Routes
-console.log(router);
-// router.get
 app.use(morgan('combined'));
-// app.use(bodyParser.json());
 app.use('/v1', router);
-
-//
-// actransitBusController(app);
-// muniBusController(app);
-//
-// actransitStopController(app);
-//
-// bartStopController(app);
-// caltrainStopController(app);
-//
-// muniStopController(app);
