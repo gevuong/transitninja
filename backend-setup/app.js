@@ -13,13 +13,12 @@ let config = require('./config'); // requires folder
 let port = process.env.PORT || 3000;
 
 // We initialize the app only after the database connection is ready. This ensures that the application won’t crash or error out by trying database operations before the connection is established.
-mongoose.connect(config.getDBConnectionString(), {
-  useMongoClient: true,
-}, (err) => {
-  if (err) return console.log(err);
+mongoose.connect(config.getDBConnectionString(), { useMongoClient: true,},
+  err => {
+    if (err) return console.log(err);
 
-  app.listen(port, function() {
-    // console.log('listening to 3000');
+    app.listen(port, function() {
+      // console.log('listening to 3000');
   });
 });
 
